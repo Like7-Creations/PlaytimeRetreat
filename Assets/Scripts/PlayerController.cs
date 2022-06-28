@@ -4,18 +4,37 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    CharacterController characterController; 
+    CharacterController characterController;
+    public CameraController cam;
   
     public float speed;
     public float jumpHeight;
     public float gravity = -9.81f;
+    float moveInputdeadzone;
    
     [SerializeField]bool isGrounded;
     public Vector3 velocity;
 
+    int leftFingerId, rightFingerId;
+
+    float halfscreen;
+
+    Vector2 lookinput;
+    float camPitch;
+
+    Vector2 moveTouchstart;
+    Vector2 moveInput;
+    
+    public Vector3 lastCheckpoint;
+
     void Start()
     {  
         characterController = GetComponent<CharacterController>();
+        cam = GetComponentInChildren<CameraController>();
+        leftFingerId = -1;
+        rightFingerId = -1;
+        lastCheckpoint = transform.position;
+        halfscreen = Screen.width / 2;
     }
 
     // Update is called once per frame
@@ -34,7 +53,7 @@ public class PlayerController : MonoBehaviour
         Vector3 move = transform.right * x + transform.forward * z;
 
         characterController.Move(move * speed * Time.deltaTime);
-       
+
         if (Input.GetButtonDown("Jump") && isGrounded)
         {
             velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
@@ -43,5 +62,16 @@ public class PlayerController : MonoBehaviour
         velocity.y += gravity * Time.deltaTime;
 
         characterController.Move(velocity * Time.deltaTime);
+
+        /* if(what ever happens to player here)
+         {
+             TPToCheckpoint(lastCheckpoint);
+         }*/
     }
+
+    void TPToCheckpoint(Vector3 lastpoint)
+    {
+        transform.position = lastpoint;
+    }
+
 }

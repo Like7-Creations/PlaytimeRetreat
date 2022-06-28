@@ -14,6 +14,8 @@ public class Elevator : MonoBehaviour
     [SerializeField] float slowingradius;
     [SerializeField] bool UpDown;
     [SerializeField] bool hasplayer;
+
+    [SerializeField]float timer;
     
     void Start()
     {
@@ -36,6 +38,10 @@ public class Elevator : MonoBehaviour
                 else UpDown = true;          
             }          
         }
+
+        timer += Time.deltaTime;
+        if (timer > 5) UpDown = true;
+        if (timer >= 11) { UpDown = false; timer = 0; }
 
         if (UpDown)
         {

@@ -1,12 +1,14 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
+using TMPro;
 
 public class PickUpThrow : MonoBehaviour
 {
     PlayerController player;
     [SerializeField] float dist;
-    [SerializeField] bool holding;
-    [SerializeField] bool hasplayer;
+    [SerializeField] public bool holding;
+    [SerializeField] public bool hasplayer;
     [SerializeField] bool chargingg;
     [SerializeField] float throwForce;
     
@@ -30,7 +32,7 @@ public class PickUpThrow : MonoBehaviour
 
         charging = PickUpDrop.PickupDropThrow.Charge;
         charging.Enable();
-        charging.performed += Charging;
+       // charging.performed += Charging;
 
         Throwing = PickUpDrop.PickupDropThrow.Throw;
         Throwing.Enable();
@@ -49,28 +51,43 @@ public class PickUpThrow : MonoBehaviour
     }
     // Update is called once per frame
 
-    void Picker(InputAction.CallbackContext context)
+   public void Picker(InputAction.CallbackContext context)
     {
         if (hasplayer)
         {
             this.rb.isKinematic = true;
+            rb.detectCollisions = false;
             transform.parent = Camera.main.transform;
             holding = true;
         }
     }
-    void Charging(InputAction.CallbackContext context)
+    public void Picker()
     {
-        if (holding)chargingg = true;
+        if (hasplayer)
+        {
+            this.rb.isKinematic = true;
+            rb.detectCollisions = false;
+            transform.parent = Camera.main.transform;
+            holding = true;
+            Debug.Log("picked up!");
+        }
     }
-    void Throw(/*InputAction.CallbackContext context*/)
+    public void Charging(/*InputAction.CallbackContext context*/)
+    {
+        if (holding) { chargingg = true; throwForce += Time.deltaTime * 200; }
+    }
+    public void Throw(/*InputAction.CallbackContext context*/)
     {
         if (holding)
         {
             rb.isKinematic = false;
+            rb.detectCollisions = true;
             transform.parent = null;
+            chargingg = false;
             rb.AddForce(Camera.main.transform.forward * throwForce);
             throwForce = 1000;
             holding = false;
+            Debug.Log("throwing if holding");
         }
     }
     void Update()
@@ -85,7 +102,12 @@ public class PickUpThrow : MonoBehaviour
 
         if (chargingg) throwForce += Time.deltaTime * 200;
 
-        if (Input.GetKeyUp(KeyCode.E)) chargingg = false;
-        else Throw();
+        /*if (Input.GetButtonDown("Fire1"))
+        {
+            Throw();
+        }*/
+
+       /* if (Input.GetKeyUp(KeyCode.E)) chargingg = false;
+        else Throw();*/
     } 
 }

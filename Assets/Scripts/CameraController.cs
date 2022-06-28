@@ -25,7 +25,7 @@ public class CameraController : MonoBehaviour
         float mouseY = Input.GetAxis("Mouse Y") * Time.deltaTime * camSens;
         rotationX -= mouseY;
         rotationX = Mathf.Clamp(rotationX, -90, 90);
-        transform.localEulerAngles = new Vector3(rotationX, 0, 0);
+       // transform.localEulerAngles = new Vector3(rotationX, 0, 0);
         player.Rotate(Vector3.up * mouseX);
 
 
