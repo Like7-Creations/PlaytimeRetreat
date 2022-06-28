@@ -20,7 +20,7 @@ public class DoorTrigger : MonoBehaviour
             }
         }
     }
-
+    
     private void OnTriggerExit(Collider other)
     {
         if (doorOpen)
