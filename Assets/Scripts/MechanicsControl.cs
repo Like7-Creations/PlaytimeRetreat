@@ -29,12 +29,12 @@ public partial class @MechanicsControl : IInputActionCollection2, IDisposable
             ""actions"": [
                 {
                     ""name"": ""PickUp"",
-                    ""type"": ""Button"",
+                    ""type"": ""Value"",
                     ""id"": ""e83ac8a0-e50f-48e0-818d-dce97256171a"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
-                    ""initialStateCheck"": false
+                    ""initialStateCheck"": true
                 },
                 {
                     ""name"": ""Charge"",
