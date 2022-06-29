@@ -102,10 +102,10 @@ public class PickUpThrow : MonoBehaviour
 
         if (chargingg) throwForce += Time.deltaTime * 200;
 
-        /*if (Input.GetButtonDown("Fire1"))
+        if (Input.GetButtonDown("Fire1"))
         {
             Throw();
-        }*/
+        }
 
        /* if (Input.GetKeyUp(KeyCode.E)) chargingg = false;
         else Throw();*/
