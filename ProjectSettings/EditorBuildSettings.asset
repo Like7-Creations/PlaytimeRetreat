@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Anmar's Dungeon.unity
-    guid: e620baececb26ea4a9b7c1ff813cff99
+    path: Assets/Scenes/WeeklyBuildScenes/(PC)WeeklyBuild.unity
+    guid: b4d93786eaad7d94bb586d5a00c90799
+  - enabled: 1
+    path: Assets/Scenes/WeeklyBuildScenes/(PC)WeeklyBuild_Next.unity
+    guid: c6d9aa3f6439fd0469befed9c46947b0
   m_configObjects: {}
