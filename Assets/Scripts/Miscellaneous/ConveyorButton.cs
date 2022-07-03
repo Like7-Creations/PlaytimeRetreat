@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class Button : MonoBehaviour
+public class ConveyorButton : MonoBehaviour
 {
     public string buttonType;
 
