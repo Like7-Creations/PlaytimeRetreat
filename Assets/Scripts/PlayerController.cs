@@ -4,15 +4,17 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    CharacterController characterController;
+    public CharacterController characterController;
     public CameraController cam;
+
+    public int level;
   
     public float speed;
     public float jumpHeight;
     public float gravity = -9.81f;
     float moveInputdeadzone;
    
-    [SerializeField]bool isGrounded;
+    public bool isGrounded;
     public Vector3 velocity;
 
     int leftFingerId, rightFingerId;
@@ -73,5 +75,4 @@ public class PlayerController : MonoBehaviour
     {
         transform.position = lastpoint;
     }
-
 }

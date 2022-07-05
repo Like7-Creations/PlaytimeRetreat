@@ -11,4 +11,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/WeeklyBuildScenes/(PC)WeeklyBuild_Next.unity
     guid: c6d9aa3f6439fd0469befed9c46947b0
+  - enabled: 1
+    path: Assets/Scenes/Anmar's Dungeon.unity
+    guid: e620baececb26ea4a9b7c1ff813cff99
   m_configObjects: {}

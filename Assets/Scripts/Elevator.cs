@@ -4,18 +4,19 @@ using UnityEngine;
 
 public class Elevator : MonoBehaviour
 {
-    Vector3 velocity;
-    [SerializeField] float Max_Velocity;
     public Transform elevator;
     public Transform[] waypoints;
+    [SerializeField] GameObject ActivateObject;
+
+    [Header("Arrival Settings")]
+    public Vector3 velocity;
+    [SerializeField] float Max_Velocity;
     [SerializeField]float maxForce;
     [SerializeField] float mass;
     [SerializeField] float max_Speed;
     [SerializeField] float slowingradius;
     [SerializeField] bool UpDown;
     [SerializeField] bool hasplayer;
-
-    [SerializeField]float timer;
     
     void Start()
     {
@@ -27,27 +28,22 @@ public class Elevator : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, 2))
         {
-            hasplayer = hit.collider.gameObject == this.gameObject;
-        }
+            hasplayer = hit.collider.gameObject == ActivateObject.gameObject;
+        } else hasplayer = false;
 
         if (hasplayer)
         {
-            if (Input.GetKey(KeyCode.E))
+            if (Input.GetKeyDown(KeyCode.E))
             {
                 if (UpDown) UpDown = false;
                 else UpDown = true;          
             }          
         }
 
-        timer += Time.deltaTime;
-        if (timer > 5) UpDown = true;
-        if (timer >= 11) { UpDown = false; timer = 0; }
-
         if (UpDown)
         {
             Arrival(waypoints[0]);
         }
-
         else Arrival(waypoints[1]);
     }
 

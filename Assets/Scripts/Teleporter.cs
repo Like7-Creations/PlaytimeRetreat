@@ -15,7 +15,11 @@ public class Teleporter : MonoBehaviour
     {
         if(other.gameObject.tag == "Player")
         {
+            playerController.characterController.enabled = false;
             playerController.transform.position = TargetPos.transform.position;
+            playerController.characterController.enabled = true;
+            //TargetPos.transform.position = playerController.transform.position;
+            Debug.Log("hellotp?");
         }
     }
 }
