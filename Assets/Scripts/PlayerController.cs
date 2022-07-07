@@ -1,40 +1,31 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class PlayerController : MonoBehaviour
 {
-    CharacterController characterController;
+    public CharacterController characterController;
     public CameraController cam;
+
+    public int level;
   
     public float speed;
     public float jumpHeight;
     public float gravity = -9.81f;
-    float moveInputdeadzone;
-   
-    [SerializeField]bool isGrounded;
+
+    public bool isGrounded;
     public Vector3 velocity;
 
-    int leftFingerId, rightFingerId;
+    KeyCode[] key = new KeyCode[] { KeyCode.Alpha1, KeyCode.Alpha2, KeyCode.Alpha3, KeyCode.Alpha4 };
+    int AbilityIndex;
 
-    float halfscreen;
-
-    Vector2 lookinput;
-    float camPitch;
-
-    Vector2 moveTouchstart;
-    Vector2 moveInput;
-    
     public Vector3 lastCheckpoint;
 
     void Start()
     {  
         characterController = GetComponent<CharacterController>();
         cam = GetComponentInChildren<CameraController>();
-        leftFingerId = -1;
-        rightFingerId = -1;
-        lastCheckpoint = transform.position;
-        halfscreen = Screen.width / 2;
     }
 
     // Update is called once per frame
@@ -67,11 +58,18 @@ public class PlayerController : MonoBehaviour
          {
              TPToCheckpoint(lastCheckpoint);
          }*/
+        for (int i = 0; i < key.Length; i++)
+        {
+            if (Input.GetKeyDown(key[i]))
+            {
+                AbilityIndex = i + 1;
+                Debug.Log(AbilityIndex);
+            }
+        }
     }
 
     void TPToCheckpoint(Vector3 lastpoint)
     {
         transform.position = lastpoint;
     }
-
 }

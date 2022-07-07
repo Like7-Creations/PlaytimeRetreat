@@ -11,7 +11,7 @@ public class MobileController : MonoBehaviour
     PickUpThrow[] pickupthrow;
     [SerializeField] Button pickUpBut;
     [SerializeField] Button ThrowBut;
-    [SerializeField] Button JumpButt;
+    [SerializeField] Button jumpButt;
 
     public float speed;
     public float jumpHeight;
@@ -66,7 +66,7 @@ public class MobileController : MonoBehaviour
 
         characterController.Move(velocity * Time.deltaTime);
 
-        JumpButt.onClick.AddListener(Jump);
+        jumpButt.onClick.AddListener(Jump);
 
         /* if(what ever happens to player here)
          {
@@ -103,10 +103,12 @@ public class MobileController : MonoBehaviour
                     {
                         leftFingerId = t.fingerId;
                         moveTouchstart = t.position;
+                        Debug.Log("left");
                     }
                     else if (t.position.x > halfscreen && rightFingerId == -1)
                     {
                         rightFingerId = t.fingerId;
+                        Debug.Log("right");
                     }
                     break;
 

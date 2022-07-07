@@ -6,7 +6,6 @@ using TMPro;
 public class PickUpThrow : MonoBehaviour
 {
     PlayerController player;
-    [SerializeField] float dist;
     [SerializeField] public bool holding;
     [SerializeField] public bool hasplayer;
     [SerializeField] bool chargingg;
@@ -30,13 +29,13 @@ public class PickUpThrow : MonoBehaviour
         pick.Enable();
         pick.performed += Picker;
 
-        charging = PickUpDrop.PickupDropThrow.Charge;
+       /* charging = PickUpDrop.PickupDropThrow.Charge;
         charging.Enable();
-       // charging.performed += Charging;
+        charging.performed += Charging;*/
 
-        Throwing = PickUpDrop.PickupDropThrow.Throw;
+        /*Throwing = PickUpDrop.PickupDropThrow.Throw;
         Throwing.Enable();
-       // Throwing.performed += Throw;
+        Throwing.performed += Throw;*/
     }
 
     private void OnDisable()
@@ -102,12 +101,16 @@ public class PickUpThrow : MonoBehaviour
 
         if (chargingg) throwForce += Time.deltaTime * 200;
 
-        /*if (Input.GetButtonDown("Fire1"))
+        if (Input.GetButtonDown("Fire1"))
+        {
+            Charging();
+        }
+        if (Input.GetButtonUp("Fire1"))
         {
             Throw();
-        }*/
+        }
 
-       /* if (Input.GetKeyUp(KeyCode.E)) chargingg = false;
-        else Throw();*/
+        /* if (Input.GetKeyUp(KeyCode.E)) chargingg = false;
+         else Throw();*/
     } 
 }
