@@ -7,7 +7,7 @@ public class ObjEffect : MonoBehaviour
     AbilityTargeting targeting;
 
     Rigidbody rbody;
-    Transform dirArrow;
+    //Transform dirArrow;
     Collider objCollider;
     Renderer colorRenderer;
 
@@ -18,8 +18,8 @@ public class ObjEffect : MonoBehaviour
     //Object Scaling Values
     public Vector3 originalObjScale;
 
-    float maxForce = 50;
-    public float accumulatedForce;
+    /*float maxForce = 50;
+    public float accumulatedForce;*/
 
     float originalMass;
 
@@ -37,8 +37,9 @@ public class ObjEffect : MonoBehaviour
 
     Color originalObjColor;
     Color highlightedColor;
-    Color frozenColor;
-    Color finalColor;
+    
+    /*Color frozenColor;
+    Color finalColor;*/
 
     void Start()
     {
@@ -55,8 +56,8 @@ public class ObjEffect : MonoBehaviour
         originalObjColor = colorRenderer.material.color;
         highlightedColor = FindObjectOfType<ObjEffect>().highlightedColor;
 
-        frozenColor = FindObjectOfType<ObjEffect>().frozenColor;
-        finalColor = FindObjectOfType<ObjEffect>().finalColor;
+        /*frozenColor = FindObjectOfType<ObjEffect>().frozenColor;
+        finalColor = FindObjectOfType<ObjEffect>().finalColor;*/
 
         //dirArrow = transform.GetChild(0);
     }
@@ -78,7 +79,7 @@ public class ObjEffect : MonoBehaviour
 
     }
 
-    public void FreezeObject(bool state)
+    public void UnfreezeObject(bool state)
     {
         print("Froze Object");
 
@@ -87,16 +88,22 @@ public class ObjEffect : MonoBehaviour
 
         if (state)
         {
-            colorRenderer.material.SetColor("Emission Color", frozenColor);
+            //colorRenderer.material.SetColor("Emission Color", frozenColor);
 
             StartCoroutine(EffectCountdown());
+            print($"{gameObject.name} has been frozen");
         }
 
         if (!state)
         {
             StopAllCoroutines();
 
-            transform.GetChild(0).gameObject.SetActive(state);
+            gameObject.GetComponent<Rigidbody>().isKinematic = false;
+            print($"{gameObject.name} is no longer frozen");
+
+            freezeActive = false;
+
+            /*transform.GetChild(0).gameObject.SetActive(state);
 
             if (accumulatedForce < 0)
             {
@@ -107,11 +114,11 @@ public class ObjEffect : MonoBehaviour
 
             rbody.AddForceAtPosition(direction * accumulatedForce, hitPoint, ForceMode.Impulse);
 
-            accumulatedForce = 0;
+            accumulatedForce = 0;*/
         }
     }
 
-    public void AccumulateForce(float amount, Vector3 point)
+    /*public void AccumulateForce(float amount, Vector3 point)
     {
         if (!freezeActive)
             return;
@@ -124,7 +131,7 @@ public class ObjEffect : MonoBehaviour
 
         direction = transform.position - hitPoint;
         transform.GetChild(0).rotation = Quaternion.LookRotation(direction);
-    }
+    }*/
 
     //Returns obj to its original size.
     public void ReturnToNormalSize(bool state)
@@ -134,13 +141,13 @@ public class ObjEffect : MonoBehaviour
             if (shrinkActive)
             {
                 StartCoroutine(EffectCountdown());
-                print("Object shrunk");
+                print($"{gameObject.name} shrunk");
             }
 
             else if (growActive)
             {
                 StartCoroutine(EffectCountdown());
-                print("Object grew");
+                print($"{gameObject.name} grew");
             }
         }
 
@@ -223,7 +230,7 @@ public class ObjEffect : MonoBehaviour
 
             //For Object Freezing
             if (freezeActive)
-                FreezeObject(false);
+                UnfreezeObject(false);
             //For Object Freezing
 
             //For Object Scaling

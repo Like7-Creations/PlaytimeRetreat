@@ -2,13 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu]
+//[CreateAssetMenu]
 
-public class ObjScaleAbility : Ability
+public class ObjScaleAbility : MonoBehaviour //Ability
 {
     public AbilityTargeting targeting;
-
-    public AbilityHolder abilityHolder;
 
     public GameObject selectedObj;
 
@@ -16,7 +14,7 @@ public class ObjScaleAbility : Ability
     public Vector3 shrinkVal;
     public Vector3 growVal;
 
-    public override void Activate()
+    /*public override void Activate()
     {
         base.Activate();
 
@@ -45,15 +43,15 @@ public class ObjScaleAbility : Ability
                     Debug.Log("Growing Object");
                 }
             }
-    }
+    }*/
 
     void Start()
     {
-        targeting = abilityHolder.gameObject.GetComponent<AbilityTargeting>();
+        targeting = GetComponent<AbilityTargeting>();
     }
 
     // Update is called once per frame
-    /*void Update()
+    void Update()
     {
         selectedObj = targeting.targetObj;
 
@@ -80,7 +78,7 @@ public class ObjScaleAbility : Ability
                     print("Growing Object");
                 }
             }
-    }*/
+    }
 
     public void ShrinkObject(GameObject obj)
     {
