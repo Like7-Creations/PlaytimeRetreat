@@ -10,20 +10,20 @@ using UnityEngine.UI;
 using TMPro;
 using System.Diagnostics;
 
-public class ChatSystem : MonoBehaviour
+public class Client : MonoBehaviour
 {
-    [SerializeField] GameObject connectPanel;
+   // [SerializeField] GameObject connectPanel;
     [SerializeField] Button connectButton;
     [SerializeField] TMP_InputField username;
 
     delegate void ConnectedEvent();
     ConnectedEvent connectEvent;
 
-    [SerializeField] Button sendButton;
-    [SerializeField] TMP_InputField ChatInput;
-    [SerializeField] GameObject chatPanel;
-    [SerializeField] TextMeshProUGUI chatlogs;
-    [SerializeField] TextMeshProUGUI ClientTest;
+   // [SerializeField] Button sendButton;
+   // [SerializeField] TMP_InputField ChatInput;
+  //  [SerializeField] GameObject chatPanel;
+   // [SerializeField] TextMeshProUGUI chatlogs;
+    // [SerializeField] TextMeshProUGUI ClientTest;
 
     Socket socket;
 
@@ -45,8 +45,8 @@ public class ChatSystem : MonoBehaviour
 
                 print("connecting successful");
 
-                connectPanel.SetActive(false);
-                chatPanel.SetActive(true);
+                //connectPanel.SetActive(false);
+                //chatPanel.SetActive(true);
 
                 if (connectEvent != null)
                     connectEvent();
@@ -56,11 +56,11 @@ public class ChatSystem : MonoBehaviour
                 print(ex);
             }
         });
-        sendButton.onClick.AddListener(() =>
+       /* sendButton.onClick.AddListener(() =>
         {
             ///socket.Send(new MessagePacket(ChatInput.text, player).Serialize());
             chatlogs.text = (username.text + ": " + ChatInput.text);
-        });
+        });*/
     }
     void Update()
     {
@@ -77,7 +77,7 @@ public class ChatSystem : MonoBehaviour
                     case BasePacket.PacketType.Message:
                         MessagePacket mp = (MessagePacket)new MessagePacket().DeSerialize(recievedBuffer);
                         print($"{mp.player.Name} spit: {mp.Message}");
-                        ClientTest.text = (mp.player.Name + ("is Saying ") + mp.Message);
+                        //ClientTest.text = (mp.player.Name + ("is Saying ") + mp.Message);
 
                         break;
 

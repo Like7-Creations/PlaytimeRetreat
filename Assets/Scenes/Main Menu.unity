@@ -480,7 +480,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &127344460
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -493,6 +493,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a8b916152f153b448cf86c0c405a3cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  connectButton: {fileID: 1213436344}
+  username: {fileID: 232097436}
 --- !u!4 &127344461
 Transform:
   m_ObjectHideFlags: 0
@@ -1950,7 +1952,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1213436345}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 127344459}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
 --- !u!114 &1213436345
 MonoBehaviour:
   m_ObjectHideFlags: 0
