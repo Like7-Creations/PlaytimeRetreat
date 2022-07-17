@@ -6,19 +6,22 @@ using System;
 
 public class Prerequesets : MonoBehaviour
 {
-    public ConveyorButton[] canons;
-    public UnityEvent onTrigger;
+    public TriggerSystem[] canons;
     public UnityEvent onTriggerEnable;
     public UnityEvent onTriggerDisable;
 
+    private bool wasTriggered;
+
+    delegate void onTrigger();
+    onTrigger pressureplate;
+
     void Start()
     {
-        
     }
 
     void Update()
     {
-        
+        //pressureplate();
     }
     
     public void Checktrigger()
@@ -26,7 +29,21 @@ public class Prerequesets : MonoBehaviour
         bool trigger = true;
         for (int i = 0; i < canons.Length; i++)
         {
-            //if(canons[i].)
+            if (!canons[i].IsTriggered())
+            {
+                trigger = false;
+                break;
+            }
+        }
+        if (trigger && !wasTriggered)
+        {
+            onTriggerEnable.Invoke();
+            wasTriggered = true;
+        }
+        else if (!trigger && wasTriggered)
+        {
+            onTriggerDisable.Invoke();
+            wasTriggered= false;
         }
     }
 }
