@@ -6,23 +6,22 @@ using System;
 
 public class Prerequesets : MonoBehaviour
 {
-    public ConveyorButton[] canons;
-    /*public UnityEvent onTrigger;
+    public TriggerSystem[] canons;
     public UnityEvent onTriggerEnable;
-    public UnityEvent onTriggerDisable;*/
+    public UnityEvent onTriggerDisable;
+
+    private bool wasTriggered;
 
     delegate void onTrigger();
     onTrigger pressureplate;
 
     void Start()
     {
-        pressureplate += pressureplatePressed;
-        pressureplate += playerfarts;
     }
 
     void Update()
     {
-        pressureplate();
+        //pressureplate();
     }
     
     public void Checktrigger()
@@ -30,18 +29,21 @@ public class Prerequesets : MonoBehaviour
         bool trigger = true;
         for (int i = 0; i < canons.Length; i++)
         {
-            //if(canons[i] = true)
-            // invoke the event
+            if (!canons[i].IsTriggered())
+            {
+                trigger = false;
+                break;
+            }
         }
-    }
-
-    public void pressureplatePressed()
-    {
-        Debug.Log("prssure plate pressed");
-    }
-
-    public void playerfarts()
-    {
-        Debug.Log("prssure plate farted");
+        if (trigger && !wasTriggered)
+        {
+            onTriggerEnable.Invoke();
+            wasTriggered = true;
+        }
+        else if (!trigger && wasTriggered)
+        {
+            onTriggerDisable.Invoke();
+            wasTriggered= false;
+        }
     }
 }

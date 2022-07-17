@@ -38,21 +38,21 @@ public partial class @MechanicsControl : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""Charge"",
-                    ""type"": ""Button"",
+                    ""type"": ""Value"",
                     ""id"": ""5842b043-9761-47ef-b428-0570d00f43fe"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
-                    ""interactions"": ""Hold"",
-                    ""initialStateCheck"": false
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 },
                 {
                     ""name"": ""Throw"",
-                    ""type"": ""Button"",
+                    ""type"": ""Value"",
                     ""id"": ""91bd655b-2630-4084-8f7d-0adec49f3251"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
-                    ""initialStateCheck"": false
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -71,7 +71,7 @@ public partial class @MechanicsControl : IInputActionCollection2, IDisposable
                     ""name"": """",
                     ""id"": ""7a404322-6873-4c40-8073-838a0b943509"",
                     ""path"": ""<Keyboard>/e"",
-                    ""interactions"": """",
+                    ""interactions"": ""Hold"",
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Charge"",
@@ -82,7 +82,7 @@ public partial class @MechanicsControl : IInputActionCollection2, IDisposable
                     ""name"": """",
                     ""id"": ""7bf02dcf-eb8d-4345-a912-b25bb47dba6f"",
                     ""path"": ""<Keyboard>/e"",
-                    ""interactions"": ""Press"",
+                    ""interactions"": ""Press(behavior=1)"",
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Throw"",
