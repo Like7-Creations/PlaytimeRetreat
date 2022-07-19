@@ -90,6 +90,34 @@ public partial class @MechanicsControl : IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Trigger"",
+            ""id"": ""dc317d0f-5621-4e17-b1e8-56675afda583"",
+            ""actions"": [
+                {
+                    ""name"": ""Interact"",
+                    ""type"": ""Button"",
+                    ""id"": ""25ec2fea-cdef-4638-b84b-60b30b0050dc"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": ""Press"",
+                    ""initialStateCheck"": true
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""33b1a8ce-84f2-4533-acd3-b141be73d932"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": ""Press"",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Interact"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -99,6 +127,9 @@ public partial class @MechanicsControl : IInputActionCollection2, IDisposable
         m_PickupDropThrow_PickUp = m_PickupDropThrow.FindAction("PickUp", throwIfNotFound: true);
         m_PickupDropThrow_Charge = m_PickupDropThrow.FindAction("Charge", throwIfNotFound: true);
         m_PickupDropThrow_Throw = m_PickupDropThrow.FindAction("Throw", throwIfNotFound: true);
+        // Trigger
+        m_Trigger = asset.FindActionMap("Trigger", throwIfNotFound: true);
+        m_Trigger_Interact = m_Trigger.FindAction("Interact", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -203,10 +234,47 @@ public partial class @MechanicsControl : IInputActionCollection2, IDisposable
         }
     }
     public PickupDropThrowActions @PickupDropThrow => new PickupDropThrowActions(this);
+
+    // Trigger
+    private readonly InputActionMap m_Trigger;
+    private ITriggerActions m_TriggerActionsCallbackInterface;
+    private readonly InputAction m_Trigger_Interact;
+    public struct TriggerActions
+    {
+        private @MechanicsControl m_Wrapper;
+        public TriggerActions(@MechanicsControl wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Interact => m_Wrapper.m_Trigger_Interact;
+        public InputActionMap Get() { return m_Wrapper.m_Trigger; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(TriggerActions set) { return set.Get(); }
+        public void SetCallbacks(ITriggerActions instance)
+        {
+            if (m_Wrapper.m_TriggerActionsCallbackInterface != null)
+            {
+                @Interact.started -= m_Wrapper.m_TriggerActionsCallbackInterface.OnInteract;
+                @Interact.performed -= m_Wrapper.m_TriggerActionsCallbackInterface.OnInteract;
+                @Interact.canceled -= m_Wrapper.m_TriggerActionsCallbackInterface.OnInteract;
+            }
+            m_Wrapper.m_TriggerActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @Interact.started += instance.OnInteract;
+                @Interact.performed += instance.OnInteract;
+                @Interact.canceled += instance.OnInteract;
+            }
+        }
+    }
+    public TriggerActions @Trigger => new TriggerActions(this);
     public interface IPickupDropThrowActions
     {
         void OnPickUp(InputAction.CallbackContext context);
         void OnCharge(InputAction.CallbackContext context);
         void OnThrow(InputAction.CallbackContext context);
+    }
+    public interface ITriggerActions
+    {
+        void OnInteract(InputAction.CallbackContext context);
     }
 }

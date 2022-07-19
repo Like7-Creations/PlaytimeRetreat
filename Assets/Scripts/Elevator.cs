@@ -47,7 +47,7 @@ public class Elevator : MonoBehaviour
         else Arrival(waypoints[1]);
     }
 
-    void Arrival(Transform obj)
+    public void Arrival(Transform obj)
     {
         var desired_velocity = obj.transform.position - elevator.transform.position;
         var dist = Vector3.Distance(elevator.position, obj.transform.position);
@@ -64,5 +64,10 @@ public class Elevator : MonoBehaviour
         var steering = desired_velocity - velocity;
         velocity = Vector3.ClampMagnitude(velocity + steering, max_Speed);
         elevator.position += velocity * Time.deltaTime;
+    }
+
+    void Goup()
+    {
+
     }
 }

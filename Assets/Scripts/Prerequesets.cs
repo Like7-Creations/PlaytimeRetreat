@@ -7,14 +7,18 @@ using System;
 public class Prerequesets : MonoBehaviour
 {
     public TriggerSystem[] canons;
-    public UnityEvent onTriggerEnable;
-    public UnityEvent onTriggerDisable;
+
+    public List<UnityEvent> onTriggerEnable;
+    public List<UnityEvent> onTriggerDisable;
+
 
     private bool wasTriggered;
 
-    delegate void onTrigger();
-    onTrigger pressureplate;
-
+    void Awake()
+    {
+        onTriggerDisable.Remove(onTriggerDisable[0]);
+        onTriggerEnable.Remove(onTriggerEnable[0]);
+    }
     void Start()
     {
     }
@@ -26,16 +30,21 @@ public class Prerequesets : MonoBehaviour
     
     public void Checktrigger()
     {
-        bool trigger = true;
+        //bool trigger = true;
         for (int i = 0; i < canons.Length; i++)
         {
-            if (!canons[i].IsTriggered())
+            if (canons[i].IsTriggered())
             {
-                trigger = false;
-                break;
+                /*trigger = false;
+                break;*/
+                onTriggerEnable[i].Invoke();
+            }
+            else if (!canons[i].IsTriggered())
+            {
+                onTriggerDisable[i].Invoke();
             }
         }
-        if (trigger && !wasTriggered)
+        /*if (trigger && !wasTriggered)
         {
             onTriggerEnable.Invoke();
             wasTriggered = true;
@@ -44,6 +53,6 @@ public class Prerequesets : MonoBehaviour
         {
             onTriggerDisable.Invoke();
             wasTriggered= false;
-        }
+        }*/
     }
 }

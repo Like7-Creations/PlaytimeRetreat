@@ -1261,11 +1261,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   triggerObj: {fileID: 897052482}
-  pressureWeightObj: {fileID: 0}
+  originalPos: {x: 0, y: 0, z: 0}
+  pressureWeightReq: 0
   triggerType: 0
-  timer: 0
+  timerDuration: 0
+  timerActive: 0
   triggerActive: 0
-  triggerHeld: 0
+  pressureActive: 0
+  toggleable: 1
   interactible: 0
 --- !u!65 &897052484
 BoxCollider:
@@ -2196,6 +2199,17 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &1208245080 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3092396923162804133, guid: 2235710a547ab4f47ad3d2bd177c7643, type: 3}
+  m_PrefabInstance: {fileID: 3092396922959773238}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fbc92725b37400c4c90c72c317b76b54, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &1226331850 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4943491839344763578, guid: 1a337ff095da00746a8231955efe076f, type: 3}
@@ -2779,6 +2793,50 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2002232881
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2002232883}
+  - component: {fileID: 2002232882}
+  m_Layer: 0
+  m_Name: TestingCharacterInstantiate
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2002232882
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2002232881}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1dfc490860c2a634d96946afd94e2b5e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  characterID: {fileID: 11400000, guid: 078e7c2f0bd836542bf4e88ee4d15370, type: 2}
+--- !u!4 &2002232883
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2002232881}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -32.52151, y: 9.734575, z: 2.9811475}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 22
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2018201077
 GameObject:
   m_ObjectHideFlags: 0
@@ -2812,13 +2870,13 @@ MonoBehaviour:
   onTriggerEnable:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 897052482}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
-        m_Mode: 1
+      - m_Target: {fileID: 1208245080}
+        m_TargetAssemblyTypeName: Elevator, Assembly-CSharp
+        m_MethodName: Arrival
+        m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Transform, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
