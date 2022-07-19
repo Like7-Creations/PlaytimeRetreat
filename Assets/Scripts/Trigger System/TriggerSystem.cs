@@ -76,20 +76,18 @@ public class TriggerSystem : MonoBehaviour
         {
             //----------------------------------------*
             case TriggerType.Button:
-                if (!triggerActive)
+
+                if (buttonPressed)
                 {
-                    if (buttonPressed)
-                    {
-                        triggerActive = true;
-                        Debug.Log($"{this.name} of type: {this.triggerType} has been activated");
-                        return triggerActive;
-                    }
-                    else if (!buttonPressed)
-                    {
-                        triggerActive = false;
-                        Debug.Log($"{this.name} of type: {this.triggerType} has been deactivated");
-                        return triggerActive;
-                    }
+                    triggerActive = true;
+                    Debug.Log($"{this.name} of type: {this.triggerType} has been activated");
+                    return triggerActive;
+                }
+                else if (!buttonPressed)
+                {
+                    triggerActive = false;
+                    Debug.Log($"{this.name} of type: {this.triggerType} has been deactivated");
+                    return triggerActive;
                 }
 
                 break;
@@ -97,27 +95,24 @@ public class TriggerSystem : MonoBehaviour
 
             //----------------------------------------*
             case TriggerType.TimedButton:
-                if (!triggerActive)
+                if (!timerActive)
                 {
-                    if (!timerActive)
+                    if (timer == timerDuration)
                     {
-                        if (timer == timerDuration)
-                        {
-                            triggerActive = true;
-                            timerActive = true;
-                            Debug.Log($"{this.name} of type: {this.triggerType} has been activated");
-                            Debug.Log($"{this.name}'s timer has been activated");
+                        triggerActive = true;
+                        timerActive = true;
+                        Debug.Log($"{this.name} of type: {this.triggerType} has been activated");
+                        Debug.Log($"{this.name}'s timer has been activated");
 
-                            return triggerActive;
-                        }
+                        return triggerActive;
+                    }
 
-                        else if (timer == 0)
-                        {
-                            triggerActive = false;
-                            Debug.Log($"{this.name} of type: {this.triggerType} has been deactivated");
+                    else if (timer == 0)
+                    {
+                        triggerActive = false;
+                        Debug.Log($"{this.name} of type: {this.triggerType} has been deactivated");
 
-                            return triggerActive;
-                        }
+                        return triggerActive;
                     }
                 }
 
@@ -137,21 +132,18 @@ public class TriggerSystem : MonoBehaviour
 
             //----------------------------------------*
             case TriggerType.PressurePlate:
-                if (!triggerActive)
+                if (pressureActive)
                 {
-                    if (pressureActive)
-                    {
-                        triggerActive = true;
-                        Debug.Log($"{this.name} of type: {this.triggerType} has been activated");
-                        return triggerActive;
-                    }
+                    triggerActive = true;
+                    Debug.Log($"{this.name} of type: {this.triggerType} has been activated");
+                    return triggerActive;
+                }
 
-                    else if (!pressureActive)
-                    {
-                        triggerActive = false;
-                        Debug.Log($"{this.name} of type: {this.triggerType} has been deactivated");
-                        return triggerActive;
-                    }
+                else if (!pressureActive)
+                {
+                    triggerActive = false;
+                    Debug.Log($"{this.name} of type: {this.triggerType} has been deactivated");
+                    return triggerActive;
                 }
 
                 break;
@@ -168,12 +160,22 @@ public class TriggerSystem : MonoBehaviour
     public void ButtonPressed(InputAction.CallbackContext context)
     {
         if (hasPlayer)
+        {
             if (!buttonPressed)
             {
                 buttonPressed = true;
 
                 Debug.Log("Button Has Been Pressed");
             }
+
+            else if (buttonPressed)
+            {
+                buttonPressed = false;
+
+                Debug.Log("Button Has Been Reset");
+            }
+        }
+
     }
 
     public void TimedButtonPressed(InputAction.CallbackContext context)

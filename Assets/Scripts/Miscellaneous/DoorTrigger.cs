@@ -8,6 +8,20 @@ public class DoorTrigger : MonoBehaviour
 
     [SerializeField] bool doorOpen = false;
 
+    public void DoorOpen()
+    {
+        doorAnim.Play("Door_Open", 0, 0.0f);
+        doorOpen = true;
+        Debug.Log("Door Opened");
+    }
+
+    public void DoorClose()
+    {
+        doorAnim.Play("Door_Close", 0, 0.0f);
+        doorOpen = false;
+        Debug.Log("Door Closed");
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))

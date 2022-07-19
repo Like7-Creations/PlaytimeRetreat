@@ -246,7 +246,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 40724691}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -22.121613, y: 9.59641, z: 2.507581}
+  m_LocalPosition: {x: -22.121613, y: 12.92, z: 2.507581}
   m_LocalScale: {x: 2, y: 1, z: 2}
   m_Children: []
   m_Father: {fileID: 79356739}
@@ -274,7 +274,7 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 40724691}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
@@ -566,6 +566,8 @@ MonoBehaviour:
   growActive: 0
   bounceActive: 0
   frictionInactive: 0
+  heavyObj: 0
+  lightObj: 0
 --- !u!1 &404270058
 GameObject:
   m_ObjectHideFlags: 0
@@ -751,6 +753,8 @@ MonoBehaviour:
   growActive: 0
   bounceActive: 0
   frictionInactive: 0
+  heavyObj: 0
+  lightObj: 0
 --- !u!1001 &426555038
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1088,6 +1092,8 @@ MonoBehaviour:
   growActive: 0
   bounceActive: 0
   frictionInactive: 0
+  heavyObj: 0
+  lightObj: 0
 --- !u!1 &481319620
 GameObject:
   m_ObjectHideFlags: 0
@@ -1346,6 +1352,8 @@ MonoBehaviour:
   growActive: 0
   bounceActive: 0
   frictionInactive: 0
+  heavyObj: 0
+  lightObj: 0
 --- !u!1 &509377582
 GameObject:
   m_ObjectHideFlags: 0
@@ -2358,6 +2366,8 @@ MonoBehaviour:
   growActive: 0
   bounceActive: 0
   frictionInactive: 0
+  heavyObj: 0
+  lightObj: 0
 --- !u!1 &814727144
 GameObject:
   m_ObjectHideFlags: 0
@@ -2393,6 +2403,7 @@ MonoBehaviour:
   originalPos: {x: 0, y: 0, z: 0}
   pressureWeightReq: 0
   triggerType: 0
+  hasPlayer: 0
   timerDuration: 5
   timerActive: 0
   triggerSpotted: 0
@@ -2786,6 +2797,8 @@ MonoBehaviour:
   growActive: 0
   bounceActive: 0
   frictionInactive: 0
+  heavyObj: 0
+  lightObj: 0
 --- !u!54 &1034440077
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -3094,6 +3107,8 @@ MonoBehaviour:
   growActive: 0
   bounceActive: 0
   frictionInactive: 0
+  heavyObj: 0
+  lightObj: 0
 --- !u!1 &1317649957
 GameObject:
   m_ObjectHideFlags: 0
@@ -3287,6 +3302,8 @@ MonoBehaviour:
   growActive: 0
   bounceActive: 0
   frictionInactive: 0
+  heavyObj: 0
+  lightObj: 0
 --- !u!1 &1583761575
 GameObject:
   m_ObjectHideFlags: 0
@@ -3343,6 +3360,8 @@ MonoBehaviour:
   growActive: 0
   bounceActive: 0
   frictionInactive: 0
+  heavyObj: 0
+  lightObj: 0
 --- !u!54 &1583761578
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -3421,6 +3440,85 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1583761575}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1626160872
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1626160874}
+  - component: {fileID: 1626160873}
+  m_Layer: 0
+  m_Name: Prerequisite System
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1626160873
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1626160872}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f57be46402dc4ae4d87a25f62b6da273, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  canons:
+  - {fileID: 814727145}
+  onTriggerEnable:
+  - m_PersistentCalls:
+      m_Calls: []
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 40724693}
+        m_TargetAssemblyTypeName: DoorTrigger, Assembly-CSharp
+        m_MethodName: DoorOpen
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  onTriggerDisable:
+  - m_PersistentCalls:
+      m_Calls: []
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 40724693}
+        m_TargetAssemblyTypeName: DoorTrigger, Assembly-CSharp
+        m_MethodName: DoorClose
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!4 &1626160874
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1626160872}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -8.482805, y: 6.127326, z: 10.163411}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 12
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1702000735
 GameObject:
   m_ObjectHideFlags: 0
@@ -3667,6 +3765,8 @@ MonoBehaviour:
   growActive: 0
   bounceActive: 0
   frictionInactive: 0
+  heavyObj: 0
+  lightObj: 0
 --- !u!54 &1866460172
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -3879,6 +3979,8 @@ MonoBehaviour:
   growActive: 0
   bounceActive: 0
   frictionInactive: 0
+  heavyObj: 0
+  lightObj: 0
 --- !u!1 &1994279295
 GameObject:
   m_ObjectHideFlags: 0
@@ -4264,6 +4366,8 @@ MonoBehaviour:
   growActive: 0
   bounceActive: 0
   frictionInactive: 0
+  heavyObj: 0
+  lightObj: 0
 --- !u!1 &2069299306
 GameObject:
   m_ObjectHideFlags: 0
