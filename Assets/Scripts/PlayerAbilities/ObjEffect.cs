@@ -35,6 +35,9 @@ public class ObjEffect : MonoBehaviour
     public bool bounceActive;
     public bool frictionInactive;
 
+    public bool heavyObj;
+    public bool lightObj;
+
     Color originalObjColor;
     Color highlightedColor;
     
@@ -165,6 +168,37 @@ public class ObjEffect : MonoBehaviour
         }
     }
 
+    public void ResetObjMass(bool state)
+    {
+        if (state)
+        {
+            if (heavyObj)
+            {
+                StartCoroutine(EffectCountdown());
+                print($"{gameObject.name}'s mass has increased.");
+            }
+
+            else if (lightObj)
+            {
+                StartCoroutine(EffectCountdown());
+                print($"{gameObject.name}'s mass has decreased.");
+            }
+        }
+
+        if (!state)
+        {
+            StopAllCoroutines();
+
+            rbody.mass = originalMass;
+            colorRenderer.material.color = originalObjColor;
+
+            if (heavyObj)
+                heavyObj = false;
+            if (lightObj)
+                lightObj = false;
+        }
+    }
+
     public void DisableBounce(bool state)
     {
         if (state)
@@ -228,27 +262,34 @@ public class ObjEffect : MonoBehaviour
                 yield return new WaitForSeconds(delay);
             }
 
-            //For Object Freezing
+            //For Resetting Frozen Object
             if (freezeActive)
                 UnfreezeObject(false);
-            //For Object Freezing
+            //For Resetting Frozen Object
 
-            //For Object Scaling
+            //For Resetting Object Scale
             if (shrinkActive)
                 ReturnToNormalSize(false);
             if (growActive)
                 ReturnToNormalSize(false);
-            //For Object Scaling
+            //For Resetting Object Scale
 
-            //For Object Bounciness
+            //For Resetting Object Mass
+            if (heavyObj)
+                ResetObjMass(false);
+            if (lightObj)
+                ResetObjMass(false);
+            //For Resetting Object Mass
+
+            //For Resetting Object Bounciness
             if (bounceActive)
                 DisableBounce(false);
-            //For Object Bounciness
+            //For Resetting Object Bounciness
 
-            //For Object Friction
+            //For Resetting Object Friction
             if (frictionInactive)
                 EnableFriction(false);
-            //For Object Friction
+            //For Resetting Object Friction
         }
 
         if (!effectTimer)

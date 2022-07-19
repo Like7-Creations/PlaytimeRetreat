@@ -68,6 +68,34 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "Trigger",
+            "id": "d620e070-d637-4320-8f72-7e2492d330f3",
+            "actions": [
+                {
+                    "name": "Interact",
+                    "type": "Value",
+                    "id": "63439c93-e8ea-4050-ad90-89cd7ce56814",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "b8691f12-e1b7-4965-b3e8-1d4d74f0b5be",
+                    "path": "<Keyboard>/e",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Interact",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": []

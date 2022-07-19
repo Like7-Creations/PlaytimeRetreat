@@ -1,13 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.Events;
 
 public class TriggerSystem : MonoBehaviour
 {
-    public delegate void OnTriggerActive();
-    public OnTriggerActive TriggerActiveEvent;
-
-    public GameObject triggerObj;
+    public MechanicsControl TriggerSys;
+    InputAction PressButton;
+    InputAction PressTimedButton;
+    InputAction PressLever;
 
     public Vector3 originalPos;     //For testing purposes. Need to replace with Animations later
     public int pressureWeightReq;        //The Object that the pressure plate requires in order to be activated.
@@ -24,24 +26,48 @@ public class TriggerSystem : MonoBehaviour
 
     Color originalObjColor;
 
+    public bool hasPlayer;
+
     float timer;
     public float timerDuration;
     public bool timerActive;
 
+    public bool triggerSpotted;
+
     public bool triggerActive = false;
-    public bool pressureActive = false;
+    bool buttonPressed = false;
+    bool pressureActive = false;
 
     //Used for triggers that need to be manually disabled, like Buttons and maybe specific Pressure Plates
     //Set to false for Timed Buttons and Levers that disable themselves without player interference. Or for pressure plates that require an object
     //on it to remain triggered
-    public bool toggleable = true;
+    //public bool toggleable = true;
 
     public bool interactible;
+
+    private void Awake()
+    {
+        TriggerSys = new MechanicsControl();
+    }
+
     void Start()
     {
+        originalObjColor = GetComponent<Renderer>().material.color;
+
         originalPos = transform.position;
         timer = timerDuration;
-        originalObjColor = GetComponent<Renderer>().material.color;
+    }
+
+    void OnEnable()
+    {
+        PressButton = TriggerSys.Trigger.Interact;
+        PressButton.Enable();
+        PressButton.performed += ButtonPressed;
+    }
+
+    void OnDisable()
+    {
+        PressButton.Disable();
     }
 
     public bool IsTriggered()
@@ -52,15 +78,18 @@ public class TriggerSystem : MonoBehaviour
             case TriggerType.Button:
                 if (!triggerActive)
                 {
-                    triggerActive = true;
-                    Debug.Log($"{this.name} of type: {this.triggerType} has been activated");
-                    return triggerActive;
-                }
-                else if (triggerActive)
-                {
-                    triggerActive = false;
-                    Debug.Log($"{this.name} of type: {this.triggerType} has been deactivated");
-                    return triggerActive;
+                    if (buttonPressed)
+                    {
+                        triggerActive = true;
+                        Debug.Log($"{this.name} of type: {this.triggerType} has been activated");
+                        return triggerActive;
+                    }
+                    else if (!buttonPressed)
+                    {
+                        triggerActive = false;
+                        Debug.Log($"{this.name} of type: {this.triggerType} has been deactivated");
+                        return triggerActive;
+                    }
                 }
 
                 break;
@@ -136,7 +165,28 @@ public class TriggerSystem : MonoBehaviour
         return triggerActive;
     }
 
-    private void OnCollisionEnter(Collision collision)
+    public void ButtonPressed(InputAction.CallbackContext context)
+    {
+        if (hasPlayer)
+            if (!buttonPressed)
+            {
+                buttonPressed = true;
+
+                Debug.Log("Button Has Been Pressed");
+            }
+    }
+
+    public void TimedButtonPressed(InputAction.CallbackContext context)
+    {
+
+    }
+
+    public void LeverPulled(InputAction.CallbackContext context)
+    {
+
+    }
+
+    void OnCollisionEnter(Collision collision)
     {
         if (collision.collider.tag == "EffectableObject" || collision.collider.tag == "Player")
         {
@@ -178,45 +228,16 @@ public class TriggerSystem : MonoBehaviour
     }
 
 
-    void TriggerFunction()
-    {
-        switch (triggerType)
-        {
-            //----------------------------------------
-            case TriggerType.Button:
-                if (interactible)
-                    triggerActive = true;
-
-
-                break;
-            //----------------------------------------
-
-            //----------------------------------------
-            case TriggerType.TimedButton:
-                triggerActive = true;
-
-                break;
-            //----------------------------------------
-
-            //----------------------------------------
-            case TriggerType.Lever:
-                triggerActive = true;
-
-                break;
-            //----------------------------------------
-
-            //----------------------------------------
-            case TriggerType.PressurePlate:
-                triggerActive = true;
-
-                break;
-                //----------------------------------------
-        }
-    }
-
-
     void Update()
     {
+        RaycastHit hit;
+        if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, 2))
+        {
+            hasPlayer = hit.collider.gameObject == this.gameObject;
+        }
+        else hasPlayer = false;
+
+
         //If statement that checks trigger type and if player is holding it or not.
 
         if (triggerType == TriggerType.TimedButton)

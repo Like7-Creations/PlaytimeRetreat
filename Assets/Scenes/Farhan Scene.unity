@@ -2390,11 +2390,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6317e52f1c45f524286f01d9c1a89d2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  triggerObj: {fileID: 814727144}
-  pressureWeightObj: {fileID: 0}
+  originalPos: {x: 0, y: 0, z: 0}
+  pressureWeightReq: 0
   triggerType: 0
+  timerDuration: 5
+  timerActive: 0
+  triggerSpotted: 0
   triggerActive: 0
-  triggerHeld: 0
+  interactible: 0
 --- !u!65 &814727146
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3120,18 +3123,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbc92725b37400c4c90c72c317b76b54, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Max_Velocity: 5
   elevator: {fileID: 35429966}
   waypoints:
   - {fileID: 728060555}
   - {fileID: 652503459}
+  ActivateObject: {fileID: 0}
+  velocity: {x: 0, y: 0, z: 0}
+  Max_Velocity: 5
   maxForce: 9.24
   mass: 5
   max_Speed: 15
   slowingradius: 10
   UpDown: 0
   hasplayer: 0
-  timer: 0
 --- !u!4 &1317649959
 Transform:
   m_ObjectHideFlags: 0
