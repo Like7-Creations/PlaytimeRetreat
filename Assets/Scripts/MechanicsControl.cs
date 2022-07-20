@@ -96,10 +96,28 @@ public partial class @MechanicsControl : IInputActionCollection2, IDisposable
             ""id"": ""d620e070-d637-4320-8f72-7e2492d330f3"",
             ""actions"": [
                 {
-                    ""name"": ""Interact"",
+                    ""name"": ""InteractButton"",
                     ""type"": ""Value"",
                     ""id"": ""63439c93-e8ea-4050-ad90-89cd7ce56814"",
                     ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""InteractTimedButton"",
+                    ""type"": ""Value"",
+                    ""id"": ""1705e828-7c8e-4418-89ec-87879fd7656d"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""InteractLever"",
+                    ""type"": ""Value"",
+                    ""id"": ""7b6738fc-fcda-455f-ad26-d6e6be78dce2"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
@@ -113,7 +131,29 @@ public partial class @MechanicsControl : IInputActionCollection2, IDisposable
                     ""interactions"": ""Press"",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Interact"",
+                    ""action"": ""InteractButton"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""aaa6847d-4477-4a82-a1b3-d343a1c76df5"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": ""Press"",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""InteractTimedButton"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2a2c9509-9907-4b63-b811-ba47b738911d"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": ""Press(behavior=2)"",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""InteractLever"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -129,7 +169,9 @@ public partial class @MechanicsControl : IInputActionCollection2, IDisposable
         m_PickupDropThrow_Throw = m_PickupDropThrow.FindAction("Throw", throwIfNotFound: true);
         // Trigger
         m_Trigger = asset.FindActionMap("Trigger", throwIfNotFound: true);
-        m_Trigger_Interact = m_Trigger.FindAction("Interact", throwIfNotFound: true);
+        m_Trigger_InteractButton = m_Trigger.FindAction("InteractButton", throwIfNotFound: true);
+        m_Trigger_InteractTimedButton = m_Trigger.FindAction("InteractTimedButton", throwIfNotFound: true);
+        m_Trigger_InteractLever = m_Trigger.FindAction("InteractLever", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -238,12 +280,16 @@ public partial class @MechanicsControl : IInputActionCollection2, IDisposable
     // Trigger
     private readonly InputActionMap m_Trigger;
     private ITriggerActions m_TriggerActionsCallbackInterface;
-    private readonly InputAction m_Trigger_Interact;
+    private readonly InputAction m_Trigger_InteractButton;
+    private readonly InputAction m_Trigger_InteractTimedButton;
+    private readonly InputAction m_Trigger_InteractLever;
     public struct TriggerActions
     {
         private @MechanicsControl m_Wrapper;
         public TriggerActions(@MechanicsControl wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Interact => m_Wrapper.m_Trigger_Interact;
+        public InputAction @InteractButton => m_Wrapper.m_Trigger_InteractButton;
+        public InputAction @InteractTimedButton => m_Wrapper.m_Trigger_InteractTimedButton;
+        public InputAction @InteractLever => m_Wrapper.m_Trigger_InteractLever;
         public InputActionMap Get() { return m_Wrapper.m_Trigger; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -253,16 +299,28 @@ public partial class @MechanicsControl : IInputActionCollection2, IDisposable
         {
             if (m_Wrapper.m_TriggerActionsCallbackInterface != null)
             {
-                @Interact.started -= m_Wrapper.m_TriggerActionsCallbackInterface.OnInteract;
-                @Interact.performed -= m_Wrapper.m_TriggerActionsCallbackInterface.OnInteract;
-                @Interact.canceled -= m_Wrapper.m_TriggerActionsCallbackInterface.OnInteract;
+                @InteractButton.started -= m_Wrapper.m_TriggerActionsCallbackInterface.OnInteractButton;
+                @InteractButton.performed -= m_Wrapper.m_TriggerActionsCallbackInterface.OnInteractButton;
+                @InteractButton.canceled -= m_Wrapper.m_TriggerActionsCallbackInterface.OnInteractButton;
+                @InteractTimedButton.started -= m_Wrapper.m_TriggerActionsCallbackInterface.OnInteractTimedButton;
+                @InteractTimedButton.performed -= m_Wrapper.m_TriggerActionsCallbackInterface.OnInteractTimedButton;
+                @InteractTimedButton.canceled -= m_Wrapper.m_TriggerActionsCallbackInterface.OnInteractTimedButton;
+                @InteractLever.started -= m_Wrapper.m_TriggerActionsCallbackInterface.OnInteractLever;
+                @InteractLever.performed -= m_Wrapper.m_TriggerActionsCallbackInterface.OnInteractLever;
+                @InteractLever.canceled -= m_Wrapper.m_TriggerActionsCallbackInterface.OnInteractLever;
             }
             m_Wrapper.m_TriggerActionsCallbackInterface = instance;
             if (instance != null)
             {
-                @Interact.started += instance.OnInteract;
-                @Interact.performed += instance.OnInteract;
-                @Interact.canceled += instance.OnInteract;
+                @InteractButton.started += instance.OnInteractButton;
+                @InteractButton.performed += instance.OnInteractButton;
+                @InteractButton.canceled += instance.OnInteractButton;
+                @InteractTimedButton.started += instance.OnInteractTimedButton;
+                @InteractTimedButton.performed += instance.OnInteractTimedButton;
+                @InteractTimedButton.canceled += instance.OnInteractTimedButton;
+                @InteractLever.started += instance.OnInteractLever;
+                @InteractLever.performed += instance.OnInteractLever;
+                @InteractLever.canceled += instance.OnInteractLever;
             }
         }
     }
@@ -275,6 +333,8 @@ public partial class @MechanicsControl : IInputActionCollection2, IDisposable
     }
     public interface ITriggerActions
     {
-        void OnInteract(InputAction.CallbackContext context);
+        void OnInteractButton(InputAction.CallbackContext context);
+        void OnInteractTimedButton(InputAction.CallbackContext context);
+        void OnInteractLever(InputAction.CallbackContext context);
     }
 }
