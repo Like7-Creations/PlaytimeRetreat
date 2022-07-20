@@ -11,6 +11,7 @@ public class LaunchPad : MonoBehaviour
     [SerializeField] bool jumped;
     float timer;
 
+    public bool active;
 
     void Start()
     {
@@ -26,7 +27,7 @@ public class LaunchPad : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "Player")
+        if (other.gameObject.tag == "Player" && active)
         {
             playerController.velocity = transform.up * ForceHeight;
             jumped = true;
@@ -35,5 +36,10 @@ public class LaunchPad : MonoBehaviour
             // Mobile
             mobileController.velocity.y = Mathf.Sqrt(ForceHeight * -2f * playerController.gravity);
         }
+    }
+
+    public void Trigger()
+    {
+        active = !active;
     }
 }

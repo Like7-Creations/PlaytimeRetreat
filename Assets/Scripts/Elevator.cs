@@ -16,7 +16,7 @@ public class Elevator : MonoBehaviour
     [SerializeField] float max_Speed;
     [SerializeField] float slowingradius;
     [SerializeField] bool UpDown;
-    [SerializeField] bool hasplayer;
+    [SerializeField] bool active;
     
     void Start()
     {
@@ -25,13 +25,13 @@ public class Elevator : MonoBehaviour
 
     void Update()
     {
-        RaycastHit hit;
-        if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, 2))
-        {
-            hasplayer = hit.collider.gameObject == ActivateObject.gameObject;
-        } else hasplayer = false;
+        //RaycastHit hit;
+        //if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, 2))
+        //{
+        //    hasplayer = hit.collider.gameObject == ActivateObject.gameObject;
+        //} else hasplayer = false;
 
-        if (hasplayer)
+        if (active)
         {
             if (Input.GetKeyDown(KeyCode.E))
             {
@@ -66,8 +66,8 @@ public class Elevator : MonoBehaviour
         elevator.position += velocity * Time.deltaTime;
     }
 
-    void Goup()
+    public void TriggerElevator()
     {
-
+        UpDown = !UpDown;
     }
 }

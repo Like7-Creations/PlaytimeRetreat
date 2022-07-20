@@ -192,7 +192,7 @@ public class TriggerSystem : MonoBehaviour
     {
         if (collision.collider.tag == "EffectableObject" || collision.collider.tag == "Player")
         {
-            collision.transform.parent = transform;
+            //collision.transform.parent = transform;
             GetComponent<Renderer>().material.color = Color.red;
         }
     }
@@ -203,7 +203,7 @@ public class TriggerSystem : MonoBehaviour
         {
             if (collision.rigidbody.mass == pressureWeightReq)
             {
-                transform.Translate(0, -0.1f, 0);
+                //transform.Translate(0, -0.1f, 0);
                 pressureActive = true;
                 Debug.Log($"A Pressure Plate has been activated");
             }
@@ -211,7 +211,7 @@ public class TriggerSystem : MonoBehaviour
             else
             {
                 pressureActive = false;
-                transform.position = originalPos;
+                //transform.position = originalPos;
             }
         }
 

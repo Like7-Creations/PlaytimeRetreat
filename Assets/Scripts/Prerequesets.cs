@@ -6,19 +6,19 @@ using System;
 
 public class Prerequesets : MonoBehaviour
 {
-    public TriggerSystem[] canons;
+    public TriggerSystem[] Triggers;
 
-    public List<UnityEvent> onTriggerEnable;
-    public List<UnityEvent> onTriggerDisable;
+    public UnityEvent onTriggerEnable;
+    public UnityEvent onTriggerDisable;
 
 
     private bool wasTriggered;
 
-    void Awake()
-    {
-        onTriggerDisable.Remove(onTriggerDisable[0]);
-        onTriggerEnable.Remove(onTriggerEnable[0]);
-    }
+    //void Awake()
+    //{
+    //    onTriggerDisable.Remove(onTriggerDisable[0]);
+    //    onTriggerEnable.Remove(onTriggerEnable[0]);
+    //}
     void Start()
     {
     }
@@ -31,21 +31,21 @@ public class Prerequesets : MonoBehaviour
     
     public void Checktrigger()
     {
-        //bool trigger = true;
-        for (int i = 0; i < canons.Length; i++)
+        bool trigger = true;
+        for (int i = 0; i < Triggers.Length; i++)
         {
-            if (canons[i].IsTriggered())
+            if (!Triggers[i].IsTriggered())
             {
-                /*trigger = false;
-                break;*/
-                onTriggerEnable[i].Invoke();
+                trigger = false;
+                break;
+                //onTriggerEnable.Invoke();
             }
-            else if (!canons[i].IsTriggered())
-            {
-                onTriggerDisable[i].Invoke();
-            }
+            //else if (!canons[i].IsTriggered())
+            //{
+            //    onTriggerDisable.Invoke();
+            //}
         }
-        /*if (trigger && !wasTriggered)
+        if (trigger && !wasTriggered)
         {
             onTriggerEnable.Invoke();
             wasTriggered = true;
@@ -54,6 +54,6 @@ public class Prerequesets : MonoBehaviour
         {
             onTriggerDisable.Invoke();
             wasTriggered= false;
-        }*/
+        }
     }
 }
