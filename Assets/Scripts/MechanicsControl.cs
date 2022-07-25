@@ -38,21 +38,21 @@ public partial class @MechanicsControl : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""Charge"",
-                    ""type"": ""Button"",
+                    ""type"": ""Value"",
                     ""id"": ""5842b043-9761-47ef-b428-0570d00f43fe"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
-                    ""interactions"": ""Hold"",
-                    ""initialStateCheck"": false
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 },
                 {
                     ""name"": ""Throw"",
-                    ""type"": ""Button"",
+                    ""type"": ""Value"",
                     ""id"": ""91bd655b-2630-4084-8f7d-0adec49f3251"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
-                    ""initialStateCheck"": false
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -71,7 +71,7 @@ public partial class @MechanicsControl : IInputActionCollection2, IDisposable
                     ""name"": """",
                     ""id"": ""7a404322-6873-4c40-8073-838a0b943509"",
                     ""path"": ""<Keyboard>/e"",
-                    ""interactions"": """",
+                    ""interactions"": ""Hold"",
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Charge"",
@@ -82,10 +82,38 @@ public partial class @MechanicsControl : IInputActionCollection2, IDisposable
                     ""name"": """",
                     ""id"": ""7bf02dcf-eb8d-4345-a912-b25bb47dba6f"",
                     ""path"": ""<Keyboard>/e"",
-                    ""interactions"": ""Press"",
+                    ""interactions"": ""Press(behavior=1)"",
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Throw"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
+        },
+        {
+            ""name"": ""Trigger"",
+            ""id"": ""d620e070-d637-4320-8f72-7e2492d330f3"",
+            ""actions"": [
+                {
+                    ""name"": ""Interact"",
+                    ""type"": ""Value"",
+                    ""id"": ""63439c93-e8ea-4050-ad90-89cd7ce56814"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""b8691f12-e1b7-4965-b3e8-1d4d74f0b5be"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": ""Press"",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Interact"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -99,6 +127,9 @@ public partial class @MechanicsControl : IInputActionCollection2, IDisposable
         m_PickupDropThrow_PickUp = m_PickupDropThrow.FindAction("PickUp", throwIfNotFound: true);
         m_PickupDropThrow_Charge = m_PickupDropThrow.FindAction("Charge", throwIfNotFound: true);
         m_PickupDropThrow_Throw = m_PickupDropThrow.FindAction("Throw", throwIfNotFound: true);
+        // Trigger
+        m_Trigger = asset.FindActionMap("Trigger", throwIfNotFound: true);
+        m_Trigger_Interact = m_Trigger.FindAction("Interact", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -203,10 +234,47 @@ public partial class @MechanicsControl : IInputActionCollection2, IDisposable
         }
     }
     public PickupDropThrowActions @PickupDropThrow => new PickupDropThrowActions(this);
+
+    // Trigger
+    private readonly InputActionMap m_Trigger;
+    private ITriggerActions m_TriggerActionsCallbackInterface;
+    private readonly InputAction m_Trigger_Interact;
+    public struct TriggerActions
+    {
+        private @MechanicsControl m_Wrapper;
+        public TriggerActions(@MechanicsControl wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Interact => m_Wrapper.m_Trigger_Interact;
+        public InputActionMap Get() { return m_Wrapper.m_Trigger; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(TriggerActions set) { return set.Get(); }
+        public void SetCallbacks(ITriggerActions instance)
+        {
+            if (m_Wrapper.m_TriggerActionsCallbackInterface != null)
+            {
+                @Interact.started -= m_Wrapper.m_TriggerActionsCallbackInterface.OnInteract;
+                @Interact.performed -= m_Wrapper.m_TriggerActionsCallbackInterface.OnInteract;
+                @Interact.canceled -= m_Wrapper.m_TriggerActionsCallbackInterface.OnInteract;
+            }
+            m_Wrapper.m_TriggerActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @Interact.started += instance.OnInteract;
+                @Interact.performed += instance.OnInteract;
+                @Interact.canceled += instance.OnInteract;
+            }
+        }
+    }
+    public TriggerActions @Trigger => new TriggerActions(this);
     public interface IPickupDropThrowActions
     {
         void OnPickUp(InputAction.CallbackContext context);
         void OnCharge(InputAction.CallbackContext context);
         void OnThrow(InputAction.CallbackContext context);
+    }
+    public interface ITriggerActions
+    {
+        void OnInteract(InputAction.CallbackContext context);
     }
 }

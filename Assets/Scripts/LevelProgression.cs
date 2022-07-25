@@ -7,7 +7,6 @@ public class LevelProgression : MonoBehaviour
 {
 
     public string nextLevel;
-
     private void OnTriggerEnter(Collider other)
     {
         if(other.gameObject.tag == "Player")

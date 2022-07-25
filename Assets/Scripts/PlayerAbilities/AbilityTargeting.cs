@@ -4,17 +4,12 @@ using UnityEngine;
 
 public class AbilityTargeting : MonoBehaviour
 {
-    public LayerMask freezeable;
-
-    public bool targeting;
-
     public GameObject targetObj;
-    public ObjEffect[] freezableObjects;
 
+    public LayerMask effectable;
     public Color highlightedColor;
 
-    public Color frozenColor;
-    public Color finalColor;
+    public bool targeting;
 
     void Start()
     {
@@ -90,7 +85,7 @@ public class AbilityTargeting : MonoBehaviour
 
             Ray ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
 
-            if (Physics.Raycast(ray, out hit, Mathf.Infinity, freezeable))
+            if (Physics.Raycast(ray, out hit, Mathf.Infinity, effectable))
             {
                 if (hit.collider.gameObject.GetComponent<ObjEffect>())
                 {
@@ -113,7 +108,7 @@ public class AbilityTargeting : MonoBehaviour
         }
     }
 
-    void FreezeTarget(bool state)
+    /*void FreezeTarget(bool state)
     {
         targeting = state;
 
@@ -128,5 +123,5 @@ public class AbilityTargeting : MonoBehaviour
                 obj.GetComponent<Renderer>().material.SetFloat("_FreezeAmount", freezeEffect);
             }
         }
-    }
+    }*/
 }

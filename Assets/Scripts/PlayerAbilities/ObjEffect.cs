@@ -7,7 +7,7 @@ public class ObjEffect : MonoBehaviour
     AbilityTargeting targeting;
 
     Rigidbody rbody;
-    Transform dirArrow;
+    //Transform dirArrow;
     Collider objCollider;
     Renderer colorRenderer;
 
@@ -18,8 +18,8 @@ public class ObjEffect : MonoBehaviour
     //Object Scaling Values
     public Vector3 originalObjScale;
 
-    float maxForce = 50;
-    public float accumulatedForce;
+    /*float maxForce = 50;
+    public float accumulatedForce;*/
 
     float originalMass;
 
@@ -35,10 +35,14 @@ public class ObjEffect : MonoBehaviour
     public bool bounceActive;
     public bool frictionInactive;
 
+    public bool heavyObj;
+    public bool lightObj;
+
     Color originalObjColor;
     Color highlightedColor;
-    Color frozenColor;
-    Color finalColor;
+    
+    /*Color frozenColor;
+    Color finalColor;*/
 
     void Start()
     {
@@ -55,8 +59,8 @@ public class ObjEffect : MonoBehaviour
         originalObjColor = colorRenderer.material.color;
         highlightedColor = FindObjectOfType<ObjEffect>().highlightedColor;
 
-        frozenColor = FindObjectOfType<ObjEffect>().frozenColor;
-        finalColor = FindObjectOfType<ObjEffect>().finalColor;
+        /*frozenColor = FindObjectOfType<ObjEffect>().frozenColor;
+        finalColor = FindObjectOfType<ObjEffect>().finalColor;*/
 
         //dirArrow = transform.GetChild(0);
     }
@@ -78,7 +82,7 @@ public class ObjEffect : MonoBehaviour
 
     }
 
-    public void FreezeObject(bool state)
+    public void UnfreezeObject(bool state)
     {
         print("Froze Object");
 
@@ -87,16 +91,22 @@ public class ObjEffect : MonoBehaviour
 
         if (state)
         {
-            colorRenderer.material.SetColor("Emission Color", frozenColor);
+            //colorRenderer.material.SetColor("Emission Color", frozenColor);
 
             StartCoroutine(EffectCountdown());
+            print($"{gameObject.name} has been frozen");
         }
 
         if (!state)
         {
             StopAllCoroutines();
 
-            transform.GetChild(0).gameObject.SetActive(state);
+            gameObject.GetComponent<Rigidbody>().isKinematic = false;
+            print($"{gameObject.name} is no longer frozen");
+
+            freezeActive = false;
+
+            /*transform.GetChild(0).gameObject.SetActive(state);
 
             if (accumulatedForce < 0)
             {
@@ -107,11 +117,11 @@ public class ObjEffect : MonoBehaviour
 
             rbody.AddForceAtPosition(direction * accumulatedForce, hitPoint, ForceMode.Impulse);
 
-            accumulatedForce = 0;
+            accumulatedForce = 0;*/
         }
     }
 
-    public void AccumulateForce(float amount, Vector3 point)
+    /*public void AccumulateForce(float amount, Vector3 point)
     {
         if (!freezeActive)
             return;
@@ -124,7 +134,7 @@ public class ObjEffect : MonoBehaviour
 
         direction = transform.position - hitPoint;
         transform.GetChild(0).rotation = Quaternion.LookRotation(direction);
-    }
+    }*/
 
     //Returns obj to its original size.
     public void ReturnToNormalSize(bool state)
@@ -134,13 +144,13 @@ public class ObjEffect : MonoBehaviour
             if (shrinkActive)
             {
                 StartCoroutine(EffectCountdown());
-                print("Object shrunk");
+                print($"{gameObject.name} shrunk");
             }
 
             else if (growActive)
             {
                 StartCoroutine(EffectCountdown());
-                print("Object grew");
+                print($"{gameObject.name} grew");
             }
         }
 
@@ -155,6 +165,37 @@ public class ObjEffect : MonoBehaviour
                 shrinkActive = false;
             if (growActive)
                 growActive = false;
+        }
+    }
+
+    public void ResetObjMass(bool state)
+    {
+        if (state)
+        {
+            if (heavyObj)
+            {
+                StartCoroutine(EffectCountdown());
+                print($"{gameObject.name}'s mass has increased.");
+            }
+
+            else if (lightObj)
+            {
+                StartCoroutine(EffectCountdown());
+                print($"{gameObject.name}'s mass has decreased.");
+            }
+        }
+
+        if (!state)
+        {
+            StopAllCoroutines();
+
+            rbody.mass = originalMass;
+            colorRenderer.material.color = originalObjColor;
+
+            if (heavyObj)
+                heavyObj = false;
+            if (lightObj)
+                lightObj = false;
         }
     }
 
@@ -221,27 +262,34 @@ public class ObjEffect : MonoBehaviour
                 yield return new WaitForSeconds(delay);
             }
 
-            //For Object Freezing
+            //For Resetting Frozen Object
             if (freezeActive)
-                FreezeObject(false);
-            //For Object Freezing
+                UnfreezeObject(false);
+            //For Resetting Frozen Object
 
-            //For Object Scaling
+            //For Resetting Object Scale
             if (shrinkActive)
                 ReturnToNormalSize(false);
             if (growActive)
                 ReturnToNormalSize(false);
-            //For Object Scaling
+            //For Resetting Object Scale
 
-            //For Object Bounciness
+            //For Resetting Object Mass
+            if (heavyObj)
+                ResetObjMass(false);
+            if (lightObj)
+                ResetObjMass(false);
+            //For Resetting Object Mass
+
+            //For Resetting Object Bounciness
             if (bounceActive)
                 DisableBounce(false);
-            //For Object Bounciness
+            //For Resetting Object Bounciness
 
-            //For Object Friction
+            //For Resetting Object Friction
             if (frictionInactive)
                 EnableFriction(false);
-            //For Object Friction
+            //For Resetting Object Friction
         }
 
         if (!effectTimer)
