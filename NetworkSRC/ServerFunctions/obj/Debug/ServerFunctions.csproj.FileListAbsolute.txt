@@ -1,5 +1,0 @@
-C:\Users\user\source\repos\Core\ServerFunctions\bin\Debug\ServerFunctions.dll
-C:\Users\user\source\repos\Core\ServerFunctions\bin\Debug\ServerFunctions.pdb
-C:\Users\user\source\repos\Core\ServerFunctions\obj\Debug\ServerFunctions.csproj.CoreCompileInputs.cache
-C:\Users\user\source\repos\Core\ServerFunctions\obj\Debug\ServerFunctions.dll
-C:\Users\user\source\repos\Core\ServerFunctions\obj\Debug\ServerFunctions.pdb

@@ -117,12 +117,13 @@ public class NetworkManager : MonoBehaviour
                         string name = lp.Name;
                         int roomcode = lp.RoomCode;
                         int portnumber = lp.LobbyPort;
-                        print("Connecting to " + lp.Name);
+                        print("Connecting to " + lp.Name + "with port " + portnumber);
                         //MainSocket.Shutdown(SocketShutdown.Both);
                         //MainSocket.Disconnect(true);
-                        lobbySocket.Connect(new IPEndPoint(IPAddress.Parse("127.0.0.1"), lp.LobbyPort));
-                        lobbySocket.Blocking = false;
-                        print("lobbySocket has connected to " + lp.Name);
+                        MainSocket.Connect(new IPEndPoint(IPAddress.Parse("127.0.0.1"), portnumber));
+                        MainSocket.Blocking = false;
+                        print("lobbySocket has connected to " + name);
+                        MainSocket.Send(new DisplayLobbiesPacket().Serialize());
                         break;
 
 

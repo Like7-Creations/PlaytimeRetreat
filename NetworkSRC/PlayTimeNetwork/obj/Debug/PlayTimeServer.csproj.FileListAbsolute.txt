@@ -1,9 +1,0 @@
-C:\Users\user\source\repos\Core\PlayTimeNetwork\bin\Debug\PlayTimeNetwork.dll
-C:\Users\user\source\repos\Core\PlayTimeNetwork\bin\Debug\PlayTimeNetwork.pdb
-C:\Users\user\source\repos\Core\PlayTimeNetwork\obj\Debug\PlayTimeServer.csproj.AssemblyReference.cache
-C:\Users\user\source\repos\Core\PlayTimeNetwork\obj\Debug\PlayTimeServer.csproj.CoreCompileInputs.cache
-C:\Users\user\source\repos\Core\PlayTimeNetwork\obj\Debug\PlayTimeNetwork.dll
-C:\Users\user\source\repos\Core\PlayTimeNetwork\obj\Debug\PlayTimeNetwork.pdb
-C:\Users\user\source\repos\Core\PlayTimeNetwork\bin\Debug\PlayTimePackets.dll
-C:\Users\user\source\repos\Core\PlayTimeNetwork\bin\Debug\PlayTimePackets.pdb
-C:\Users\user\source\repos\Core\PlayTimeNetwork\obj\Debug\PlayTimeServer.csproj.CopyComplete
