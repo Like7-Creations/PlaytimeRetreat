@@ -1,0 +1,6 @@
+C:\Users\user\source\repos\Core\PlayTimePackets\bin\Debug\PlayTimePackets.dll
+C:\Users\user\source\repos\Core\PlayTimePackets\bin\Debug\PlayTimePackets.pdb
+C:\Users\user\source\repos\Core\PlayTimePackets\obj\Debug\PlayTimePackets.csproj.CoreCompileInputs.cache
+C:\Users\user\source\repos\Core\PlayTimePackets\obj\Debug\PlayTimePackets.dll
+C:\Users\user\source\repos\Core\PlayTimePackets\obj\Debug\PlayTimePackets.pdb
+C:\Users\user\source\repos\Core\PlayTimePackets\obj\Debug\PlayTimePackets.csproj.AssemblyReference.cache

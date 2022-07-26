@@ -1,0 +1,47 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v6.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v6.0": {
+      "MatchmakingServer/1.0.0": {
+        "dependencies": {
+          "PlayTimePackets": "1.0.0",
+          "ServerFunctions": "1.0.0"
+        },
+        "runtime": {
+          "MatchmakingServer.dll": {}
+        }
+      },
+      "PlayTimePackets/1.0.0": {
+        "runtime": {
+          "PlayTimePackets.dll": {}
+        }
+      },
+      "ServerFunctions/1.0.0": {
+        "runtime": {
+          "ServerFunctions.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "MatchmakingServer/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "PlayTimePackets/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "ServerFunctions/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}
