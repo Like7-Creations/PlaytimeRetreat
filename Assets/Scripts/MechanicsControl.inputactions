@@ -74,10 +74,28 @@
             "id": "d620e070-d637-4320-8f72-7e2492d330f3",
             "actions": [
                 {
-                    "name": "Interact",
+                    "name": "InteractButton",
                     "type": "Value",
                     "id": "63439c93-e8ea-4050-ad90-89cd7ce56814",
                     "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "InteractTimedButton",
+                    "type": "Value",
+                    "id": "1705e828-7c8e-4418-89ec-87879fd7656d",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "InteractLever",
+                    "type": "Value",
+                    "id": "7b6738fc-fcda-455f-ad26-d6e6be78dce2",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
@@ -91,7 +109,29 @@
                     "interactions": "Press",
                     "processors": "",
                     "groups": "",
-                    "action": "Interact",
+                    "action": "InteractButton",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "aaa6847d-4477-4a82-a1b3-d343a1c76df5",
+                    "path": "<Keyboard>/e",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "",
+                    "action": "InteractTimedButton",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2a2c9509-9907-4b63-b811-ba47b738911d",
+                    "path": "<Keyboard>/e",
+                    "interactions": "Press(behavior=2)",
+                    "processors": "",
+                    "groups": "",
+                    "action": "InteractLever",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
