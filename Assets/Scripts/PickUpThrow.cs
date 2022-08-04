@@ -11,6 +11,7 @@ public class PickUpThrow : MonoBehaviour
     [SerializeField] bool chargingg;
     [SerializeField] float throwForce;
     float timer;
+    bool bol;
     
     Rigidbody rb;
 
@@ -55,7 +56,7 @@ public class PickUpThrow : MonoBehaviour
 
     public void Picker(InputAction.CallbackContext context)
     {
-        if (hasplayer)
+        if (hasplayer && !holding)
         {
             this.rb.isKinematic = true;
             rb.detectCollisions = false;
