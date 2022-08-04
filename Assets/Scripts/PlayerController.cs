@@ -9,7 +9,7 @@ public class PlayerController : MonoBehaviour
     public CameraController cam;
 
     public int level;
-  
+
     public float speed;
     public float jumpHeight;
     public float gravity = -9.81f;
@@ -23,9 +23,13 @@ public class PlayerController : MonoBehaviour
     public Vector3 lastCheckpoint;
 
     void Start()
-    {  
+    {
         characterController = GetComponent<CharacterController>();
-        cam = GetComponentInChildren<CameraController>();
+
+        if (GetComponentInChildren<CameraController>() != null)
+        {
+            cam = GetComponentInChildren<CameraController>();
+        }
     }
 
     // Update is called once per frame

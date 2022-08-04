@@ -17,13 +17,13 @@ public class ObjNetComp : NetworkComponent
         
     }
 
-    public override void UpdateComponent(GameBasePacket packet)
+    public override void UpdateComponent(byte[] receivedBuffer)
     {
 
     }
 
-    public override GameBasePacket SendUpdateRequest(GameBasePacket packet)
+    public override void SendUpdateRequest()
     {
-        throw new System.NotImplementedException();
+
     }
 }

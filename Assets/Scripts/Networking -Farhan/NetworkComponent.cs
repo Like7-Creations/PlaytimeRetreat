@@ -6,21 +6,35 @@ using GamePackets;
 
 public abstract class NetworkComponent : MonoBehaviour
 {
+    public GameNetworkManager gnManager;
+    public TestNetManager testNetManager;
+
     public Guid ownerID;
 
-    public int gameObjID;
+    public string gameObjID;
 
-    public enum Ownership
+    //public enum Ownership
+    //{
+    //    Host,
+    //    Partner,
+    //    Unowned
+    //}
+
+    //public Ownership ownStatus;
+
+    public void Awake()
     {
-        Host,
-        Partner,
-        Unowned
+        gnManager = FindObjectOfType <GameNetworkManager>();
+        testNetManager = FindObjectOfType<TestNetManager>();
+        gameObjID = gameObject.name;
     }
 
-    public Ownership ownStatus;
+    public abstract void UpdateComponent(byte[] buffer);
 
-   
-    public abstract void UpdateComponent(GameBasePacket packet);
+    public virtual void SendUpdateRequest()
+    {
+        byte[] buffer = new byte[1024];
 
-    public abstract GameBasePacket SendUpdateRequest(GameBasePacket packet);
+        gnManager.SendPacket(buffer);
+    }
 }

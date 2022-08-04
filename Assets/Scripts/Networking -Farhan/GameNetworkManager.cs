@@ -15,7 +15,7 @@ public class GameNetworkManager : MonoBehaviour
     public ConnectedToServer ServerConnectedEvent;
 
     public NetworkComponent[] netObjs;
-    
+    public List<GameObject> players = new List<GameObject>();
 
     [Header("Connect Panel")]
     [SerializeField] GameObject connectPanel;
@@ -27,10 +27,10 @@ public class GameNetworkManager : MonoBehaviour
     [SerializeField] Button spawnButton;
     [SerializeField] GameObject objPrefab;
 
-    Socket socket;
+    public Socket socket;
     Player player;
 
-    int objId;
+    string objId;
     int ownerID;
 
     // Start is called before the first frame update
@@ -39,8 +39,7 @@ public class GameNetworkManager : MonoBehaviour
         //Call instantiation function here
         netObjs = FindObjectsOfType<NetworkComponent>();
 
-
-        objId = 1;
+        //objId = 1;
 
         connectButton.onClick.AddListener(() =>
         {
@@ -59,6 +58,7 @@ public class GameNetworkManager : MonoBehaviour
                 if (ServerConnectedEvent != null)
                     ServerConnectedEvent();
 
+
                 //InstantiateFromResources(objPrefab.name);
             }
             catch (SocketException ex)
@@ -75,17 +75,18 @@ public class GameNetworkManager : MonoBehaviour
             if (socket.Available > 0)
             {
                 DeserializePackets();
+
+                //for (int i = 0; i < netObjs.Length; i++)
+                //{
+
+                //}
             }
         }
     }
 
-    public void SerializePackets()
+    public void SendPacket(byte[] buffer)
     {
-        /*foreach (NetworkComponent netObj in prefabs)
-        {
-            if(netObj.netObjType == 1)
-            socket.Send(new RigidbodyPacket(netObj.gRbody, netObj.gameObjID, player).Serialize());
-        }*/
+        socket.Send(buffer);
     }
 
     public void DeserializePackets()
@@ -98,7 +99,7 @@ public class GameNetworkManager : MonoBehaviour
         for (int i = 0; i < netObjs.Length; i++)
         {
             if (netObjs[i].gameObjID == pb.objID)
-                netObjs[i].UpdateComponent(pb);
+                netObjs[i].UpdateComponent(receivedBuffer);
         }
 
         /*switch (pb.Type)
@@ -163,6 +164,8 @@ public class GameNetworkManager : MonoBehaviour
         print($"{player.Name} has requested the Instantiation of Object: {prefabName}");
         //socket.Send(new InstantiateObjPacket(prefabName, /*player,*/ objectID).Serialize());
 
+        //We would instantiate a player character and send a packet over the server.
+
         InstantiateFromResources(prefabName, objectID);
 
     }
@@ -174,10 +177,9 @@ public class GameNetworkManager : MonoBehaviour
 
         prefabObj.AddComponent<NetworkComponent>();     //Ideally, this should already have been added to the prefab.
 
-        //netObjs.Add(prefabObj.GetComponent<NetworkComponent>());
-
+        //It should be added to the list of players.
         
-        prefabObj.GetComponent<NetworkComponent>().gameObjID = objectID;
-        objId++;
+        //prefabObj.GetComponent<NetworkComponent>().gameObjID = objectID;
+        //objId++;
     }
 }

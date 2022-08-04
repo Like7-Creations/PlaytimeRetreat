@@ -7,8 +7,6 @@ public class TriggerNetComp : NetworkComponent
 {
     public TriggerSystem trigger;
 
-    int objID;
-
     void Start()
     {
         trigger = GetComponent<TriggerSystem>();
@@ -20,27 +18,25 @@ public class TriggerNetComp : NetworkComponent
         //gameid == this.name
     }
 
-    public override void UpdateComponent(GameBasePacket tPacket)
+    public override void UpdateComponent(byte[] receivedBuffer)
     {
-        byte[] receivedBuffer = new byte[1024];
+        //byte[] receivedBuffer = new byte[1024];
 
-        switch (tPacket.Type)
-        {
-            case GameBasePacket.PacketType.Trigger:
-                TriggerPacket tPack = (TriggerPacket)new TriggerPacket().DeSerialize(receivedBuffer);
-                trigger.triggerActive = tPack.triggerActive;
+        //switch (tPacket.Type)
+        //{
+        //    case GameBasePacket.PacketType.Trigger:
+        //        TriggerPacket tPack = (TriggerPacket)new TriggerPacket().DeSerialize(receivedBuffer);
+        //        trigger.triggerActive = tPack.triggerActive;
 
-                    break;
+        //            break;
 
-            default:
-                break;
-        }
+        //    default:
+        //        break;
+        //}
     }
 
-    public override GameBasePacket SendUpdateRequest(GameBasePacket packet)
+    public override void SendUpdateRequest()
     {
-        //new TriggerPacket(objID.ToString(), trigger.IsTriggered());
-
-        return packet;
+        
     }
 }

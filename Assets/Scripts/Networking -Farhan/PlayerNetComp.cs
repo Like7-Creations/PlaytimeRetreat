@@ -2,9 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using GamePackets;
+using System;
 
 public class PlayerNetComp : NetworkComponent
 {
+    public Guid localID;
+
     public Transform playerTransform;
     public CapsuleCollider capCollider;
 
@@ -23,7 +26,7 @@ public class PlayerNetComp : NetworkComponent
     public enum PlayerType
     {
         Unkown = -1,
-        Host,
+        Local,
         Partner
     }
 
@@ -31,6 +34,8 @@ public class PlayerNetComp : NetworkComponent
 
     void Start()
     {
+
+
         playerTransform = GetComponent<Transform>();
         capCollider = GetComponent<CapsuleCollider>();
 
@@ -52,9 +57,9 @@ public class PlayerNetComp : NetworkComponent
 
     }
 
-    public override void UpdateComponent(GameBasePacket packet)
+    public override void UpdateComponent(byte[] receivedBuffer)
     {
-        byte[] receivedBuffer = new byte[1024];
+        /*byte[] receivedBuffer = new byte[1024];
 
         switch (packet.Type)
         {
@@ -62,27 +67,22 @@ public class PlayerNetComp : NetworkComponent
                 PlayerControllerPacket pcPack = (PlayerControllerPacket)new PlayerControllerPacket().DeSerialize(receivedBuffer);
                 playerType = (PlayerType)pcPack.playerIntType;
 
-
                 break;
 
             default:
                 break;
-        }
+        }*/
 
     }
 
-    public override GameBasePacket SendUpdateRequest(GameBasePacket packet)
+    public override void SendUpdateRequest()
     {
-        switch (packet.Type)
-        {
-            case GameBasePacket.PacketType.PlayerController:
-                packet = new PlayerControllerPacket((int)playerType, gameObjID, pController.isGrounded, pController.velocity);
-                break;
+        byte[] buffer;
 
-            default:
-                break;
-        }
+        GameBasePacket pcPacket = new PlayerControllerPacket((int)playerType, gameObjID, pController.isGrounded, pController.velocity);
+        buffer = pcPacket.Serialize();
+        gnManager.SendPacket(buffer);
 
-        return packet;
+
     }
 }
