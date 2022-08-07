@@ -18,6 +18,8 @@ public class TestNetManager : MonoBehaviour
     public PlayerNetComp localPlayer;
     public PlayerNetComp partnerPlayer;
 
+    int PlayerId;
+
     public Socket socket;
     public Player player;
 

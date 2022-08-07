@@ -28,6 +28,8 @@ public class PlayerController : MonoBehaviour
     public Vector3 velocity;
     public Vector3 movement;
 
+    [SerializeField] int id;
+
     KeyCode[] key = new KeyCode[] { KeyCode.Alpha1, KeyCode.Alpha2, KeyCode.Alpha3, KeyCode.Alpha4 };
     int AbilityIndex;
 
