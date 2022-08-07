@@ -17,6 +17,8 @@ public class PlayerController : MonoBehaviour
     public bool isGrounded;
     public Vector3 velocity;
 
+    [SerializeField] int id;
+
     KeyCode[] key = new KeyCode[] { KeyCode.Alpha1, KeyCode.Alpha2, KeyCode.Alpha3, KeyCode.Alpha4 };
     int AbilityIndex;
 
@@ -35,39 +37,42 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        isGrounded = Physics.Raycast(transform.position, Vector3.down, 1.5f);
-
-        if (isGrounded && velocity.y < 0)
+        if (id == 0)
         {
-            velocity.y = -2;
-        }
+            isGrounded = Physics.Raycast(transform.position, Vector3.down, 1.5f);
 
-        float x = Input.GetAxis("Horizontal");
-        float z = Input.GetAxis("Vertical");
-
-        Vector3 move = transform.right * x + transform.forward * z;
-
-        characterController.Move(move * speed * Time.deltaTime);
-
-        if (Input.GetButtonDown("Jump") && isGrounded)
-        {
-            velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
-        }
-
-        velocity.y += gravity * Time.deltaTime;
-
-        characterController.Move(velocity * Time.deltaTime);
-
-        /* if(what ever happens to player here)
-         {
-             TPToCheckpoint(lastCheckpoint);
-         }*/
-        for (int i = 0; i < key.Length; i++)
-        {
-            if (Input.GetKeyDown(key[i]))
+            if (isGrounded && velocity.y < 0)
             {
-                AbilityIndex = i + 1;
-                Debug.Log(AbilityIndex);
+                velocity.y = -2;
+            }
+
+            float x = Input.GetAxis("Horizontal");
+            float z = Input.GetAxis("Vertical");
+
+            Vector3 move = transform.right * x + transform.forward * z;
+
+            characterController.Move(move * speed * Time.deltaTime);
+
+            if (Input.GetButtonDown("Jump") && isGrounded)
+            {
+                velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
+            }
+
+            velocity.y += gravity * Time.deltaTime;
+
+           // characterController.Move(velocity * Time.deltaTime);
+
+            /* if(what ever happens to player here)
+             {
+                 TPToCheckpoint(lastCheckpoint);
+             }*/
+            for (int i = 0; i < key.Length; i++)
+            {
+                if (Input.GetKeyDown(key[i]))
+                {
+                    AbilityIndex = i + 1;
+                    Debug.Log(AbilityIndex);
+                }
             }
         }
     }

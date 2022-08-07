@@ -233,8 +233,8 @@ public class NetworkManager : MonoBehaviour
                             KickMessage.gameObject.SetActive(true);
                             KickMessage.text = krp.Request;
                             print("I got kicked out! or lobby is full");
-                            //BackToMainServer();
-                            SceneManager.LoadScene("_MainMenu");
+                            BackToMainServer();
+                            //SceneManager.LoadScene("_MainMenu");
                             print("connected back to main server");
                         }
                         //for leaving...if client...relaunch main scene
@@ -258,9 +258,9 @@ public class NetworkManager : MonoBehaviour
 
     public void BackToMainServer()
     {
-        MainSocket.Blocking = false;
         MainSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         MainSocket.Connect(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 3300));
+        MainSocket.Blocking = false;
         BackToMenuScreen();
     }
     public void BackToMenuScreen()
