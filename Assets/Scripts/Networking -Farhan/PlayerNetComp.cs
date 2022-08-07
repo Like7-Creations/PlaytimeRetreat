@@ -8,6 +8,9 @@ public class PlayerNetComp : NetworkComponent
 {
     public Guid localID;
 
+    Vector3 currentPos;
+    Quaternion currentRot;
+
     public Transform playerTransform;
     public CapsuleCollider capCollider;
 
@@ -25,7 +28,6 @@ public class PlayerNetComp : NetworkComponent
 
     public enum PlayerType
     {
-        Unkown = -1,
         Local,
         Partner
     }
@@ -34,7 +36,8 @@ public class PlayerNetComp : NetworkComponent
 
     void Start()
     {
-
+        currentPos = transform.position;
+        currentRot = transform.rotation;
 
         playerTransform = GetComponent<Transform>();
         capCollider = GetComponent<CapsuleCollider>();
@@ -52,37 +55,74 @@ public class PlayerNetComp : NetworkComponent
         surfaceAbility = GetComponent<ObjSurfaceAbility>();
     }
 
-    void Update()
+    void FixedUpdate()
     {
-
+        if (playerType == PlayerType.Local)
+        {
+            /*if (transform.position != currentPos && transform.rotation != currentRot)
+            {*/
+            SendUpdateRequest();
+            currentPos = transform.position;
+            currentRot = transform.rotation;
+            //}
+        }
+        //if local
+        //check for rotation and position change
+        //if true, sendupdatepacket.
     }
 
     public override void UpdateComponent(byte[] receivedBuffer)
     {
-        /*byte[] receivedBuffer = new byte[1024];
+        GameBasePacket pb = new GameBasePacket().DeSerialize(receivedBuffer);
 
-        switch (packet.Type)
+        switch (pb.Type)
         {
             case GameBasePacket.PacketType.PlayerController:
                 PlayerControllerPacket pcPack = (PlayerControllerPacket)new PlayerControllerPacket().DeSerialize(receivedBuffer);
-                playerType = (PlayerType)pcPack.playerIntType;
+                if (playerType == PlayerType.Partner)
+                {
+                    transform.position = pcPack.position;
+                    print($"{pcPack.position} from packet of type {pcPack.Type}, is being passed onto player of type {playerType}");
+                    //pController.velocity = pcPack.velocity;
+
+                    currentPos = transform.position;
+                    currentRot = transform.rotation;
+                }
 
                 break;
 
             default:
                 break;
-        }*/
+        }
+    }
 
+    public void SetSpawn(byte[] buffer)
+    {
+        GameBasePacket pb = new GameBasePacket().DeSerialize(buffer);
+
+        switch (pb.Type)
+        {
+            case GameBasePacket.PacketType.PlayerSpawn:
+                SpawnPosPacket spawnPacket = (SpawnPosPacket)new SpawnPosPacket().DeSerialize(buffer);
+                print($"Received packet from {spawnPacket.objID} containg {spawnPacket.spawnPos}");
+                transform.position = spawnPacket.spawnPos;
+                print($"Object Spawn at{transform.position} obtained from {spawnPacket.spawnPos}");
+
+                //Deserialize SpawnPos Packet, and then update gameobj Transform.pos.
+                break;
+
+            default:
+                break;
+        }
     }
 
     public override void SendUpdateRequest()
     {
         byte[] buffer;
 
-        GameBasePacket pcPacket = new PlayerControllerPacket((int)playerType, gameObjID, pController.isGrounded, pController.velocity);
+        GameBasePacket pcPacket = new PlayerControllerPacket((int)playerType, gameObjID, transform.position);
+        print($"Sending {pcPacket.Type} containing {playerType}, {gameObjID}, {transform.position}");
         buffer = pcPacket.Serialize();
-        gnManager.SendPacket(buffer);
-
-
+        testNetManager.SendPacket(buffer);
     }
 }

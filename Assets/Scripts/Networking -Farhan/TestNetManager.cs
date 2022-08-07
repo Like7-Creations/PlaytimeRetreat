@@ -7,16 +7,19 @@ using UnityEngine.UI;
 using TMPro;
 using GamePackets;
 using PlayTimePackets;
+using System;
 
 public class TestNetManager : MonoBehaviour
 {
+    public string playerName;
+
     public NetworkComponent[] netObjs;
     //public PlayerNetComp[] playerComps = new PlayerNetComp[2];
     public PlayerNetComp localPlayer;
     public PlayerNetComp partnerPlayer;
 
     public Socket socket;
-    Player player;
+    public Player player;
 
     bool isConnected;
 
@@ -24,7 +27,7 @@ public class TestNetManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        player = new Player("Bot");
+        player = new Player(playerName);
 
         netObjs = FindObjectsOfType<NetworkComponent>();
 
@@ -32,25 +35,31 @@ public class TestNetManager : MonoBehaviour
         {
             if (netObjs[i].GetComponent<PlayerNetComp>())
             {
-                
-                
-                /*if(playerComps.Length == 0)
+                PlayerNetComp pcComp = (PlayerNetComp)netObjs[i];
+                if (pcComp.playerType == PlayerNetComp.PlayerType.Local)
                 {
-                    playerComps[0] = (PlayerNetComp) netObjs[i];
+                    localPlayer = pcComp;
+
                 }
-                else
+                else if (pcComp.playerType == PlayerNetComp.PlayerType.Partner)
                 {
-                    playerComps[playerComps.Length - 1] = (PlayerNetComp) netObjs[i];
-                }*/
+                    partnerPlayer = pcComp;
+                }
+
+                /*
+                 * 
+                 */
             }
         }
-
 
         socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         socket.Connect(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 3000));
         socket.Blocking = false;
 
         isConnected = true;
+
+        localPlayer.localID = player.ID;
+        socket.Send(new PlayerInfoPacket(player.ID, player.Name).Serialize());
     }
 
     void Update()
@@ -60,11 +69,6 @@ public class TestNetManager : MonoBehaviour
             if (socket.Available > 0)
             {
                 DeserializePackets();
-
-                //for (int i = 0; i < netObjs.Length; i++)
-                //{
-
-                //}
             }
         }
     }
@@ -84,7 +88,43 @@ public class TestNetManager : MonoBehaviour
 
         switch (pb.Type)
         {
-            //case 
+            /*case GameBasePacket.PacketType.PlayerInfo:
+                PlayerInfoPacket piPack = (PlayerInfoPacket)new PlayerInfoPacket().DeSerialize(receivedBuffer);
+
+                break;*/
+
+            case GameBasePacket.PacketType.PlayerController:
+                PlayerControllerPacket pcPack = (PlayerControllerPacket)new PlayerControllerPacket().DeSerialize(receivedBuffer);
+                print($"Received position: {pcPack.position}, from {pcPack.objID}");
+
+                Console.WriteLine($"{pcPack} packet of {pcPack.objID} conaining {pcPack.position} has been received.");
+
+                if (partnerPlayer.gameObjID.Equals(pcPack.objID))
+                {
+                    partnerPlayer.UpdateComponent(receivedBuffer);
+                }
+
+                break;
+
+            //Check for Spawnpoint Packet
+            case GameBasePacket.PacketType.PlayerSpawn:
+                Guid temp = new Guid(pb.objID);
+                //If it's id is equal to playyer.id
+                if (temp == player.ID)
+                {
+                    //Send packet to local controller
+                    localPlayer.SetSpawn(receivedBuffer);
+                }
+                else
+                {
+                    //Else, give it to partner.
+                    partnerPlayer.SetSpawn(receivedBuffer);
+                }
+
+                break;
+
+            default:
+                break;
         }
 
         for (int i = 0; i < netObjs.Length; i++)
