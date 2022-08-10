@@ -15,13 +15,14 @@ public class PlayerNetComp : NetworkComponent
     public CapsuleCollider capCollider;
 
     public PlayerController pController;
-    public MobileController mController;
-    public PlayerCollision collision;
+    //public MobileController mController;
+    //public CameraController cam;
 
-    public AbilityHolder ability;
+
+    //public AbilityHolder ability;
     public AbilityTargeting targeting;
 
-    public ObjFreezeAbility freezeAbility;
+    /*public ObjFreezeAbility freezeAbility;
     public ObjMassAbility massAbility;
     public ObjScaleAbility scaleAbility;
     public ObjSurfaceAbility surfaceAbility;
@@ -32,39 +33,42 @@ public class PlayerNetComp : NetworkComponent
         Partner
     }
 
-    public PlayerType playerType;
+    public PlayerType playerType;*/
 
     void Start()
     {
         currentPos = transform.position;
         currentRot = transform.rotation;
 
+        print(localID.ToString());
+
+        //if (playerType == PlayerType.Local)
+        //{
+        //    cam = GetComponentInChildren<CameraController>();
+        //    cam.gameObject.SetActive(true);
+        //}
+
         playerTransform = GetComponent<Transform>();
-        capCollider = GetComponent<CapsuleCollider>();
+        //capCollider = GetComponent<CapsuleCollider>();
 
         pController = GetComponent<PlayerController>();
-        mController = GetComponent<MobileController>();
-        collision = GetComponent<PlayerCollision>();
 
-        ability = GetComponent<AbilityHolder>();
         targeting = GetComponent<AbilityTargeting>();
-
-        freezeAbility = GetComponent<ObjFreezeAbility>();
-        massAbility = GetComponent<ObjMassAbility>();
-        scaleAbility = GetComponent<ObjScaleAbility>();
-        surfaceAbility = GetComponent<ObjSurfaceAbility>();
     }
 
     void FixedUpdate()
     {
-        if (playerType == PlayerType.Local)
+        if (localID == testNetManager.PlayerId)
         {
-            /*if (transform.position != currentPos && transform.rotation != currentRot)
-            {*/
             SendUpdateRequest();
-            currentPos = transform.position;
-            currentRot = transform.rotation;
-            //}
+            currentPos = transform.position;      //This version works. The one with the if-statement doesnt.
+
+            /*if (transform.position != currentPos)
+            {
+                SendUpdateRequest();
+                currentPos = transform.position;
+                //currentRot = transform.rotation;
+            }*/
         }
         //if local
         //check for rotation and position change
@@ -79,14 +83,15 @@ public class PlayerNetComp : NetworkComponent
         {
             case GameBasePacket.PacketType.PlayerController:
                 PlayerControllerPacket pcPack = (PlayerControllerPacket)new PlayerControllerPacket().DeSerialize(receivedBuffer);
-                if (playerType == PlayerType.Partner)
+                if (localID == Guid.Parse(pcPack.objID))
                 {
                     transform.position = pcPack.position;
-                    print($"{pcPack.position} from packet of type {pcPack.Type}, is being passed onto player of type {playerType}");
-                    //pController.velocity = pcPack.velocity;
+                    print($"{pcPack.position} from packet of type {pcPack.Type}, is being passed onto player of type {this.name}");
+
+                    /*pController.movement = pcPack.movement;
+                    pController.velocity = pcPack.velocity;*/
 
                     currentPos = transform.position;
-                    currentRot = transform.rotation;
                 }
 
                 break;
@@ -105,6 +110,7 @@ public class PlayerNetComp : NetworkComponent
             case GameBasePacket.PacketType.PlayerSpawn:
                 SpawnPosPacket spawnPacket = (SpawnPosPacket)new SpawnPosPacket().DeSerialize(buffer);
                 print($"Received packet from {spawnPacket.objID} containg {spawnPacket.spawnPos}");
+
                 transform.position = spawnPacket.spawnPos;
                 print($"Object Spawn at{transform.position} obtained from {spawnPacket.spawnPos}");
 
@@ -120,8 +126,8 @@ public class PlayerNetComp : NetworkComponent
     {
         byte[] buffer;
 
-        GameBasePacket pcPacket = new PlayerControllerPacket((int)playerType, gameObjID, transform.position);
-        print($"Sending {pcPacket.Type} containing {playerType}, {gameObjID}, {transform.position}");
+        GameBasePacket pcPacket = new PlayerControllerPacket(localID.ToString(), transform.position);
+        print($"Sending {pcPacket.Type} containing {localID.ToString()}, {transform.position}");
         buffer = pcPacket.Serialize();
         testNetManager.SendPacket(buffer);
     }

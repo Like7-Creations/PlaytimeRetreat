@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+
 using UnityEngine;
 using GamePackets;
 
@@ -19,14 +20,14 @@ public class PickUpNetComp : NetworkComponent
     Vector3 currentScale;
    
     
-    BoxCollider collider;
+    BoxCollider bCollider;
 
 
     void Start()
     {
         pickupthrow = GetComponent<PickUpThrow>();
         rb = GetComponent<Rigidbody>();
-        collider = GetComponent<BoxCollider>();
+        bCollider = GetComponent<BoxCollider>();
         currentPos = transform.position;
         currentRot = transform.eulerAngles;
         currentBool = pickupthrow.holding;
@@ -51,22 +52,22 @@ public class PickUpNetComp : NetworkComponent
         switch (pb.Type)
         {
             case GameBasePacket.PacketType.PickUp:
-                PickUpPacket pup = (PickUpPacket)new PickUpPacket().DeSerialize(receivedBuffer);
+                PickUpPacket puPack = (PickUpPacket)new PickUpPacket().DeSerialize(receivedBuffer);
                 //print($"Packet contains position:{pup.Position}");
 
-                pickupthrow.holding = pup.Holding;
-                print(pup.Holding);
-                transform.position = pup.Position;
-                transform.rotation = Quaternion.Euler(pup.Rotation);
+                pickupthrow.holding = puPack.Holding;
+                print(puPack.Holding);
+                transform.position = puPack.Position;
+                transform.rotation = Quaternion.Euler(puPack.Rotation);
                 print("updating position and rotation");
                 currentPos = transform.position;
                 break;
 
             case GameBasePacket.PacketType.SizeMass:
-                SizeMassPacket smp = (SizeMassPacket)new SizeMassPacket().DeSerialize(receivedBuffer);
+                SizeMassPacket smPack = (SizeMassPacket)new SizeMassPacket().DeSerialize(receivedBuffer);
                 print("updating object scale and mass");
-                transform.localScale = smp.Scale;
-                rb.mass = smp.Mass;
+                transform.localScale = smPack.Scale;
+                rb.mass = smPack.Mass;
                 currentScale = transform.localScale;
                 break;
 

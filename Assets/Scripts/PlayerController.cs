@@ -8,6 +8,7 @@ public class PlayerController : MonoBehaviour
     public CharacterController characterController;
     public CameraController cam;
 
+    public TestNetManager tnManager;
     public PlayerNetComp pcNetComp;
 
     //public enum PlayerType
@@ -38,48 +39,57 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         characterController = GetComponent<CharacterController>();
+        tnManager = GetComponent<TestNetManager>();
         pcNetComp = GetComponent<PlayerNetComp>();
 
-        if (GetComponentInChildren<CameraController>() != null)
+        /*if (pcNetComp.localID == tnManager.PlayerId)
         {
             cam = GetComponentInChildren<CameraController>();
-        }
+            cam.gameObject.SetActive(true);
+        }*/
     }
 
     // Update is called once per frame
     void Update()
     {
+        isGrounded = Physics.Raycast(transform.position, Vector3.down, 1.5f);
 
-        if (pcNetComp.playerType == PlayerNetComp.PlayerType.Local)
+        if (isGrounded && velocity.y < 0)
         {
-            isGrounded = Physics.Raycast(transform.position, Vector3.down, 1.5f);
+            velocity.y = -2;
+        }
 
-            if (isGrounded && velocity.y < 0)
-            {
-                velocity.y = -2;
-            }
-
+        if (pcNetComp.localID == tnManager.PlayerId)
+        {
             float x = Input.GetAxis("Horizontal");
             float z = Input.GetAxis("Vertical");
 
             movement = transform.right * x + transform.forward * z; ;
             //Vector3 move = transform.right * x + transform.forward * z;
             //movement = move;
+        }
 
-            characterController.Move(movement * speed * Time.deltaTime);
+        characterController.Move(movement * speed * Time.deltaTime);
 
+        if (pcNetComp.localID == tnManager.PlayerId)
+        {
             if (Input.GetButtonDown("Jump") && isGrounded)
             {
                 velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
             }
 
-            velocity.y += gravity * Time.deltaTime;
+        }
 
-            characterController.Move(velocity * Time.deltaTime);
-            /* if(what ever happens to player here)
-             {
-                 TPToCheckpoint(lastCheckpoint);
-             }*/
+        velocity.y += gravity * Time.deltaTime;
+        characterController.Move(velocity * Time.deltaTime);
+
+        /* if(what ever happens to player here)
+         {
+             TPToCheckpoint(lastCheckpoint);
+         }*/
+
+        if (pcNetComp.localID == tnManager.PlayerId)
+        {
             for (int i = 0; i < key.Length; i++)
             {
                 if (Input.GetKeyDown(key[i]))
@@ -89,6 +99,7 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
+
     }
 
     void TPToCheckpoint(Vector3 lastpoint)
