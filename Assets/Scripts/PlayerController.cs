@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using GamePackets;
+using System;
 public class PlayerController : MonoBehaviour
 {
     public CharacterController characterController;
@@ -36,11 +37,16 @@ public class PlayerController : MonoBehaviour
 
     public Vector3 lastCheckpoint;
 
+    Guid testGuid;
+
     void Start()
     {
         characterController = GetComponent<CharacterController>();
-        tnManager = GetComponent<TestNetManager>();
-        pcNetComp = GetComponent<PlayerNetComp>();
+        tnManager = FindObjectOfType<TestNetManager>();
+        pcNetComp = gameObject.GetComponent<PlayerNetComp>();
+
+        testGuid = tnManager.PlayerId;
+
 
         /*if (pcNetComp.localID == tnManager.PlayerId)
         {
@@ -58,9 +64,9 @@ public class PlayerController : MonoBehaviour
             velocity.y = -2;
         }
 
-        if (pcNetComp.localID != null)
+        if (testGuid != null)
         {
-            if (pcNetComp.localID == tnManager.PlayerId)
+            if (testGuid == tnManager.PlayerId)
             {
                 float x = Input.GetAxis("Horizontal");
                 float z = Input.GetAxis("Vertical");

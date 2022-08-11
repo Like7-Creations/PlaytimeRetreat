@@ -187,7 +187,6 @@ MonoBehaviour:
   gnManager: {fileID: 0}
   testNetManager: {fileID: 0}
   gameObjID: 
-  tnManager: {fileID: 0}
   playerTransform: {fileID: 0}
   capCollider: {fileID: 0}
   pController: {fileID: 0}
