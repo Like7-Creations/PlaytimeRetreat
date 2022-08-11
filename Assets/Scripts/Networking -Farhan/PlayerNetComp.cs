@@ -8,81 +8,127 @@ public class PlayerNetComp : NetworkComponent
 {
     public Guid localID;
 
+    Vector3 currentPos;
+    Quaternion currentRot;
+
     public Transform playerTransform;
     public CapsuleCollider capCollider;
 
     public PlayerController pController;
-    public MobileController mController;
-    public PlayerCollision collision;
+    //public MobileController mController;
+    //public CameraController cam;
 
-    public AbilityHolder ability;
+
+    //public AbilityHolder ability;
     public AbilityTargeting targeting;
 
-    public ObjFreezeAbility freezeAbility;
+    /*public ObjFreezeAbility freezeAbility;
     public ObjMassAbility massAbility;
     public ObjScaleAbility scaleAbility;
     public ObjSurfaceAbility surfaceAbility;
 
     public enum PlayerType
     {
-        Unkown = -1,
         Local,
         Partner
     }
 
-    public PlayerType playerType;
+    public PlayerType playerType;*/
 
     void Start()
     {
+        currentPos = transform.position;
+        currentRot = transform.rotation;
 
+        print(localID.ToString());
+
+        //if (playerType == PlayerType.Local)
+        //{
+        //    cam = GetComponentInChildren<CameraController>();
+        //    cam.gameObject.SetActive(true);
+        //}
 
         playerTransform = GetComponent<Transform>();
-        capCollider = GetComponent<CapsuleCollider>();
+        //capCollider = GetComponent<CapsuleCollider>();
 
         pController = GetComponent<PlayerController>();
-        mController = GetComponent<MobileController>();
-        collision = GetComponent<PlayerCollision>();
 
-        ability = GetComponent<AbilityHolder>();
         targeting = GetComponent<AbilityTargeting>();
-
-        freezeAbility = GetComponent<ObjFreezeAbility>();
-        massAbility = GetComponent<ObjMassAbility>();
-        scaleAbility = GetComponent<ObjScaleAbility>();
-        surfaceAbility = GetComponent<ObjSurfaceAbility>();
     }
 
-    void Update()
+    void FixedUpdate()
     {
+        if (localID == testNetManager.PlayerId)
+        {
+            SendUpdateRequest();
+            currentPos = transform.position;      //This version works. The one with the if-statement doesnt.
 
+            /*if (transform.position != currentPos)
+            {
+                SendUpdateRequest();
+                currentPos = transform.position;
+                //currentRot = transform.rotation;
+            }*/
+        }
+        //if local
+        //check for rotation and position change
+        //if true, sendupdatepacket.
     }
 
     public override void UpdateComponent(byte[] receivedBuffer)
     {
-        /*byte[] receivedBuffer = new byte[1024];
+        GameBasePacket pb = new GameBasePacket().DeSerialize(receivedBuffer);
 
-        switch (packet.Type)
+        switch (pb.Type)
         {
             case GameBasePacket.PacketType.PlayerController:
                 PlayerControllerPacket pcPack = (PlayerControllerPacket)new PlayerControllerPacket().DeSerialize(receivedBuffer);
-                playerType = (PlayerType)pcPack.playerIntType;
+                if (localID == Guid.Parse(pcPack.objID))
+                {
+                    transform.position = pcPack.position;
+                    print($"{pcPack.position} from packet of type {pcPack.Type}, is being passed onto player of type {this.name}");
+
+                    /*pController.movement = pcPack.movement;
+                    pController.velocity = pcPack.velocity;*/
+
+                    currentPos = transform.position;
+                }
 
                 break;
 
             default:
                 break;
-        }*/
+        }
+    }
 
+    public void SetSpawn(byte[] buffer)
+    {
+        GameBasePacket pb = new GameBasePacket().DeSerialize(buffer);
+
+        switch (pb.Type)
+        {
+            case GameBasePacket.PacketType.PlayerSpawn:
+                SpawnPosPacket spawnPacket = (SpawnPosPacket)new SpawnPosPacket().DeSerialize(buffer);
+                print($"Received packet from {spawnPacket.objID} containg {spawnPacket.spawnPos}");
+
+                transform.position = spawnPacket.spawnPos;
+                print($"Object Spawn at{transform.position} obtained from {spawnPacket.spawnPos}");
+
+                //Deserialize SpawnPos Packet, and then update gameobj Transform.pos.
+                break;
+
+            default:
+                break;
+        }
     }
 
     public override void SendUpdateRequest()
     {
         byte[] buffer;
 
-        GameBasePacket pcPacket = new PlayerControllerPacket((int)playerType, gameObjID, pController.isGrounded, pController.velocity);
+        GameBasePacket pcPacket = new PlayerControllerPacket(localID.ToString(), transform.position);
+        print($"Sending {pcPacket.Type} containing {localID.ToString()}, {transform.position}");
         buffer = pcPacket.Serialize();
-        gnManager.SendPacket(buffer);
-
-
+        testNetManager.SendPacket(buffer);
     }
 }

@@ -33,7 +33,6 @@ public class GameNetworkManager : MonoBehaviour
     string objId;
     int ownerID;
 
-    // Start is called before the first frame update
     void Start()
     {
         //Call instantiation function here

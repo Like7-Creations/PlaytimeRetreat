@@ -1,28 +1,33 @@
 using System.Collections;
 using System.Collections.Generic;
+
 using UnityEngine;
 using GamePackets;
 
 public class PickUpNetComp : NetworkComponent
-{   
+{
+    public bool Holding;
+    public Vector3 Position;
+    public Vector3 Rotation;
+    
     Vector3 currentPos;
     Vector3 currentRot;
     bool currentBool;
-    float timer;
+    
     
     PickUpThrow pickupthrow;
     Rigidbody rb;
     Vector3 currentScale;
    
     
-    BoxCollider collider;
+    BoxCollider bCollider;
 
 
     void Start()
     {
         pickupthrow = GetComponent<PickUpThrow>();
         rb = GetComponent<Rigidbody>();
-        collider = GetComponent<BoxCollider>();
+        bCollider = GetComponent<BoxCollider>();
         currentPos = transform.position;
         currentRot = transform.eulerAngles;
         currentBool = pickupthrow.holding;
@@ -30,13 +35,9 @@ public class PickUpNetComp : NetworkComponent
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    void Update()
     {
-        timer += Time.deltaTime;
-        if (timer > 0.05f)
-        {
             SendUpdateRequest();
-        }
         /*if (transform.position != currentPos || pickupthrow != pickupthrow.holding || transform.localScale != currentScale)
         {
             currentPos = transform.position;
@@ -51,22 +52,22 @@ public class PickUpNetComp : NetworkComponent
         switch (pb.Type)
         {
             case GameBasePacket.PacketType.PickUp:
-                PickUpPacket pup = (PickUpPacket)new PickUpPacket().DeSerialize(receivedBuffer);
+                PickUpPacket puPack = (PickUpPacket)new PickUpPacket().DeSerialize(receivedBuffer);
                 //print($"Packet contains position:{pup.Position}");
 
-                pickupthrow.holding = pup.Holding;
-                //print(pup.Holding);
-                transform.position = pup.Position;
-                transform.rotation = Quaternion.Euler(pup.Rotation);
+                pickupthrow.holding = puPack.Holding;
+                print(puPack.Holding);
+                transform.position = puPack.Position;
+                transform.rotation = Quaternion.Euler(puPack.Rotation);
                 print("updating position and rotation");
                 currentPos = transform.position;
                 break;
 
             case GameBasePacket.PacketType.SizeMass:
-                SizeMassPacket smp = (SizeMassPacket)new SizeMassPacket().DeSerialize(receivedBuffer);
+                SizeMassPacket smPack = (SizeMassPacket)new SizeMassPacket().DeSerialize(receivedBuffer);
                 print("updating object scale and mass");
-                transform.localScale = smp.Scale;
-                rb.mass = smp.Mass;
+                transform.localScale = smPack.Scale;
+                rb.mass = smPack.Mass;
                 currentScale = transform.localScale;
                 break;
 
@@ -77,13 +78,13 @@ public class PickUpNetComp : NetworkComponent
     public override void SendUpdateRequest()
     {
         byte[] buffer;
-        if (transform.position != currentPos /*|| pickupthrow != pickupthrow.holding*/)
+        if (transform.position != currentPos/* || pickupthrow != pickupthrow.holding*/)
         {
             GameBasePacket pickUpPacket = new PickUpPacket(pickupthrow.holding, transform.position, transform.eulerAngles, gameObjID);
             buffer = pickUpPacket.Serialize();
             testNetManager.SendPacket(buffer);
             currentPos = transform.position;
-            currentBool = pickupthrow.holding;
+           // currentBool = pickupthrow.holding;
         }
 
         if (transform.localScale != currentScale)
