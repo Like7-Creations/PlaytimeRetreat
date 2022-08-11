@@ -11,8 +11,8 @@ using System;
 
 public class TestNetManager : MonoBehaviour
 {
-    //public string localPrefabName;      //Until we have multiple characters, we will use the same prefab for both characters.
-    public GameObject prefabController;
+    public string localPrefabName;      //Until we have multiple characters, we will use the same prefab for both characters.
+    //public GameObject prefabController;
 
     public NetworkComponent[] netObjs;
     //public PlayerNetComp[] playerComps = new PlayerNetComp[2];
@@ -100,7 +100,7 @@ public class TestNetManager : MonoBehaviour
                 if (localPlayer == null)
                 {
                     //Instantiate(prefabController, p1Spawn.position, Quaternion.identity);
-                    GameObject localController = InstantiateFromResources(prefabController);
+                    GameObject localController = InstantiateFromResources(localPrefabName, playerDesignation);
                     print($"{localController.name} has been instantiated for {playerDesignation}");
 
                     localPlayer = localController.GetComponent<PlayerNetComp>();
@@ -109,7 +109,7 @@ public class TestNetManager : MonoBehaviour
                     localPlayer.localID = PlayerId;
                     print($"{localPlayer.name} for {playerDesignation} has received the ID:{localPlayer.localID}");
 
-                    SendInstantiationUpdate(prefabController.name, localPlayer.localID, localPlayer.name);
+                    SendInstantiationUpdate(localPrefabName, localPlayer.localID, playerDesignation);
                     print($"An Instantiation Packet for {playerDesignation} with ID:{localPlayer.localID} has been sent to the server");
                 }
             }
@@ -161,7 +161,7 @@ public class TestNetManager : MonoBehaviour
                     {
                         print($"ID:{tempID} is not equal to TestManager's ID:{PlayerId}");
 
-                        GameObject partnerController = InstantiateFromResources(prefabController);
+                        GameObject partnerController = InstantiateFromResources(localPrefabName, ioPack.objID);
                         print($"{partnerController.name} has been instantiated for {playerDesignation}");
 
                         partnerPlayer = partnerController.GetComponent<PlayerNetComp>();
@@ -219,33 +219,33 @@ public class TestNetManager : MonoBehaviour
         }
     }
 
-    public GameObject InstantiateFromResources(GameObject prefabName)
+    public GameObject InstantiateFromResources(string prefabName, string designation)
     {
-        //GameObject prefab = Resources.Load<GameObject>($"Prefabs/{prefabName}");
+        GameObject prefab = Resources.Load<GameObject>($"Prefabs/{prefabName}");
         Vector3 spawn;
-        if (playerDesignation == "Player1")
+        if (designation == "Player1")
         {
             spawn = p1Spawn.position;
-            Instantiate(prefabName, spawn, Quaternion.identity);     //Replace rotation with new values later.
+            Instantiate(prefab, spawn, Quaternion.identity);     //Replace rotation with new values later.
            // prefabName.GetComponent<Renderer>().material.color = Color.red;
-            prefabName.name = playerDesignation + " Controller";
-            print($"{prefabName.name} has been instantiated for {playerDesignation} with a color of Red at spawnPos {spawn}");
+            prefab.name = playerDesignation + " Controller";
+            print($"{prefab.name} has been instantiated for {playerDesignation} with a color of Red at spawnPos {spawn}");
         }
-        else if (playerDesignation == "Player2")
+        else if (designation == "Player2")
         {
             spawn = p2Spawn.position;
-            Instantiate(prefabName, spawn, Quaternion.identity);     //Replace spawnPos and rotation with new values later.
+            Instantiate(prefab, spawn, Quaternion.identity);     //Replace spawnPos and rotation with new values later.
            // prefabName.GetComponent<Renderer>().material.color = Color.blue;
-            prefabName.name = playerDesignation + " Controller";
+            prefab.name = playerDesignation + " Controller";
 
-            partnerPlayer = prefabName.GetComponent<PlayerNetComp>();
+            partnerPlayer = prefab.GetComponent<PlayerNetComp>();
             
-            print($"{prefabName.name} has been instantiated for {playerDesignation} with a color of Blue at spawnPos {spawn}");
+            print($"{prefab.name} has been instantiated for {playerDesignation} with a color of Blue at spawnPos {spawn}");
         }
 
         //prefab.AddComponent<PlayerNetComp>();       //Optional, use only if player doesnt have the netComp.
 
-        return prefabName;
+        return prefab;
     }
 
     public void SendInstantiationUpdate(string prefabName, Guid ownerID, string objId)
