@@ -49,7 +49,6 @@ public class PlayerController : MonoBehaviour
         }*/
     }
 
-    // Update is called once per frame
     void Update()
     {
         isGrounded = Physics.Raycast(transform.position, Vector3.down, 1.5f);
@@ -59,43 +58,40 @@ public class PlayerController : MonoBehaviour
             velocity.y = -2;
         }
 
-        if (pcNetComp.localID == tnManager.PlayerId)
+        if (pcNetComp.localID != null)
         {
-            float x = Input.GetAxis("Horizontal");
-            float z = Input.GetAxis("Vertical");
-
-            movement = transform.right * x + transform.forward * z; ;
-            //Vector3 move = transform.right * x + transform.forward * z;
-            //movement = move;
-        }
-
-        characterController.Move(movement * speed * Time.deltaTime);
-
-        if (pcNetComp.localID == tnManager.PlayerId)
-        {
-            if (Input.GetButtonDown("Jump") && isGrounded)
+            if (pcNetComp.localID == tnManager.PlayerId)
             {
-                velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
-            }
+                float x = Input.GetAxis("Horizontal");
+                float z = Input.GetAxis("Vertical");
 
-        }
+                movement = transform.right * x + transform.forward * z; ;
+                //Vector3 move = transform.right * x + transform.forward * z;
+                //movement = move;
 
-        velocity.y += gravity * Time.deltaTime;
-        characterController.Move(velocity * Time.deltaTime);
+                characterController.Move(movement * speed * Time.deltaTime);
 
-        /* if(what ever happens to player here)
-         {
-             TPToCheckpoint(lastCheckpoint);
-         }*/
-
-        if (pcNetComp.localID == tnManager.PlayerId)
-        {
-            for (int i = 0; i < key.Length; i++)
-            {
-                if (Input.GetKeyDown(key[i]))
+                if (Input.GetButtonDown("Jump") && isGrounded)
                 {
-                    AbilityIndex = i + 1;
-                    Debug.Log(AbilityIndex);
+                    velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
+                }
+
+
+                velocity.y += gravity * Time.deltaTime;
+                characterController.Move(velocity * Time.deltaTime);
+
+                /* if(what ever happens to player here)
+                 {
+                     TPToCheckpoint(lastCheckpoint);
+                 }*/
+
+                for (int i = 0; i < key.Length; i++)
+                {
+                    if (Input.GetKeyDown(key[i]))
+                    {
+                        AbilityIndex = i + 1;
+                        Debug.Log(AbilityIndex);
+                    }
                 }
             }
         }
