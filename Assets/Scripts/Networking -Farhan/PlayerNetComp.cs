@@ -40,8 +40,6 @@ public class PlayerNetComp : NetworkComponent
         currentPos = transform.position;
         currentRot = transform.rotation;
 
-        print(localID.ToString());
-
         //if (playerType == PlayerType.Local)
         //{
         //    cam = GetComponentInChildren<CameraController>();

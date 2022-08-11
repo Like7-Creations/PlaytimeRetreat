@@ -49,7 +49,8 @@ public class TestNetManager : MonoBehaviour
 
         netObjs = FindObjectsOfType<NetworkComponent>();
         PlayerId = Guid.NewGuid();
-        playerDesignation = null;
+
+        print(PlayerId);
 
         /* Generate a client/owner/player ID.
          * Instantiate the local player prefab here
@@ -81,11 +82,6 @@ public class TestNetManager : MonoBehaviour
         socket.Blocking = false;
 
         isConnected = true;
-
-        /*localPlayer = InstantiateFromResources(localPrefabName).GetComponent<PlayerNetComp>();
-        localPlayer.gameObject.GetComponent<Renderer>().material.color = Color.red;
-        localPlayer.localID = PlayerId;
-        SendInstantiationUpdate(localPrefabName, PlayerId);*/
     }
 
     void Update()
@@ -97,12 +93,19 @@ public class TestNetManager : MonoBehaviour
                 DeserializePackets();
             }
 
-            if(localPlayer == null)
+            if (playerDesignation != null)
             {
-                localPlayer = InstantiateFromResources(localPrefabName).GetComponent<PlayerNetComp>();
-                localPlayer.gameObject.GetComponent<Renderer>().material.color = Color.red;
+                GameObject localController = InstantiateFromResources(localPrefabName);
+                print($"{localController.name} has been instantiated for {playerDesignation}");
+
+                localPlayer = localController.GetComponent<PlayerNetComp>();
+                print($"{localController.name} has been set as the localPlayer for {playerDesignation}");
+
                 localPlayer.localID = PlayerId;
-                SendInstantiationUpdate(localPrefabName, PlayerId);
+                print($"{localPlayer.name} for {playerDesignation} has received the ID:{localPlayer.localID}");
+
+                SendInstantiationUpdate(localPrefabName, localPlayer.localID);
+                print($"An Instantiation Packet for {playerDesignation} with ID:{localPlayer.localID} has been sent to the server");
             }
         }
     }
@@ -129,33 +132,44 @@ public class TestNetManager : MonoBehaviour
              * If false, call the instantiate function and pass in the prefabName received from the packet
              * Then assign the instantiated Player to the partnerPlayer, and set its localID to the one received from the packet.
              */
-            //------------------------------Done
+            //------------------------------
+
+            case GameBasePacket.PacketType.PlayerInfo:
+                PlayerInfoPacket piPack = (PlayerInfoPacket)new PlayerInfoPacket().DeSerialize(receivedBuffer);
+                if(playerDesignation == null)
+                {
+                    playerDesignation = piPack.playerName;
+                    print($"Welcome {playerDesignation}");
+                }
+
+                break;
 
             case GameBasePacket.PacketType.Instantiate:
                 InstantiateObjPacket ioPack = (InstantiateObjPacket)new InstantiateObjPacket().DeSerialize(receivedBuffer);
                 Guid tempID = Guid.Parse(ioPack.OwnerID);
+                print($"Received {ioPack.Type} with ID:{tempID}");
                 if (tempID != PlayerId)
                 {
-                    partnerPlayer = InstantiateFromResources(ioPack.prefabName).GetComponent<PlayerNetComp>();
-                    partnerPlayer.gameObject.GetComponent<Renderer>().material.color = Color.blue;
+                    print($"ID:{tempID} is not equal to TestManager's ID:{PlayerId}");
+
+                    GameObject partnerController = InstantiateFromResources(ioPack.prefabName);
+                    print($"{partnerController.name} has been instantiated for {playerDesignation}");
+
+                    partnerPlayer = partnerController.GetComponent<PlayerNetComp>();
+                    print($"{partnerController.name} has been set as the partnerPlayer for {playerDesignation}");
+
                     partnerPlayer.localID = PlayerId;
+                    print($"{partnerPlayer.name} for {playerDesignation} has received the ID:{partnerPlayer.localID}");
                 }
 
                 break;
 
-            case GameBasePacket.PacketType.PlayerInfo:
-                PlayerInfoPacket piPack = (PlayerInfoPacket)new PlayerInfoPacket().DeSerialize(receivedBuffer);
-                if (playerDesignation == null)
-                {
-                    playerDesignation = piPack.playerName;
-                }
-                break;
 
             case GameBasePacket.PacketType.PlayerController:
                 PlayerControllerPacket pcPack = (PlayerControllerPacket)new PlayerControllerPacket().DeSerialize(receivedBuffer);
                 print($"Received position: {pcPack.position}, from {pcPack.objID}");
 
-                Console.WriteLine($"{pcPack} packet of {pcPack.objID} conaining {pcPack.position} has been received.");
+                //Console.WriteLine($"{pcPack} packet of {pcPack.objID} conaining {pcPack.position} has been received.");
 
                 if (partnerPlayer.localID == Guid.Parse(pcPack.objID))
                 {
@@ -199,15 +213,24 @@ public class TestNetManager : MonoBehaviour
     {
         GameObject prefab = Resources.Load<GameObject>($"Prefabs/{prefabName}");
         Vector3 spawn;
-        if (playerDesignation == "Player1")
+        if (playerDesignation.Equals("Player1"))
         {
             spawn = p1Spawn.position;
-            Instantiate(prefab, spawn, Quaternion.identity);     //Replace spawnPos and rotation with new values later.
+            Instantiate(prefab, spawn, Quaternion.identity);     //Replace rotation with new values later.
+            prefab.GetComponent<Renderer>().material.color = Color.red;
+            prefab.name = playerDesignation + " Controller";
+            print($"{prefab.name} has been instantiated for {playerDesignation} with a color of Red at spawnPos {spawn}");
         }
-        else if (playerDesignation == "Player2")
+        else if (playerDesignation.Equals("Player2"))
         {
             spawn = p2Spawn.position;
             Instantiate(prefab, spawn, Quaternion.identity);     //Replace spawnPos and rotation with new values later.
+            prefab.GetComponent<Renderer>().material.color = Color.blue;
+            prefab.name = playerDesignation + " Controller";
+
+            partnerPlayer = prefab.GetComponent<PlayerNetComp>();
+            
+            print($"{prefab.name} has been instantiated for {playerDesignation} with a color of Blue at spawnPos {spawn}");
         }
 
         //prefab.AddComponent<PlayerNetComp>();       //Optional, use only if player doesnt have the netComp.
@@ -218,6 +241,8 @@ public class TestNetManager : MonoBehaviour
     public void SendInstantiationUpdate(string prefabName, Guid ownerID)
     {
         socket.Send(new InstantiateObjPacket(prefabName, ownerID.ToString()).Serialize());
+
+        InstantiateFromResources(prefabName);
     }
 
     /* Create 2 Instantiation functions:
