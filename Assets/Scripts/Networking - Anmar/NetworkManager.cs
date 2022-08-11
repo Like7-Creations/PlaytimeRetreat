@@ -59,7 +59,7 @@ public class NetworkManager : MonoBehaviour
 
     Player player;
     Socket MainSocket;
-    Socket lobbySocket;
+    Socket TestSocket;
     List<PlayerController> playerss = new List<PlayerController>();
     PlayerController[] playerController;
 
@@ -71,6 +71,8 @@ public class NetworkManager : MonoBehaviour
         MainSocket.Connect(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 3000));
         MainSocket.Blocking = false;
         player = new Player(Guid.NewGuid().ToString());
+        
+
 
         //lobbySocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
@@ -123,12 +125,10 @@ public class NetworkManager : MonoBehaviour
             text.text = ChatInput.text;
             text.transform.parent = canvas.transform;
             text.transform.parent = ContentPanel.transform;
-            print("f");
             MainSocket.Send(new MessagePacket(ChatInput.text, player).Serialize());
         });
         ConnectButton.onClick.AddListener(() =>
         {
-        //check if inputted roomcode is one of the grabbedroomcodes...
             int roomcode = int.Parse(RoomCodeInput.text);
             print(roomcode);
             MainSocket.Send(new JoinRequestPacket(ChosenLobbyName,roomcode,"null", player).Serialize());
@@ -145,20 +145,8 @@ public class NetworkManager : MonoBehaviour
         });
         LeaveButton.onClick.AddListener(() =>
         {
-            BackToMainServer();
+            //BackToMainServer();
         });
-        /*for (int i = 0; i < lobbyButtonNames.Count; i++)
-        {
-            if (lobbyButtonNames[i] != null)
-            {
-                lobbyButtonNames[i].onClick.AddListener(() =>
-                {
-                    //ChosenLobbyName = lobbyButtonNames[i].transform.Find("Text (TMP)").gameObject.GetComponent<TextMeshProUGUI>().text;
-                    //print(ChosenLobbyName);
-                    print("button list testing");
-                });
-            }
-        }*/
     }
     void Update()
     {
@@ -210,7 +198,6 @@ public class NetworkManager : MonoBehaviour
                     //Recieve Display Lobbies Packet
                     case BasePacket.PacketType.LobbyName:
                         LobbyNamesPacket lnp = (LobbyNamesPacket)new LobbyNamesPacket().DeSerialize(recievedBuffer);
-                        //GrabbedroomNames = lnp.LobbyNames;
                         for (int i = 0; i < lnp.LobbyNames.Count; i++)
                         {
                             string.Join(", ", lnp.LobbyNames);
@@ -220,9 +207,7 @@ public class NetworkManager : MonoBehaviour
                             instantiateButton.transform.Find("Text (TMP)").gameObject.GetComponent<TextMeshProUGUI>().text = lnp.LobbyNames[i];
                             lobbyButtonNames.Add(instantiateButton);
                             lobbyButtonNames[i].transform.parent = ContentPanel.transform;
-                           /* GrabbedroomNames.Add(lnp.LobbyNames);
-                            GrabbedLobbyCodes.Add(lnp.RoomCodes);*/
-                        }
+                        } 
                         break;
 
                         //kick request recieve as a client
@@ -233,9 +218,8 @@ public class NetworkManager : MonoBehaviour
                             KickMessage.gameObject.SetActive(true);
                             KickMessage.text = krp.Request;
                             print("I got kicked out! or lobby is full");
-                            BackToMainServer();
-                            //SceneManager.LoadScene("_MainMenu");
-                            print("connected back to main server");
+                            //BackToMenuScreen();
+                            SceneManager.LoadScene("_MainMenu");
                         }
                         //for leaving...if client...relaunch main scene
                         //if host send packet to cancel the lobby and remove it off the list of lobbies in the main server... 
@@ -256,13 +240,6 @@ public class NetworkManager : MonoBehaviour
            
     }
 
-    public void BackToMainServer()
-    {
-        MainSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-        MainSocket.Connect(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 3300));
-        MainSocket.Blocking = false;
-        BackToMenuScreen();
-    }
     public void BackToMenuScreen()
     {
         LobbyPage.gameObject.SetActive(false);
@@ -286,11 +263,5 @@ public class NetworkManager : MonoBehaviour
     public void LeaveLobby()
     {
 
-    }
-    private void OnApplicationQuit()
-    {
-        MainSocket.Shutdown(SocketShutdown.Both);
-        MainSocket.Disconnect(false);
-        print("Disconnected from server");
     }
 }

@@ -17,7 +17,6 @@ public class LobbyButton : MonoBehaviour
     {
         networkmanager = FindObjectOfType<NetworkManager>();
         ButtonName = transform.Find("Text (TMP)").gameObject.GetComponent<TextMeshProUGUI>().text;
-        Debug.Log(ButtonName);
     }
     public void ChangeNMstring()
     {
