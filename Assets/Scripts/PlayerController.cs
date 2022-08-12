@@ -12,6 +12,8 @@ public class PlayerController : MonoBehaviour
     public TestNetManager tnManager;
     public PlayerNetComp pcNetComp;
 
+    [SerializeField] string testString;
+
     //public enum PlayerType
     //{
     //    Local,
@@ -37,7 +39,9 @@ public class PlayerController : MonoBehaviour
 
     public Vector3 lastCheckpoint;
 
-    Guid testGuid;
+    public Guid testGuid;
+
+    public PlayerController[] pcontrollers;
 
     void Start()
     {
@@ -46,7 +50,14 @@ public class PlayerController : MonoBehaviour
         pcNetComp = gameObject.GetComponent<PlayerNetComp>();
 
         testGuid = tnManager.PlayerId;
+        //testGuid = pcNetComp.localID;
+        pcNetComp.localID = testGuid;
+        testString = testGuid.ToString();
 
+        pcontrollers = FindObjectsOfType<PlayerController>();
+
+
+        if (pcontrollers.Length > 1) { testGuid = tnManager.PartnerGuidStore; testString = testGuid.ToString(); }
 
         /*if (pcNetComp.localID == tnManager.PlayerId)
         {
@@ -57,16 +68,17 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        isGrounded = Physics.Raycast(transform.position, Vector3.down, 1.5f);
+            isGrounded = Physics.Raycast(transform.position, Vector3.down, 1.5f);
 
         if (isGrounded && velocity.y < 0)
         {
             velocity.y = -2;
         }
 
+        print(testGuid);
         if (testGuid != null)
         {
-            if (testGuid == tnManager.PlayerId)
+            if (testGuid == pcNetComp.localID)
             {
                 float x = Input.GetAxis("Horizontal");
                 float z = Input.GetAxis("Vertical");

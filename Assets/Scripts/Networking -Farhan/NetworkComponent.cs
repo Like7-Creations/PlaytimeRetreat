@@ -24,7 +24,7 @@ public abstract class NetworkComponent : MonoBehaviour
 
     public void Awake()
     {
-        gnManager = FindObjectOfType <GameNetworkManager>();
+      //  gnManager = FindObjectOfType <GameNetworkManager>();
         testNetManager = FindObjectOfType<TestNetManager>();
         gameObjID = gameObject.name;
     }

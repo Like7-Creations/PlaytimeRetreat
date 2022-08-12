@@ -15,6 +15,7 @@ public class PlayerNetComp : NetworkComponent
     public CapsuleCollider capCollider;
 
     public PlayerController pController;
+    public GameObject PartnerGameobject;
     //public MobileController mController;
     //public CameraController cam;
 
@@ -40,6 +41,9 @@ public class PlayerNetComp : NetworkComponent
         currentPos = transform.position;
         currentRot = transform.rotation;
 
+
+        testNetManager = FindObjectOfType<TestNetManager>();
+        gameObjID = gameObject.name;
         //if (playerType == PlayerType.Local)
         //{
         //    cam = GetComponentInChildren<CameraController>();
@@ -83,13 +87,17 @@ public class PlayerNetComp : NetworkComponent
                 PlayerControllerPacket pcPack = (PlayerControllerPacket)new PlayerControllerPacket().DeSerialize(receivedBuffer);
                 if (localID == Guid.Parse(pcPack.objID))
                 {
-                    transform.position = pcPack.position;
-                    print($"{pcPack.position} from packet of type {pcPack.Type}, is being passed onto player of type {this.name}");
+                    if (localID == testNetManager.PlayerId)
+                    {
+                        transform.position = pcPack.position;
+                        print($"{pcPack.position} from packet of type {pcPack.Type}, is being passed onto player of type {this.name}");
+                    
 
-                    /*pController.movement = pcPack.movement;
-                    pController.velocity = pcPack.velocity;*/
+                        /*pController.movement = pcPack.movement;
+                        pController.velocity = pcPack.velocity;*/
 
-                    currentPos = transform.position;
+                        currentPos = transform.position;
+                    }
                 }
 
                 break;

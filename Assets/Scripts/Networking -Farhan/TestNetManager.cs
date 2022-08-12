@@ -29,6 +29,7 @@ public class TestNetManager : MonoBehaviour
     public Player player;
 
     bool isConnected;
+    public Guid PartnerGuidStore;
 
 
     /*HOW TO SOLVE OWNERSHIP:-
@@ -116,6 +117,7 @@ public class TestNetManager : MonoBehaviour
         }
     }
 
+    int test = 0;
     public void SendPacket(byte[] buffer)
     {
         socket.Send(buffer);
@@ -157,6 +159,7 @@ public class TestNetManager : MonoBehaviour
                 print($"Received {ioPack.Type} with ID:{tempID}");
                 if (tempID != PlayerId)
                 {
+                    //partnerPlayer = null;
                     if (partnerPlayer == null)
                     {
                         print($"ID:{tempID} is not equal to TestManager's ID:{PlayerId}");
@@ -168,7 +171,23 @@ public class TestNetManager : MonoBehaviour
                         print($"{partnerController.name} has been set as the partnerPlayer for {playerDesignation}");
 
                         partnerPlayer.localID = (Guid.Parse(ioPack.OwnerID));
+                        PartnerGuidStore = Guid.Parse(ioPack.OwnerID);
+                        //partnerController.GetComponent<PlayerController>().pcNetComp.localID = Guid.Parse(ioPack.OwnerID);
                         print($"{partnerPlayer.name} for {playerDesignation} has received the ID:{partnerPlayer.localID}");
+                    }
+                    else if (test == 0)
+                    {
+                        GameObject partnerController = InstantiateFromResources(localPrefabName, ioPack.objID);
+                        print($"{partnerController.name} has been instantiated for {playerDesignation}");
+
+                        partnerPlayer = partnerController.GetComponent<PlayerNetComp>();
+                        print($"{partnerController.name} has been set as the partnerPlayer for {playerDesignation}");
+
+                        partnerPlayer.localID = (Guid.Parse(ioPack.OwnerID));
+                        PartnerGuidStore = Guid.Parse(ioPack.OwnerID);
+                        //partnerController.GetComponent<PlayerController>().pcNetComp.localID = Guid.Parse(ioPack.OwnerID);
+                        print($"{partnerPlayer.name} for {playerDesignation} has received the ID:{partnerPlayer.localID}");
+                        test++;
                     }
                 }
 

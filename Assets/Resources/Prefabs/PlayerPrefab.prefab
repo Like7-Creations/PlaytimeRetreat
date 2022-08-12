@@ -104,6 +104,7 @@ MonoBehaviour:
   cam: {fileID: 0}
   tnManager: {fileID: 0}
   pcNetComp: {fileID: 0}
+  testString: 
   level: 0
   speed: 10
   jumpHeight: 23.23
@@ -113,6 +114,7 @@ MonoBehaviour:
   movement: {x: 0, y: 0, z: 0}
   id: 0
   lastCheckpoint: {x: 0, y: 0, z: 0}
+  pcontrollers: []
 --- !u!114 &1440416819398475894
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -190,6 +192,7 @@ MonoBehaviour:
   playerTransform: {fileID: 0}
   capCollider: {fileID: 0}
   pController: {fileID: 0}
+  PartnerGameobject: {fileID: 0}
   targeting: {fileID: 0}
 --- !u!1 &1503224324319637400
 GameObject:
