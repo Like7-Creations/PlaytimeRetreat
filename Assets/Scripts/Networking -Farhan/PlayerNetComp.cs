@@ -8,62 +8,36 @@ public class PlayerNetComp : NetworkComponent
 {
     public Guid localID;
 
-    Vector3 currentPos;
-    Quaternion currentRot;
+    public PlayerController pController;
 
     public Transform playerTransform;
     public CapsuleCollider capCollider;
 
-    public PlayerController pController;
-    public GameObject PartnerGameobject;
-    //public MobileController mController;
-    //public CameraController cam;
+    public string playerIdDisplay;
+    public string playerDesignation;
 
+    public bool playerDataSet = false;
 
     //public AbilityHolder ability;
     public AbilityTargeting targeting;
 
-    /*public ObjFreezeAbility freezeAbility;
-    public ObjMassAbility massAbility;
-    public ObjScaleAbility scaleAbility;
-    public ObjSurfaceAbility surfaceAbility;
-
-    public enum PlayerType
-    {
-        Local,
-        Partner
-    }
-
-    public PlayerType playerType;*/
-
     void Start()
     {
-        currentPos = transform.position;
-        currentRot = transform.rotation;
-
-
         testNetManager = FindObjectOfType<TestNetManager>();
-        gameObjID = gameObject.name;
-        //if (playerType == PlayerType.Local)
-        //{
-        //    cam = GetComponentInChildren<CameraController>();
-        //    cam.gameObject.SetActive(true);
-        //}
-
-        playerTransform = GetComponent<Transform>();
-        //capCollider = GetComponent<CapsuleCollider>();
 
         pController = GetComponent<PlayerController>();
-
+        playerTransform = GetComponent<Transform>();
         targeting = GetComponent<AbilityTargeting>();
+
+        gameObjID = gameObject.name;
     }
 
     void FixedUpdate()
     {
-        if (localID == testNetManager.PlayerId)
+        if (localID == testNetManager.clientID)
         {
             SendUpdateRequest();
-            currentPos = transform.position;      //This version works. The one with the if-statement doesnt.
+            //currentPos = transform.position;      //This version works. The one with the if-statement doesnt.
 
             /*if (transform.position != currentPos)
             {
@@ -85,18 +59,25 @@ public class PlayerNetComp : NetworkComponent
         {
             case GameBasePacket.PacketType.PlayerController:
                 PlayerControllerPacket pcPack = (PlayerControllerPacket)new PlayerControllerPacket().DeSerialize(receivedBuffer);
-                if (localID == Guid.Parse(pcPack.objID))
+                if (gameObjID == pcPack.objID)
                 {
-                    if (localID == testNetManager.PlayerId)
+                    print($"{gameObject} has received {pcPack.Type} packet from the server.");
+
+                    Guid tempID = Guid.Parse(pcPack.ownershipID);
+
+                    if (localID != testNetManager.clientID)
                     {
-                        transform.position = pcPack.position;
-                        print($"{pcPack.position} from packet of type {pcPack.Type}, is being passed onto player of type {this.name}");
-                    
+                        if (localID == tempID)
+                        {
+                            //transform.position = pcPack.position;
+                            print("Player Movement: " + pController.movement);
+                            pController.movement = pcPack.movement;
 
-                        /*pController.movement = pcPack.movement;
-                        pController.velocity = pcPack.velocity;*/
+                            print("Player Velocity: " + pController.velocity);
+                            pController.velocity = pcPack.velocity;
 
-                        currentPos = transform.position;
+                            print($"{pcPack.movement} and {pcPack.velocity} from packet of type {pcPack.Type}, are being passed onto player of type {gameObject}");
+                        }
                     }
                 }
 
@@ -107,7 +88,7 @@ public class PlayerNetComp : NetworkComponent
         }
     }
 
-    public void SetSpawn(byte[] buffer)
+    /*public void SetSpawn(byte[] buffer)
     {
         GameBasePacket pb = new GameBasePacket().DeSerialize(buffer);
 
@@ -126,15 +107,15 @@ public class PlayerNetComp : NetworkComponent
             default:
                 break;
         }
-    }
+    }*/
 
     public override void SendUpdateRequest()
     {
         byte[] buffer;
 
-        GameBasePacket pcPacket = new PlayerControllerPacket(localID.ToString(), transform.position);
-        print($"Sending {pcPacket.Type} containing {localID.ToString()}, {transform.position}");
-        buffer = pcPacket.Serialize();
+        GameBasePacket pcPack = new PlayerControllerPacket(pController.movement, pController.velocity, localID.ToString(), gameObjID);
+        print($"Sending {pcPack.Type} containing {localID.ToString()}");
+        buffer = pcPack.Serialize();
         testNetManager.SendPacket(buffer);
     }
 }

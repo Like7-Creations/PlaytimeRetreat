@@ -155,7 +155,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 757ccd8bd8bff544ca70a7720d5d8acf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gnManager: {fileID: 0}
   testNetManager: {fileID: 0}
   gameObjID: 
 --- !u!65 &521342833
@@ -514,13 +513,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4053b1ad563a86c4986cec024b87b7fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  localPrefabName: PlayerPrefab
+  prefabName: PlayerPrefab
   netObjs: []
-  localPlayer: {fileID: 0}
-  partnerPlayer: {fileID: 0}
+  playersAdded: 0
   p1Spawn: {fileID: 689534691}
   p2Spawn: {fileID: 1193156998}
-  playerDesignation: 
+  clientIdDisplay: 
+  clientDesignation: 
+  localPlayer: {fileID: 0}
+  localName: 
+  localIdDisplay: 
+  localDesignation: 
+  partnerPlayer: {fileID: 0}
+  partnerName: 
+  partnerIdDisplay: 
+  partnerDesignation: 
 --- !u!4 &1526425545
 Transform:
   m_ObjectHideFlags: 0
