@@ -6,37 +6,52 @@ using GamePackets;
 public class TriggerNetComp : NetworkComponent
 {
     public TriggerSystem trigger;
+    bool currentActive;
+    bool updating;
 
     void Start()
     {
         trigger = GetComponent<TriggerSystem>();
+        gameObjID = this.gameObject.name;
+        currentActive = trigger.triggerActive;
     }
 
     // Update is called once per frame
     void Update()
     {
-        //gameid == this.name
+        if(trigger.triggerActive != currentActive)
+        {
+            SendUpdateRequest();
+            currentActive = trigger.triggerActive;
+        }
+        Debug.Log(trigger.triggerActive);
     }
 
     public override void UpdateComponent(byte[] receivedBuffer)
     {
-        //byte[] receivedBuffer = new byte[1024];
+        GameBasePacket pb = new GameBasePacket().DeSerialize(receivedBuffer);
 
-        //switch (tPacket.Type)
-        //{
-        //    case GameBasePacket.PacketType.Trigger:
-        //        TriggerPacket tPack = (TriggerPacket)new TriggerPacket().DeSerialize(receivedBuffer);
-        //        trigger.triggerActive = tPack.triggerActive;
+        switch (pb.Type)
+        {
+            case GameBasePacket.PacketType.Trigger:
+                TriggerPacket tp = (TriggerPacket)new TriggerPacket().DeSerialize(receivedBuffer);
+                Debug.Log("Received Trigger Request");
+                trigger.triggerActive = tp.triggerActive;
+                currentActive = tp.triggerActive;
 
-        //            break;
+                break;
 
-        //    default:
-        //        break;
-        //}
+            default:
+                break;
+        }
     }
 
     public override void SendUpdateRequest()
     {
-        
+        byte[] buffer;
+        Debug.Log("Sending Trigger Request");
+        GameBasePacket pcPacket = new TriggerPacket(gameObjID, trigger.triggerActive);
+        buffer = pcPacket.Serialize();
+        testNetManager.SendPacket(buffer);
     }
 }

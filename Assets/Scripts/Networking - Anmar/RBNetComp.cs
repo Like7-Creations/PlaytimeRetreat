@@ -36,13 +36,13 @@ public class RBNetComp : NetworkComponent
         {
             SendUpdateRequest();
             //print(rb.isKinematic);
-        }*/
+        }
         timer += Time.deltaTime;
         if(timer > 10)
         {
             SendUpdateRequest();
             timer = 0;
-        }
+        }/*
         /*if (Velocity != rb.velocity && !recieving)
         {
             SendUpdateRequest();

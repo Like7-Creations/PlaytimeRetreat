@@ -31,6 +31,7 @@ public class NetworkManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI KickMessage;
     [SerializeField] TextMeshProUGUI RoomCode;
     [SerializeField] TextMeshProUGUI PartnerUsername;
+    [SerializeField] TextMeshProUGUI RoomCodeText;
     
     
     [SerializeField] TextMeshProUGUI TextPrefabForChat;
@@ -59,7 +60,7 @@ public class NetworkManager : MonoBehaviour
 
     Player player;
     Socket MainSocket;
-    Socket TestSocket;
+    Socket LobbySocket;
     List<PlayerController> playerss = new List<PlayerController>();
     PlayerController[] playerController;
 
@@ -125,7 +126,7 @@ public class NetworkManager : MonoBehaviour
             text.text = ChatInput.text;
             text.transform.parent = canvas.transform;
             text.transform.parent = ContentPanel.transform;
-            MainSocket.Send(new MessagePacket(ChatInput.text, player).Serialize());
+            LobbySocket.Send(new MessagePacket(ChatInput.text, player).Serialize());
         });
         ConnectButton.onClick.AddListener(() =>
         {
@@ -135,17 +136,18 @@ public class NetworkManager : MonoBehaviour
         });
         StartButton.onClick.AddListener(() =>
         {
-            if(host) 
-                MainSocket.Send(new StartGamePacket("start", player).Serialize());
+            if(host)
+                LobbySocket.Send(new StartGamePacket("start", player).Serialize());
         });
         KickButton.onClick.AddListener(() =>
         {
             if(host) 
-                MainSocket.Send(new KickRequestPacket("kickrequest", player).Serialize());
+                LobbySocket.Send(new KickRequestPacket("kickrequest", player).Serialize());
         });
         LeaveButton.onClick.AddListener(() =>
         {
-            //BackToMainServer();
+            if(host) LobbySocket.Send(new LeaveRequestPacket(RoomName.text, host, player).Serialize());
+            if(client) LobbySocket.Send(new LeaveRequestPacket(ChosenLobbyName, client, player).Serialize());
         });
     }
     void Update()
@@ -157,33 +159,21 @@ public class NetworkManager : MonoBehaviour
                 byte[] recievedBuffer = new byte[MainSocket.Available];
                 MainSocket.Receive(recievedBuffer);
                 BasePacket pb = new BasePacket().DeSerialize(recievedBuffer);
-                print("instantiating player for other players");
                 switch (pb.Type)
-                {
-                    case BasePacket.PacketType.Message:
-                        MessagePacket mp = (MessagePacket)new MessagePacket().DeSerialize(recievedBuffer);
-                        print($" someone spit: {mp.Message}");
-                        TextMeshProUGUI text = Instantiate(TextPrefabForChat);
-                        text.text = mp.Message;
-                        text.transform.parent = ContentPanel.transform;
-                        //ClientTest.text = (mp.player.Name + ("is Saying ") + mp.Message);
-
-                        break;
-
-                       
+                {                       
                     //lobby information packet...and joining a lobby
                     case BasePacket.PacketType.Lobby:
                         LobbyInformationPacket lp = (LobbyInformationPacket)new LobbyInformationPacket().DeSerialize(recievedBuffer);
                         string name = lp.Name;
                         int roomcode = lp.RoomCode;
                         int portnumber = lp.LobbyPort;
+                        RoomCodeText.text = "Room Code: " + lp.RoomCode.ToString();
                         print("Connecting to " + lp.Name + "with port " + portnumber);
-                        MainSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                        MainSocket.Connect(new IPEndPoint(IPAddress.Parse("127.0.0.1"), portnumber));
-                        MainSocket.Blocking = false;
+                        LobbySocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                        LobbySocket.Connect(new IPEndPoint(IPAddress.Parse("127.0.0.1"), portnumber));
+                        LobbySocket.Blocking = false;
                         print("I have connected to " + name);
-                        
-                       // MainSocket.Send(new DisplayLobbiesPacket().Serialize());
+
                         break;
 
                         // join request packet
@@ -210,17 +200,37 @@ public class NetworkManager : MonoBehaviour
                         } 
                         break;
 
-                        //kick request recieve as a client
+                    default:
+                        break;
+                }
+            }
+            if(LobbySocket.Available > 0)
+            {
+                byte[] recievedBuffer = new byte[LobbySocket.Available];
+                LobbySocket.Receive(recievedBuffer);
+                BasePacket pb = new BasePacket().DeSerialize(recievedBuffer);
+                switch (pb.Type)
+                {
+                    case BasePacket.PacketType.Message:
+                        MessagePacket mp = (MessagePacket)new MessagePacket().DeSerialize(recievedBuffer);
+                        print($" someone spit: {mp.Message}");
+                        TextMeshProUGUI text = Instantiate(TextPrefabForChat);
+                        text.text = mp.Message;
+                        text.transform.parent = ContentPanel.transform;
+                        //ClientTest.text = (mp.player.Name + ("is Saying ") + mp.Message);
+
+                        break;
+
+                    //kick request recieve as a client
                     case BasePacket.PacketType.KickRequest:
-                        KickRequestPacket krp = (KickRequestPacket)new KickRequestPacket().DeSerialize(recievedBuffer);
-                        if (client)
-                        {
-                            KickMessage.gameObject.SetActive(true);
-                            KickMessage.text = krp.Request;
-                            print("I got kicked out! or lobby is full");
-                            //BackToMenuScreen();
-                            SceneManager.LoadScene("_MainMenu");
-                        }
+                        KickRequestPacket krp = (KickRequestPacket)new KickRequestPacket().DeSerialize(recievedBuffer);                     
+                        KickMessage.gameObject.SetActive(true);
+                        KickMessage.text = krp.Request;
+                        print("I got kicked out! or lobby is full");
+                        BackToMenuScreen();
+                        //LobbySocket.Shutdown(SocketShutdown.Both);
+                        //SceneManager.LoadScene("_MainMenu");
+                        
                         //for leaving...if client...relaunch main scene
                         //if host send packet to cancel the lobby and remove it off the list of lobbies in the main server... 
                         break;
@@ -238,6 +248,13 @@ public class NetworkManager : MonoBehaviour
             Console.WriteLine(ex);
         }
            
+    }
+
+    void OnApplicationQuit()
+    {
+        MainSocket.Send(new PlayerShutDownPacket("", player).Serialize());
+        if(host) LobbySocket.Send(new LeaveRequestPacket(RoomName.text, host, player).Serialize());
+        LobbySocket.Send(new PlayerShutDownPacket("", player).Serialize());
     }
 
     public void BackToMenuScreen()
