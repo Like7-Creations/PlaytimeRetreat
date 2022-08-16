@@ -61,7 +61,7 @@ public class PlayerNetComp : NetworkComponent
                 PlayerControllerPacket pcPack = (PlayerControllerPacket)new PlayerControllerPacket().DeSerialize(receivedBuffer);
                 if (gameObjID == pcPack.objID)
                 {
-                    print($"{gameObject} has received {pcPack.Type} packet from the server.");
+                    //print($"{gameObject} has received {pcPack.Type} packet from the server.");
 
                     Guid tempID = Guid.Parse(pcPack.ownershipID);
 
@@ -70,13 +70,13 @@ public class PlayerNetComp : NetworkComponent
                         if (localID == tempID)
                         {
                             //transform.position = pcPack.position;
-                            print("Player Movement: " + pController.movement);
+                            //print("Player Movement: " + pController.movement);
                             pController.movement = pcPack.movement;
 
-                            print("Player Velocity: " + pController.velocity);
+                           // print("Player Velocity: " + pController.velocity);
                             pController.velocity = pcPack.velocity;
 
-                            print($"{pcPack.movement} and {pcPack.velocity} from packet of type {pcPack.Type}, are being passed onto player of type {gameObject}");
+                            //print($"{pcPack.movement} and {pcPack.velocity} from packet of type {pcPack.Type}, are being passed onto player of type {gameObject}");
                         }
                     }
                 }
@@ -114,7 +114,7 @@ public class PlayerNetComp : NetworkComponent
         byte[] buffer;
 
         GameBasePacket pcPack = new PlayerControllerPacket(pController.movement, pController.velocity, localID.ToString(), gameObjID);
-        print($"Sending {pcPack.Type} containing {localID.ToString()}");
+        //print($"Sending {pcPack.Type} containing {localID.ToString()}");
         buffer = pcPack.Serialize();
         testNetManager.SendPacket(buffer);
     }

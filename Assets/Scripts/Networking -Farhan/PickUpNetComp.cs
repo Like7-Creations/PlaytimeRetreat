@@ -28,22 +28,30 @@ public class PickUpNetComp : NetworkComponent
         pickupthrow = GetComponent<PickUpThrow>();
         rb = GetComponent<Rigidbody>();
         bCollider = GetComponent<BoxCollider>();
+        testNetManager = FindObjectOfType<TestNetManager>();
+        gameObjID = gameObject.name;
         currentPos = transform.position;
         currentRot = transform.eulerAngles;
         currentBool = pickupthrow.holding;
         currentScale = transform.localScale;
     }
 
-    // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-            SendUpdateRequest();
         /*if (transform.position != currentPos || pickupthrow != pickupthrow.holding || transform.localScale != currentScale)
         {
+            SendUpdateRequest();
             currentPos = transform.position;
             currentBool = pickupthrow.holding;
             currentScale = transform.localScale;
         }*/
+        if (pickupthrow.holding != currentBool)
+        {
+            SendUpdateRequest();
+            //currentPos = transform.position;
+            currentBool = pickupthrow.holding;
+            //currentScale = transform.localScale;
+        }
     }
     public override void UpdateComponent(byte[] receivedBuffer)
     {
@@ -53,13 +61,12 @@ public class PickUpNetComp : NetworkComponent
         {
             case GameBasePacket.PacketType.PickUp:
                 PickUpPacket puPack = (PickUpPacket)new PickUpPacket().DeSerialize(receivedBuffer);
-                //print($"Packet contains position:{pup.Position}");
 
                 pickupthrow.holding = puPack.Holding;
                 print(puPack.Holding);
                 transform.position = puPack.Position;
                 transform.rotation = Quaternion.Euler(puPack.Rotation);
-                print("updating position and rotation");
+                print("updating PickUP Bool");
                 currentPos = transform.position;
                 break;
 
@@ -78,22 +85,16 @@ public class PickUpNetComp : NetworkComponent
     public override void SendUpdateRequest()
     {
         byte[] buffer;
-        if (transform.position != currentPos/* || pickupthrow != pickupthrow.holding*/)
-        {
-            GameBasePacket pickUpPacket = new PickUpPacket(pickupthrow.holding, transform.position, transform.eulerAngles, gameObjID);
-            buffer = pickUpPacket.Serialize();
-            testNetManager.SendPacket(buffer);
-            currentPos = transform.position;
-           // currentBool = pickupthrow.holding;
-        }
+        GameBasePacket pickUpPacket = new PickUpPacket(pickupthrow.holding, transform.position, transform.eulerAngles, gameObjID);
+        buffer = pickUpPacket.Serialize();
+        testNetManager.SendPacket(buffer);
+        currentPos = transform.position;
 
-        if (transform.localScale != currentScale)
-        {
-            GameBasePacket sizemass = new SizeMassPacket(transform.localScale, rb.mass, gameObjID);
-            buffer = sizemass.Serialize();
-            testNetManager.SendPacket(buffer);
-            currentScale = transform.localScale;
-        }
+        GameBasePacket sizemass = new SizeMassPacket(transform.localScale, rb.mass, gameObjID);
+        buffer = sizemass.Serialize();
+        testNetManager.SendPacket(buffer);
+        currentScale = transform.localScale;
+        
 
     }
 }

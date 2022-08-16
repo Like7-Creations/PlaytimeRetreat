@@ -96,5 +96,7 @@ public class PickUpThrow : MonoBehaviour
         if(holding) timer += Time.deltaTime;
 
         if (chargingg) throwForce += Time.deltaTime * 200;
+
+        Debug.Log("The Holding Bool is " + holding);
     } 
 }

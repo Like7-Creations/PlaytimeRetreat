@@ -22,6 +22,8 @@ public class RBNetComp : NetworkComponent
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        testNetManager = FindObjectOfType<TestNetManager>();
+        gameObjID = gameObject.name;
         Velocity = rb.velocity;
         mass = rb.mass;
         gravityActive = true;
@@ -57,12 +59,13 @@ public class RBNetComp : NetworkComponent
         {
             SendUpdateRequest();
             gravityActive = rb.useGravity;
-        }
-        else if (kinematic != rb.isKinematic && !recieving)
+        }*/
+        if (kinematic != rb.isKinematic && !recieving)
         {
             SendUpdateRequest();
             kinematic = rb.isKinematic;
-        }*/
+        }
+        Debug.Log("The Kinematic Bool is " + rb.isKinematic);
     }
     public override void UpdateComponent(byte[] receivedBuffer)
     {

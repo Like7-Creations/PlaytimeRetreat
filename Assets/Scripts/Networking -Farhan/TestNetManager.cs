@@ -84,7 +84,7 @@ public class TestNetManager : MonoBehaviour
         isConnected = true;
 
         socket.Send(new ClientReadyPacket(true, gameObject.name).Serialize());      //This should send a player connected packet.
-        print("Sending client connection status to server");
+       // print("Sending client connection status to server");
     }
 
     void Update()
@@ -94,7 +94,7 @@ public class TestNetManager : MonoBehaviour
             if (socket.Available > 0)
             {
                 DeserializePackets();
-                print($"{gameObject.name} has received a designation of {clientDesignation} from the server.");
+                //print($"{gameObject.name} has received a designation of {clientDesignation} from the server.");
 
                 if (clientsLinked)
                 {
@@ -103,7 +103,7 @@ public class TestNetManager : MonoBehaviour
                         if (localPlayer == null)
                         {
                             SpawnController(prefabName, clientDesignation, clientID.ToString());
-                            print($"{localName} has been instantiated for {clientDesignation}");
+                            //print($"{localName} has been instantiated for {clientDesignation}");
                         }
 
                     }
@@ -133,7 +133,7 @@ public class TestNetManager : MonoBehaviour
 
         socket.Receive(receivedBuffer);
         GameBasePacket pb = new GameBasePacket().DeSerialize(receivedBuffer);
-        print($"Packet received {pb.objID}");
+        //print($"Packet received {pb.objID}");
 
         switch (pb.Type)
         {
@@ -153,7 +153,7 @@ public class TestNetManager : MonoBehaviour
                     if (clientDesignation == null)
                     {
                         clientDesignation = piPack.clientDesignation;
-                        print($"Welcome {clientDesignation}");
+                       // print($"Welcome {clientDesignation}");
                         clientsLinked = true;
                     }
                 }
@@ -171,7 +171,7 @@ public class TestNetManager : MonoBehaviour
                         if (partnerPlayer == null)
                         {
                             SpawnController(iPack.prefabName, iPack.objID, iPack.ownershipID.ToString());
-                            print($"{partnerName} has been instantiated for {partnerDesignation}");
+                           // print($"{partnerName} has been instantiated for {partnerDesignation}");
                         }
                     }
                 }
@@ -186,11 +186,11 @@ public class TestNetManager : MonoBehaviour
         {
             if (netObjs[i].gameObjID == pb.objID)
             {
-                print($"{netObjs[i].name} Object found. Providing Packet {pb.Type}");
+                //print($"{netObjs[i].name} Object found. Providing Packet {pb.Type}");
                 netObjs[i].UpdateComponent(receivedBuffer);
 
-                if (pb.Type == GameBasePacket.PacketType.PlayerController)
-                    print($"{pb.Type} packet has been received. Sending to {partnerName}");
+                //if (pb.Type == GameBasePacket.PacketType.PlayerController)
+                   // print($"{pb.Type} packet has been received. Sending to {partnerName}");
             }
         }
     }
