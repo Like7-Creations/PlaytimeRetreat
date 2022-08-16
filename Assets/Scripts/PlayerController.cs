@@ -12,16 +12,6 @@ public class PlayerController : MonoBehaviour
     public TestNetManager tnManager;
     public PlayerNetComp pcNetComp;
 
-    [SerializeField] string testString;
-
-    //public enum PlayerType
-    //{
-    //    Local,
-    //    Partner
-    //}
-
-    //public PlayerType playerType;
-
     public int level;
 
     public float speed;
@@ -39,70 +29,47 @@ public class PlayerController : MonoBehaviour
 
     public Vector3 lastCheckpoint;
 
-    public Guid testGuid;
-
-    public PlayerController[] pcontrollers;
-
     void Start()
     {
         characterController = GetComponent<CharacterController>();
         tnManager = FindObjectOfType<TestNetManager>();
         pcNetComp = gameObject.GetComponent<PlayerNetComp>();
-
-        testGuid = tnManager.PlayerId;
-        //testGuid = pcNetComp.localID;
-        pcNetComp.localID = testGuid;
-        testString = testGuid.ToString();
-
-        pcontrollers = FindObjectsOfType<PlayerController>();
-
-
-        if (pcontrollers.Length > 1) { testGuid = tnManager.PartnerGuidStore; testString = testGuid.ToString(); }
-
-        /*if (pcNetComp.localID == tnManager.PlayerId)
-        {
-            cam = GetComponentInChildren<CameraController>();
-            cam.gameObject.SetActive(true);
-        }*/
     }
 
     void Update()
     {
-            isGrounded = Physics.Raycast(transform.position, Vector3.down, 1.5f);
+        isGrounded = Physics.Raycast(transform.position, Vector3.down, 1.5f);
 
         if (isGrounded && velocity.y < 0)
         {
             velocity.y = -2;
         }
 
-        print(testGuid);
-        if (testGuid != null)
+        if (pcNetComp != null)
         {
-            if (testGuid == pcNetComp.localID)
+            if (pcNetComp.localID == tnManager.clientID)
             {
                 float x = Input.GetAxis("Horizontal");
                 float z = Input.GetAxis("Vertical");
 
-                movement = transform.right * x + transform.forward * z; ;
-                //Vector3 move = transform.right * x + transform.forward * z;
-                //movement = move;
+                movement = transform.right * x + transform.forward * z;
+            }
 
-                characterController.Move(movement * speed * Time.deltaTime);
+            characterController.Move(movement * speed * Time.deltaTime);
 
+            if (pcNetComp.localID == tnManager.clientID)
+            {
                 if (Input.GetButtonDown("Jump") && isGrounded)
                 {
                     velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
                 }
+            }
 
+            velocity.y += gravity * Time.deltaTime;
+            characterController.Move(velocity * Time.deltaTime);
 
-                velocity.y += gravity * Time.deltaTime;
-                characterController.Move(velocity * Time.deltaTime);
-
-                /* if(what ever happens to player here)
-                 {
-                     TPToCheckpoint(lastCheckpoint);
-                 }*/
-
+            if (pcNetComp.localID == tnManager.clientID)
+            {
                 for (int i = 0; i < key.Length; i++)
                 {
                     if (Input.GetKeyDown(key[i]))
@@ -112,6 +79,11 @@ public class PlayerController : MonoBehaviour
                     }
                 }
             }
+
+            /* if(what ever happens to player here)
+             {
+                 TPToCheckpoint(lastCheckpoint);
+             }*/
         }
 
     }
