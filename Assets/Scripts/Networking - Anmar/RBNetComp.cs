@@ -12,7 +12,7 @@ public class RBNetComp : NetworkComponent
     public bool gravityActive;
     public bool kinematic;
 
-    bool recieving;
+    bool receiving;
 
     Rigidbody rb;
 
@@ -33,39 +33,33 @@ public class RBNetComp : NetworkComponent
     // Update is called once per frame
     void FixedUpdate()
     {
-        /*timer += Time.deltaTime;
+        timer += Time.deltaTime;
         if(timer > 0.05f)
         {
             SendUpdateRequest();
             //print(rb.isKinematic);
         }
-        timer += Time.deltaTime;
-        if(timer > 10)
-        {
-            SendUpdateRequest();
-            timer = 0;
-        }/*
-        /*if (Velocity != rb.velocity && !recieving)
+        /*if (Velocity != rb.velocity && !receiving)
         {
             SendUpdateRequest();
             Velocity = rb.velocity;
         }
-        else if (mass != rb.mass && !recieving)
+        else if (mass != rb.mass && !receiving)
         {
             SendUpdateRequest();
             mass = rb.mass;
         }
-        else if(gravityActive != rb.useGravity && !recieving)
+        else if(gravityActive != rb.useGravity && !receiving)
         {
             SendUpdateRequest();
             gravityActive = rb.useGravity;
-        }*/
-        if (kinematic != rb.isKinematic && !recieving)
+        }
+        if (kinematic != rb.isKinematic && !receiving)
         {
             SendUpdateRequest();
             kinematic = rb.isKinematic;
-        }
-        Debug.Log("The Kinematic Bool is " + rb.isKinematic);
+        }*/
+        //Debug.Log("The Kinematic Bool is " + rb.isKinematic);
     }
     public override void UpdateComponent(byte[] receivedBuffer)
     {
@@ -76,9 +70,9 @@ public class RBNetComp : NetworkComponent
             case GameBasePacket.PacketType.Rigidbody:
                 RigidbodyPacket rbp = (RigidbodyPacket)new RigidbodyPacket().DeSerialize(receivedBuffer);
                 //print($"Packet contains position:{pup.Position}");
-                recieving = true;
+                receiving = true;
                 rb.isKinematic = rbp.isKinematic;
-                rb.velocity = rbp.velocity;
+                print("received kinematic = " + rbp.isKinematic);
                 rb.mass = rbp.mass;
                 rb.useGravity = rbp.gravityActive;
 
@@ -86,8 +80,8 @@ public class RBNetComp : NetworkComponent
                 mass = rbp.mass;
                 gravityActive = rbp.gravityActive;
                 kinematic = rbp.isKinematic;
-                recieving = false;
-                print(rbp.isKinematic);
+                //print(rbp.isKinematic);
+                receiving = false;
                 
                 break;
 
@@ -104,7 +98,5 @@ public class RBNetComp : NetworkComponent
         buffer = pickUpPacket.Serialize();
         testNetManager.SendPacket(buffer);
         // currentBool = pickupthrow.holding;
-        
-
     }
 }

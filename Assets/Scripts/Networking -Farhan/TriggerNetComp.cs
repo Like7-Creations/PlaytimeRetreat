@@ -7,24 +7,26 @@ public class TriggerNetComp : NetworkComponent
 {
     public TriggerSystem trigger;
     bool currentActive;
-    bool updating;
+    float timer;
 
     void Start()
     {
         trigger = GetComponent<TriggerSystem>();
+        testNetManager = FindObjectOfType<TestNetManager>();
         gameObjID = this.gameObject.name;
         currentActive = trigger.triggerActive;
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        if(trigger.triggerActive != currentActive)
+        timer += Time.deltaTime;
+        if(timer >= 0.05)
         {
             SendUpdateRequest();
-            currentActive = trigger.triggerActive;
+            timer = 0;
         }
-        Debug.Log(trigger.triggerActive);
+       // Debug.Log(trigger.triggerActive);
     }
 
     public override void UpdateComponent(byte[] receivedBuffer)
@@ -37,7 +39,7 @@ public class TriggerNetComp : NetworkComponent
                 TriggerPacket tp = (TriggerPacket)new TriggerPacket().DeSerialize(receivedBuffer);
                 Debug.Log("Received Trigger Request");
                 trigger.triggerActive = tp.triggerActive;
-                currentActive = tp.triggerActive;
+                print(trigger.triggerActive);
 
                 break;
 
