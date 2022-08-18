@@ -14,7 +14,10 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/TestPacketScene.unity
     guid: b4b6bbc5e4063b347bc60f8b76cb6f43
-  - enabled: 1
-    path: Assets/Scenes/TestPacketScene_Anmar.unity
-    guid: b1ea03b2c44ec534e9470aa05ca13eac
+  - enabled: 0
+    path: 
+    guid: 00000000000000000000000000000000
+  - enabled: 0
+    path: 
+    guid: 00000000000000000000000000000000
   m_configObjects: {}

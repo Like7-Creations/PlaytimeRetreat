@@ -6,10 +6,13 @@ public class Bridge : MonoBehaviour
 {
 
     Animator animator;
+    public bool startRaised;
 
     private void Start()
     {
         animator = GetComponent<Animator>();
+        if (!startRaised)
+            Lower();
     }
 
     public void Raise()

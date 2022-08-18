@@ -32,8 +32,10 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         characterController = GetComponent<CharacterController>();
-        tnManager = FindObjectOfType<TestNetManager>();
-        pcNetComp = gameObject.GetComponent<PlayerNetComp>();
+        if (FindObjectOfType<TestNetManager>() != null)
+            tnManager = FindObjectOfType<TestNetManager>();
+        if (GetComponent<PlayerNetComp>() != null)
+            pcNetComp = gameObject.GetComponent<PlayerNetComp>();
     }
 
     void Update()
@@ -45,9 +47,9 @@ public class PlayerController : MonoBehaviour
             velocity.y = -2;
         }
 
-        if (pcNetComp != null)
+        if (/*pcNetComp != null*/true)
         {
-            if (pcNetComp.localID == tnManager.clientID)
+            if (/*pcNetComp.localID == tnManager.clientID*/true)
             {
                 float x = Input.GetAxis("Horizontal");
                 float z = Input.GetAxis("Vertical");
@@ -57,7 +59,7 @@ public class PlayerController : MonoBehaviour
                 characterController.Move(movement * speed * Time.deltaTime);
             }
 
-            if (pcNetComp.localID == tnManager.clientID)
+            if (/*pcNetComp.localID == tnManager.clientID*/true)
             {
                 if (Input.GetButtonDown("Jump") && isGrounded)
                 {
@@ -68,7 +70,7 @@ public class PlayerController : MonoBehaviour
                 characterController.Move(velocity * Time.deltaTime);
             }
 
-            if (pcNetComp.localID == tnManager.clientID)
+            if (/*pcNetComp.localID == tnManager.clientID*/true)
             {
                 for (int i = 0; i < key.Length; i++)
                 {
