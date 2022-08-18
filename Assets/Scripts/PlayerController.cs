@@ -53,9 +53,9 @@ public class PlayerController : MonoBehaviour
                 float z = Input.GetAxis("Vertical");
 
                 movement = transform.right * x + transform.forward * z;
-            }
 
-            characterController.Move(movement * speed * Time.deltaTime);
+                characterController.Move(movement * speed * Time.deltaTime);
+            }
 
             if (pcNetComp.localID == tnManager.clientID)
             {
@@ -63,10 +63,10 @@ public class PlayerController : MonoBehaviour
                 {
                     velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
                 }
-            }
 
-            velocity.y += gravity * Time.deltaTime;
-            characterController.Move(velocity * Time.deltaTime);
+                velocity.y += gravity * Time.deltaTime;
+                characterController.Move(velocity * Time.deltaTime);
+            }
 
             if (pcNetComp.localID == tnManager.clientID)
             {

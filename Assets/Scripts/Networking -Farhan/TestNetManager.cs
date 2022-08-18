@@ -14,19 +14,26 @@ public class TestNetManager : MonoBehaviour
     [Header("Instate Prefabs")]
     [SerializeField] string prefabName;
 
+    [Header("Camera")]
+    [SerializeField] Camera mainCam;
+
     [Header("Net-Synced Objects")]
     List<NetworkComponent> playerComps = new List<NetworkComponent>();
     public NetworkComponent[] netObjs;
     public bool playersAdded = false;
 
-    [Header("Player Spawns")]
-    public Transform p1Spawn;
-    public Transform p2Spawn;
-
     [Header("Local Client Details")]
     public Guid clientID;
     public string clientIdDisplay;
     public string clientDesignation;
+
+    [Header("Player Spawns")]
+    //[SerializeField, Range(0, 20)]
+    [SerializeField] float timerDuration = 5f;
+    [SerializeField] bool beginInstantiation;
+
+    public Transform p1Spawn;
+    public Transform p2Spawn;
 
     [Header("Local Player Details")]
     public PlayerNetComp localPlayer;
@@ -46,7 +53,7 @@ public class TestNetManager : MonoBehaviour
 
     bool isConnected;
     bool clientsLinked;
-    
+
     /*HOW TO SOLVE OWNERSHIP:-
      * Basically, we need the NetManager to first generate an ID for the client it's linked to.
      * In this way, both clients will have a unique ID tied to them.
@@ -69,6 +76,8 @@ public class TestNetManager : MonoBehaviour
         clientIdDisplay = clientID.ToString();
         clientDesignation = null;
 
+        mainCam = FindObjectOfType<Camera>();
+
         //print(PlayerId);
 
         /* Generate a client/owner/player ID.
@@ -84,11 +93,13 @@ public class TestNetManager : MonoBehaviour
         isConnected = true;
 
         socket.Send(new ClientReadyPacket(true, gameObject.name).Serialize());      //This should send a player connected packet.
-       // print("Sending client connection status to server");
+                                                                                    // print("Sending client connection status to server");
     }
 
     void Update()
     {
+        //InstantiationTimer();
+
         if (isConnected)
         {
             if (socket.Available > 0)
@@ -99,29 +110,39 @@ public class TestNetManager : MonoBehaviour
                 if (clientsLinked)
                 {
                     if (clientDesignation != null)
-                    {
-                        if (localPlayer == null)
-                        {
-                            SpawnController(prefabName, clientDesignation, clientID.ToString());
-                            //print($"{localName} has been instantiated for {clientDesignation}");
-                        }
-
-                    }
+                        //if (beginInstantiation)
+                            if (localPlayer == null)
+                            {
+                                SpawnController(prefabName, clientDesignation, clientID.ToString());
+                                //print($"{localName} has been instantiated for {clientDesignation}");
+                            }
 
                     if (playerComps.Count >= 2)
-                    {
                         if (!playersAdded)
                         {
                             netObjs = playerComps.ToArray();
                             playersAdded = true;
                         }
-                    }
                 }
             }
         }
     }
 
-    int test = 0;
+    public void /*IEnumerator*/ InstantiationTimer()
+    {
+        if (clientsLinked)
+        {
+            if (timerDuration > 0)
+                timerDuration -= Time.deltaTime;
+
+            else if (timerDuration <= 0)
+            {
+                timerDuration = 0;
+                beginInstantiation = true;
+            }
+        }
+    }
+
     public void SendPacket(byte[] buffer)
     {
         socket.Send(buffer);
@@ -153,7 +174,7 @@ public class TestNetManager : MonoBehaviour
                     if (clientDesignation == null)
                     {
                         clientDesignation = piPack.clientDesignation;
-                       // print($"Welcome {clientDesignation}");
+                        // print($"Welcome {clientDesignation}");
                         clientsLinked = true;
                     }
                 }
@@ -171,7 +192,7 @@ public class TestNetManager : MonoBehaviour
                         if (partnerPlayer == null)
                         {
                             SpawnController(iPack.prefabName, iPack.objID, iPack.ownershipID.ToString());
-                           // print($"{partnerName} has been instantiated for {partnerDesignation}");
+                            // print($"{partnerName} has been instantiated for {partnerDesignation}");
                         }
                     }
                 }
@@ -190,7 +211,7 @@ public class TestNetManager : MonoBehaviour
                 netObjs[i].UpdateComponent(receivedBuffer);
 
                 //if (pb.Type == GameBasePacket.PacketType.PlayerController)
-                   // print($"{pb.Type} packet has been received. Sending to {partnerName}");
+                // print($"{pb.Type} packet has been received. Sending to {partnerName}");
             }
         }
     }
@@ -215,6 +236,8 @@ public class TestNetManager : MonoBehaviour
                 localIdDisplay = localPlayer.playerIdDisplay;
 
                 localDesignation = localPlayer.playerDesignation;
+
+                mainCam.gameObject.SetActive(false);
             }
 
             SendInstantiationRequest(prefabName, localPlayer.localID.ToString(), designation);
