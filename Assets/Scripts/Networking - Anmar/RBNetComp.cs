@@ -33,32 +33,35 @@ public class RBNetComp : NetworkComponent
     // Update is called once per frame
     void FixedUpdate()
     {
-        timer += Time.deltaTime;
+        /*timer += Time.deltaTime;
         if(timer > 0.05f)
         {
             SendUpdateRequest();
             //print(rb.isKinematic);
         }
-        /*if (Velocity != rb.velocity && !receiving)
+        if (Velocity != rb.velocity && !receiving)
         {
             SendUpdateRequest();
             Velocity = rb.velocity;
-        }
-        else if (mass != rb.mass && !receiving)
-        {
-            SendUpdateRequest();
-            mass = rb.mass;
-        }
-        else if(gravityActive != rb.useGravity && !receiving)
-        {
-            SendUpdateRequest();
-            gravityActive = rb.useGravity;
-        }
-        if (kinematic != rb.isKinematic && !receiving)
-        {
-            SendUpdateRequest();
-            kinematic = rb.isKinematic;
         }*/
+        if (testNetManager.localPlayer != null && testNetManager.partnerPlayer != null)
+        {
+            if (mass != rb.mass && !receiving)
+            {
+                //SendUpdateRequest();
+                mass = rb.mass;
+            }
+            else if (gravityActive != rb.useGravity && !receiving)
+            {
+                // SendUpdateRequest();
+                gravityActive = rb.useGravity;
+            }
+            if (kinematic != rb.isKinematic && !receiving)
+            {
+                //SendUpdateRequest();
+                kinematic = rb.isKinematic;
+            }
+        }
         //Debug.Log("The Kinematic Bool is " + rb.isKinematic);
     }
     public override void UpdateComponent(byte[] receivedBuffer)
@@ -97,6 +100,7 @@ public class RBNetComp : NetworkComponent
         GameBasePacket pickUpPacket = new RigidbodyPacket(rb, gameObjID);
         buffer = pickUpPacket.Serialize();
         testNetManager.SendPacket(buffer);
+        print("Sending Rigidbody Packet");
         // currentBool = pickupthrow.holding;
     }
 }

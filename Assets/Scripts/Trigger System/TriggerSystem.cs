@@ -36,7 +36,7 @@ public class TriggerSystem : MonoBehaviour
 
     public bool triggerActive = false;
 
-    bool buttonPressed = false;
+    public bool buttonPressed = false;
     bool leverPulled = false;
     bool pressureActive = false;
 
@@ -50,12 +50,12 @@ public class TriggerSystem : MonoBehaviour
     private void Awake()
     {
         TriggerSys = new MechanicsControl();
+        this.gameObject.AddComponent<TriggerNetComp>();
     }
 
     void Start()
     {
         originalObjColor = GetComponent<Renderer>().material.color;
-
         originalPos = transform.position;
         timer = timerDuration;
     }
@@ -92,13 +92,13 @@ public class TriggerSystem : MonoBehaviour
                 if (buttonPressed)
                 {
                     triggerActive = true;
-                    Debug.Log($"{this.name} of type: {this.triggerType} has been activated");
+                   // Debug.Log($"{this.name} of type: {this.triggerType} has been activated");
                     return triggerActive;
                 }
                 else if (!buttonPressed)
                 {
                     triggerActive = false;
-                    Debug.Log($"{this.name} of type: {this.triggerType} has been deactivated");
+                    //Debug.Log($"{this.name} of type: {this.triggerType} has been deactivated");
                     return triggerActive;
                 }
 
@@ -113,8 +113,8 @@ public class TriggerSystem : MonoBehaviour
                     {
                         triggerActive = true;
                         timerButtonPressed = true;
-                        Debug.Log($"{this.name} of type: {this.triggerType} has been activated");
-                        Debug.Log($"{this.name}'s timer has been activated");
+                        //Debug.Log($"{this.name} of type: {this.triggerType} has been activated");
+                       // Debug.Log($"{this.name}'s timer has been activated");
 
                         return triggerActive;
                     }
@@ -132,7 +132,7 @@ public class TriggerSystem : MonoBehaviour
                         triggerActive = false;
                         timerButtonPressed = false;
                         timer = timerDuration;
-                        Debug.Log($"{this.name} of type: {this.triggerType} has been deactivated");
+                       // Debug.Log($"{this.name} of type: {this.triggerType} has been deactivated");
 
                         return triggerActive;
                     }
@@ -146,14 +146,14 @@ public class TriggerSystem : MonoBehaviour
                 if (leverPulled)
                 {
                     triggerActive = true;
-                    Debug.Log($"{this.name} of type: {this.triggerType} has been activated");
+                    //Debug.Log($"{this.name} of type: {this.triggerType} has been activated");
                     return triggerActive;
                 }
 
                 else if (!leverPulled)
                 {
                     triggerActive = false;
-                    Debug.Log($"{this.name} of type: {this.triggerType} has been deactivated");
+                    //Debug.Log($"{this.name} of type: {this.triggerType} has been deactivated");
                     return triggerActive;
                 }
 
@@ -165,14 +165,14 @@ public class TriggerSystem : MonoBehaviour
                 if (pressureActive)
                 {
                     triggerActive = true;
-                    Debug.Log($"{this.name} of type: {this.triggerType} has been activated");
+                    //Debug.Log($"{this.name} of type: {this.triggerType} has been activated");
                     return triggerActive;
                 }
 
                 else if (!pressureActive)
                 {
                     triggerActive = false;
-                    Debug.Log($"{this.name} of type: {this.triggerType} has been deactivated");
+                    //Debug.Log($"{this.name} of type: {this.triggerType} has been deactivated");
                     return triggerActive;
                 }
 
@@ -194,13 +194,13 @@ public class TriggerSystem : MonoBehaviour
             if (!buttonPressed)
             {
                 buttonPressed = true;
-                Debug.Log("Button Has Been Pressed");
+                //Debug.Log("Button Has Been Pressed");
             }
 
             else if (buttonPressed)
             {
                 buttonPressed = false;
-                Debug.Log("Button Has Been Reset");
+                //Debug.Log("Button Has Been Reset");
             }
         }
 
@@ -213,7 +213,7 @@ public class TriggerSystem : MonoBehaviour
             if (timer == timerDuration)
             {
                 timerButtonPressed = true;
-                Debug.Log("TimedButton Has Been Pressed");
+                //Debug.Log("TimedButton Has Been Pressed");
             }
         }
     }
@@ -225,13 +225,13 @@ public class TriggerSystem : MonoBehaviour
             if (!leverPulled)
             {
                 leverPulled = true;
-                Debug.Log("Lever Has Been Pulled");
+               // Debug.Log("Lever Has Been Pulled");
             }
 
             else if (leverPulled)
             {
                 leverPulled = false;
-                Debug.Log("Lever Has Been Let Go");
+               // Debug.Log("Lever Has Been Let Go");
             }
         }
     }
@@ -253,7 +253,7 @@ public class TriggerSystem : MonoBehaviour
             {
                 //transform.Translate(0, -0.1f, 0);
                 pressureActive = true;
-                Debug.Log($"A Pressure Plate has been activated");
+                //Debug.Log($"A Pressure Plate has been activated");
             }
 
             else
@@ -269,7 +269,7 @@ public class TriggerSystem : MonoBehaviour
         if (collision.collider.tag == "EffectableObject" || collision.collider.tag == "Player")
         {
             pressureActive = false;
-            Debug.Log($"A Pressure Plate has been deactivated");
+           // Debug.Log($"A Pressure Plate has been deactivated");
 
             collision.transform.parent = null;
             GetComponent<Renderer>().material.color = originalObjColor;
@@ -279,6 +279,7 @@ public class TriggerSystem : MonoBehaviour
 
     void Update()
     {
+
         RaycastHit hit;
         if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, 2))
         {
@@ -296,15 +297,15 @@ public class TriggerSystem : MonoBehaviour
                     if (timer > 0)
                     {
                         timer -= Time.deltaTime;
-                        Debug.Log($"{timer} seconds left");
+                        //Debug.Log($"{timer} seconds left");
                     }
 
                     else
                     {
                         timer = 0;
                         timerButtonPressed = false;
-                        Debug.Log("Timed Button Reset");
-                        Debug.Log($"{this.name}'s timer has been deactivated");
+                       // Debug.Log("Timed Button Reset");
+                       // Debug.Log($"{this.name}'s timer has been deactivated");
                     }
                 }
             }
@@ -317,7 +318,7 @@ public class TriggerSystem : MonoBehaviour
                 if (transform.position.y < originalPos.y)
                 {
                     transform.Translate(0, 0.1f, 0);
-                    Debug.Log("Pressure Plate Reset");
+                   // Debug.Log("Pressure Plate Reset");
                 }
 
                 else

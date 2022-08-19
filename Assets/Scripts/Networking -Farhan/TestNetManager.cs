@@ -8,6 +8,7 @@ using TMPro;
 using GamePackets;
 using PlayTimePackets;
 using System;
+using System.Linq;
 
 public class TestNetManager : MonoBehaviour
 {
@@ -54,6 +55,8 @@ public class TestNetManager : MonoBehaviour
     bool isConnected;
     bool clientsLinked;
 
+    public GameServerPort gameServerPort;
+
     /*HOW TO SOLVE OWNERSHIP:-
      * Basically, we need the NetManager to first generate an ID for the client it's linked to.
      * In this way, both clients will have a unique ID tied to them.
@@ -67,7 +70,7 @@ public class TestNetManager : MonoBehaviour
      * If it isn't a match, it has to receive a packet.
      */
 
-    void Start()
+    void Awake()
     {
         //player = new Player(playerName, Guid.NewGuid());
 
@@ -78,6 +81,7 @@ public class TestNetManager : MonoBehaviour
 
         mainCam = FindObjectOfType<Camera>();
 
+
         //print(PlayerId);
 
         /* Generate a client/owner/player ID.
@@ -87,7 +91,7 @@ public class TestNetManager : MonoBehaviour
          */
 
         socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-        socket.Connect(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 3000));
+        socket.Connect(new IPEndPoint(IPAddress.Parse("127.0.0.1"), gameServerPort.GamePort));
         socket.Blocking = false;
 
         isConnected = true;
@@ -120,7 +124,15 @@ public class TestNetManager : MonoBehaviour
                     if (playerComps.Count >= 2)
                         if (!playersAdded)
                         {
-                            netObjs = playerComps.ToArray();
+                            NetworkComponent[] comp = netObjs;
+                            NetworkComponent[] comps = playerComps.ToArray();
+                     
+                           // netObjs = playerComps.ToArray();
+
+                            netObjs = comp.Concat(comps).ToArray();
+
+
+                            //netObjs = playerComps.ToArray();
                             playersAdded = true;
                         }
                 }
@@ -203,15 +215,18 @@ public class TestNetManager : MonoBehaviour
                 break;
         }
 
-        for (int i = 0; i < netObjs.Length; i++)
+        if (localPlayer != null & partnerPlayer != null)
         {
-            if (netObjs[i].gameObjID == pb.objID)
+            for (int i = 0; i < netObjs.Length; i++)
             {
-                //print($"{netObjs[i].name} Object found. Providing Packet {pb.Type}");
-                netObjs[i].UpdateComponent(receivedBuffer);
+                if (netObjs[i].gameObjID == pb.objID)
+                {
+                    //print($"{netObjs[i].name} Object found. Providing Packet {pb.Type}");
+                    netObjs[i].UpdateComponent(receivedBuffer);
 
-                //if (pb.Type == GameBasePacket.PacketType.PlayerController)
-                // print($"{pb.Type} packet has been received. Sending to {partnerName}");
+                    //if (pb.Type == GameBasePacket.PacketType.PlayerController)
+                    // print($"{pb.Type} packet has been received. Sending to {partnerName}");
+                }
             }
         }
     }

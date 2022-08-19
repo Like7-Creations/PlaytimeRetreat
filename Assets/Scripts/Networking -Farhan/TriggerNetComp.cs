@@ -7,7 +7,9 @@ public class TriggerNetComp : NetworkComponent
 {
     public TriggerSystem trigger;
     bool currentActive;
+    bool currentActive2;
     float timer;
+    bool receiving = false;
 
     void Start()
     {
@@ -20,13 +22,20 @@ public class TriggerNetComp : NetworkComponent
     // Update is called once per frame
     void FixedUpdate()
     {
-        timer += Time.deltaTime;
-        if(timer >= 0.05)
-        {
-            SendUpdateRequest();
-            timer = 0;
+        if (testNetManager.localPlayer != null && testNetManager.partnerPlayer != null) 
+        { 
+            if(currentActive != trigger.triggerActive & !receiving)
+            {
+                SendUpdateRequest();
+                currentActive = trigger.triggerActive;
+            }
+            if (currentActive2 != trigger.buttonPressed)
+            {
+                SendUpdateRequest();
+                currentActive2 = trigger.buttonPressed;
+            }
         }
-       // Debug.Log(trigger.triggerActive);
+
     }
 
     public override void UpdateComponent(byte[] receivedBuffer)
@@ -38,8 +47,13 @@ public class TriggerNetComp : NetworkComponent
             case GameBasePacket.PacketType.Trigger:
                 TriggerPacket tp = (TriggerPacket)new TriggerPacket().DeSerialize(receivedBuffer);
                 Debug.Log("Received Trigger Request");
+                receiving = true;
                 trigger.triggerActive = tp.triggerActive;
+                trigger.buttonPressed = tp.PressedActive;
+                currentActive = trigger.triggerActive;
+                currentActive2 = trigger.buttonPressed;
                 print(trigger.triggerActive);
+                receiving = false;
 
                 break;
 
@@ -51,8 +65,8 @@ public class TriggerNetComp : NetworkComponent
     public override void SendUpdateRequest()
     {
         byte[] buffer;
-        Debug.Log("Sending Trigger Request");
-        GameBasePacket pcPacket = new TriggerPacket(gameObjID, trigger.triggerActive);
+        Debug.Log("Sending Trigger Packet");
+        GameBasePacket pcPacket = new TriggerPacket(gameObjID, trigger.buttonPressed,trigger.triggerActive);
         buffer = pcPacket.Serialize();
         testNetManager.SendPacket(buffer);
     }

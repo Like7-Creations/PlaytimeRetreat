@@ -47,9 +47,9 @@ public class PlayerController : MonoBehaviour
             velocity.y = -2;
         }
 
-        if (/*pcNetComp != null*/true)
+        if (pcNetComp != null)
         {
-            if (/*pcNetComp.localID == tnManager.clientID*/true)
+            if (pcNetComp.localID == tnManager.clientID)
             {
                 float x = Input.GetAxis("Horizontal");
                 float z = Input.GetAxis("Vertical");
@@ -59,7 +59,7 @@ public class PlayerController : MonoBehaviour
                 characterController.Move(movement * speed * Time.deltaTime);
             }
 
-            if (/*pcNetComp.localID == tnManager.clientID*/true)
+            if (pcNetComp.localID == tnManager.clientID)
             {
                 if (Input.GetButtonDown("Jump") && isGrounded)
                 {
@@ -70,7 +70,7 @@ public class PlayerController : MonoBehaviour
                 characterController.Move(velocity * Time.deltaTime);
             }
 
-            if (/*pcNetComp.localID == tnManager.clientID*/true)
+            if (pcNetComp.localID == tnManager.clientID)
             {
                 for (int i = 0; i < key.Length; i++)
                 {

@@ -64,6 +64,8 @@ public class NetworkManager : MonoBehaviour
     List<PlayerController> playerss = new List<PlayerController>();
     PlayerController[] playerController;
 
+    public GameServerPort gameServerPort;
+
     string playerPrefabPath = "Prefabs/PlayerController";
     bool connected;
     void Start()
@@ -72,7 +74,9 @@ public class NetworkManager : MonoBehaviour
         MainSocket.Connect(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 3000));
         MainSocket.Blocking = false;
         player = new Player(Guid.NewGuid().ToString());
-        
+
+        LobbySocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+
 
 
         //lobbySocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -137,7 +141,7 @@ public class NetworkManager : MonoBehaviour
         StartButton.onClick.AddListener(() =>
         {
             if(host)
-                LobbySocket.Send(new StartGamePacket("start", player).Serialize());
+                LobbySocket.Send(new StartGamePacket(0, player).Serialize());
         });
         KickButton.onClick.AddListener(() =>
         {
@@ -169,7 +173,6 @@ public class NetworkManager : MonoBehaviour
                         int portnumber = lp.LobbyPort;
                         RoomCodeText.text = "Room Code: " + lp.RoomCode.ToString();
                         print("Connecting to " + lp.Name + "with port " + portnumber);
-                        LobbySocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                         LobbySocket.Connect(new IPEndPoint(IPAddress.Parse("127.0.0.1"), portnumber));
                         LobbySocket.Blocking = false;
                         print("I have connected to " + name);
@@ -235,7 +238,9 @@ public class NetworkManager : MonoBehaviour
                         //if host send packet to cancel the lobby and remove it off the list of lobbies in the main server... 
                         break;
                     case BasePacket.PacketType.StartGame:
-                        SceneManager.LoadScene("Chris Scene");
+                        StartGamePacket sgp = (StartGamePacket)new StartGamePacket().DeSerialize(recievedBuffer);
+                        gameServerPort.GamePort = sgp.Gameport;
+                        SceneManager.LoadScene("_Level 1");
                         break;
 
                     default:

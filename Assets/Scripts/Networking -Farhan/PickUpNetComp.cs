@@ -15,6 +15,7 @@ public class PickUpNetComp : NetworkComponent
     bool currentBool;
     float currentMass;
     bool receiving;
+    float currentBounciness;
 
     float timer;
 
@@ -24,7 +25,7 @@ public class PickUpNetComp : NetworkComponent
     Collider collider;
 
 
-    void Start()
+    void Awake()
     {
         pickupthrow = GetComponent<PickUpThrow>();
         rb = GetComponent<Rigidbody>();
@@ -40,38 +41,46 @@ public class PickUpNetComp : NetworkComponent
 
     void FixedUpdate()
     {
-        timer += Time.deltaTime;
-        if(timer > 0.01f)
+        /* timer += Time.deltaTime;
+         if(timer > 0.05f)
+         {
+             SendUpdateRequest();
+             timer = 0;
+         }*/
+        if (testNetManager.localPlayer != null && testNetManager.partnerPlayer != null)
         {
-            SendUpdateRequest();
-            timer = 0;
+            if (transform.position != currentPos && !receiving)
+            {
+                SendUpdateRequest();
+                currentPos = transform.position;
+            }
+            else if (currentBool != pickupthrow.holding && !receiving)
+            {
+                SendUpdateRequest();
+                currentBool = pickupthrow.holding;
+                print("bool has changed sending request");
+            }
+            else if (currentRot != transform.rotation.eulerAngles && !receiving)
+            {
+                SendUpdateRequest();
+                currentRot = transform.rotation.eulerAngles;
+            }
+            else if (transform.localScale != currentScale && !receiving)
+            {
+                SendUpdateRequest();
+                currentScale = transform.localScale;
+            }
+            else if (currentMass != rb.mass && !receiving)
+            {
+                SendUpdateRequest();
+                currentMass = rb.mass;
+            }
+            else if (currentBounciness != collider.material.bounciness && !receiving)
+            {
+                SendUpdateRequest();
+                currentBounciness = collider.material.bounciness;
+            }
         }
-        /*if (transform.position != currentPos && !receiving)
-        {
-            SendUpdateRequest();
-            currentPos = transform.position;
-        }
-        else if (currentBool != pickupthrow.holding && !receiving)
-        {
-            SendUpdateRequest();
-            currentBool = pickupthrow.holding;
-            print("bool has changed sending request");
-        }
-        else if (currentRot != transform.rotation.eulerAngles && !receiving)
-        {
-            SendUpdateRequest();
-            currentRot = transform.rotation.eulerAngles;
-        }
-        else if (transform.localScale != currentScale && !receiving)
-        {
-            SendUpdateRequest();
-            currentScale = transform.localScale;
-        }
-        else if (currentMass != rb.mass && !receiving)
-        {
-            SendUpdateRequest();
-            currentMass = rb.mass;
-        }*/
     }
     public override void UpdateComponent(byte[] receivedBuffer)
     {
@@ -109,7 +118,8 @@ public class PickUpNetComp : NetworkComponent
                 BouncinessPacket bp = (BouncinessPacket)new BouncinessPacket().DeSerialize(receivedBuffer);
                 receiving = true;
                 collider.material.bounciness = bp.Bounciness;
-               // print("bounciness is now: " + collider.material.bounciness);
+                currentBounciness = collider.material.bounciness;
+                // print("bounciness is now: " + collider.material.bounciness);
                 receiving = false;
                 break;
 
@@ -123,21 +133,21 @@ public class PickUpNetComp : NetworkComponent
         GameBasePacket pickUpPacket = new PickUpPacket(pickupthrow.holding, transform.position, transform.eulerAngles, gameObjID);
         buffer = pickUpPacket.Serialize();
         testNetManager.SendPacket(buffer);
-        //print("Sending PickUP");
+        print("Sending PickUP");
 
         StartCoroutine(WaitFor(0.05f));
 
         GameBasePacket sizemass = new SizeMassPacket(transform.localScale, rb.mass, gameObjID);
         buffer = sizemass.Serialize();
         testNetManager.SendPacket(buffer);
-        //print("Sending Size&MAss");
+        print("Sending Size&MAss");
 
         StartCoroutine(WaitFor(0.05f));
 
         GameBasePacket bouncinessP = new BouncinessPacket(collider.material.bounciness, gameObjID);
         buffer = bouncinessP.Serialize();
         testNetManager.SendPacket(buffer);
-        //print("sending bounciness");
+        print("sending bounciness");
 
     }
 

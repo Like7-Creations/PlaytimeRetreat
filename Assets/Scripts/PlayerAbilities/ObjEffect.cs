@@ -44,8 +44,13 @@ public class ObjEffect : MonoBehaviour
     /*Color frozenColor;
     Color finalColor;*/
 
-    void Start()
+
+    void Awake()
     {
+        this.gameObject.AddComponent<PickUpThrow>();
+        this.gameObject.AddComponent<PickUpNetComp>();
+        this.gameObject.AddComponent<Rigidbody>();
+        this.gameObject.AddComponent<RBNetComp>();
         targeting = FindObjectOfType<AbilityTargeting>();
 
         rbody = GetComponent<Rigidbody>();

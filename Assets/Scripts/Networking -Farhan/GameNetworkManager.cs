@@ -32,6 +32,8 @@ public class GameNetworkManager : MonoBehaviour
 
     string objId;
     int ownerID;
+    int gamePort;
+    GameServerPort gameServerPort;
 
     void Start()
     {
