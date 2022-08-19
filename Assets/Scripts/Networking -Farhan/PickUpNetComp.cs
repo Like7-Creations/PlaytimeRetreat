@@ -106,7 +106,7 @@ public class PickUpNetComp : NetworkComponent
                 SizeMassPacket smPack = (SizeMassPacket)new SizeMassPacket().DeSerialize(receivedBuffer);
                 //print("receiving scale and mass packet");
                 receiving = true;
-                GetComponent<RectTransform>().localScale = smPack.Scale;
+                GetComponent<Transform>().localScale = smPack.Scale;
                 rb.mass = smPack.Mass;
                 currentScale = smPack.Scale;
                 currentMass = rb.mass;

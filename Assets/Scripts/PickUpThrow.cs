@@ -92,6 +92,7 @@ public class PickUpThrow : MonoBehaviour
             hasplayer = hit.collider.gameObject == this.gameObject;
         }
         else hasplayer = false;*/
+        rb.isKinematic = holding;
 
         if(holding) timer += Time.deltaTime;
 

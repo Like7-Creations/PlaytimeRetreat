@@ -6274,6 +6274,10 @@ PrefabInstance:
       value: Cube
       objectReference: {fileID: 0}
     - target: {fileID: 4943491839344763580, guid: 1a337ff095da00746a8231955efe076f, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4943491839344763580, guid: 1a337ff095da00746a8231955efe076f, type: 3}
       propertyPath: m_TagString
       value: EffectableObject
       objectReference: {fileID: 0}
@@ -6281,7 +6285,8 @@ PrefabInstance:
       propertyPath: m_Mass
       value: 500
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 4943491839344763578, guid: 1a337ff095da00746a8231955efe076f, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 1a337ff095da00746a8231955efe076f, type: 3}
 --- !u!4 &191914988 stripped
 Transform:
@@ -6314,8 +6319,6 @@ MonoBehaviour:
   growActive: 0
   bounceActive: 0
   frictionInactive: 0
-  heavyObj: 0
-  lightObj: 0
 --- !u!1001 &192671045
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -17956,7 +17959,7 @@ GameObject:
   - component: {fileID: 511894295}
   - component: {fileID: 511894294}
   - component: {fileID: 511894293}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Bridge_1 Trigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -40437,6 +40440,10 @@ PrefabInstance:
       value: Cube (3)
       objectReference: {fileID: 0}
     - target: {fileID: 4943491839344763580, guid: 1a337ff095da00746a8231955efe076f, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4943491839344763580, guid: 1a337ff095da00746a8231955efe076f, type: 3}
       propertyPath: m_TagString
       value: EffectableObject
       objectReference: {fileID: 0}
@@ -40444,7 +40451,8 @@ PrefabInstance:
       propertyPath: m_Mass
       value: 50
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 4943491839344763578, guid: 1a337ff095da00746a8231955efe076f, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 1a337ff095da00746a8231955efe076f, type: 3}
 --- !u!4 &1147128490 stripped
 Transform:
@@ -40477,8 +40485,6 @@ MonoBehaviour:
   growActive: 0
   bounceActive: 0
   frictionInactive: 0
-  heavyObj: 0
-  lightObj: 0
 --- !u!1001 &1148231308
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -54111,6 +54117,10 @@ PrefabInstance:
       value: Cube (1)
       objectReference: {fileID: 0}
     - target: {fileID: 4943491839344763580, guid: 1a337ff095da00746a8231955efe076f, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4943491839344763580, guid: 1a337ff095da00746a8231955efe076f, type: 3}
       propertyPath: m_TagString
       value: EffectableObject
       objectReference: {fileID: 0}
@@ -54118,7 +54128,8 @@ PrefabInstance:
       propertyPath: m_Mass
       value: 20
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 4943491839344763578, guid: 1a337ff095da00746a8231955efe076f, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 1a337ff095da00746a8231955efe076f, type: 3}
 --- !u!4 &1590858374 stripped
 Transform:
@@ -54151,8 +54162,6 @@ MonoBehaviour:
   growActive: 0
   bounceActive: 0
   frictionInactive: 0
-  heavyObj: 0
-  lightObj: 0
 --- !u!1001 &1593745510
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -72053,6 +72062,10 @@ PrefabInstance:
       value: Cube (2)
       objectReference: {fileID: 0}
     - target: {fileID: 4943491839344763580, guid: 1a337ff095da00746a8231955efe076f, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4943491839344763580, guid: 1a337ff095da00746a8231955efe076f, type: 3}
       propertyPath: m_TagString
       value: EffectableObject
       objectReference: {fileID: 0}
@@ -72060,7 +72073,8 @@ PrefabInstance:
       propertyPath: m_Mass
       value: 50
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 4943491839344763578, guid: 1a337ff095da00746a8231955efe076f, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 1a337ff095da00746a8231955efe076f, type: 3}
 --- !u!4 &2095329538 stripped
 Transform:
@@ -72093,8 +72107,6 @@ MonoBehaviour:
   growActive: 0
   bounceActive: 0
   frictionInactive: 0
-  heavyObj: 0
-  lightObj: 0
 --- !u!1 &2096365919
 GameObject:
   m_ObjectHideFlags: 0

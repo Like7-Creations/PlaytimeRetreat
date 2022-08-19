@@ -60,6 +60,7 @@ public class NetworkManager : MonoBehaviour
 
     Player player;
     Socket MainSocket;
+    List<Socket> Lobbysockets = new List<Socket>();
     Socket LobbySocket;
     List<PlayerController> playerss = new List<PlayerController>();
     PlayerController[] playerController;
@@ -152,6 +153,8 @@ public class NetworkManager : MonoBehaviour
         {
             if(host) LobbySocket.Send(new LeaveRequestPacket(RoomName.text, host, player).Serialize());
             if(client) LobbySocket.Send(new LeaveRequestPacket(ChosenLobbyName, client, player).Serialize());
+            LobbySocket.Shutdown(SocketShutdown.Both);
+            LobbySocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         });
     }
     void Update()
@@ -194,8 +197,15 @@ public class NetworkManager : MonoBehaviour
                         for (int i = 0; i < lnp.LobbyNames.Count; i++)
                         {
                             string.Join(", ", lnp.LobbyNames);
-                            print(lnp.LobbyNames[i]);
                             print("Recieved lobby name: " + lnp.LobbyNames[i]);
+                            if(ContentPanel.transform.childCount > 0 && lobbyButtonNames != null)
+                            {
+                                lobbyButtonNames.Clear();
+                                for (int j = 0; j < ContentPanel.transform.childCount; j++)
+                                {
+                                    Destroy(ContentPanel.transform.GetChild(j));
+                                }
+                            }
                             Button instantiateButton = Instantiate(buttonPrefabForLobbyNames);
                             instantiateButton.transform.Find("Text (TMP)").gameObject.GetComponent<TextMeshProUGUI>().text = lnp.LobbyNames[i];
                             lobbyButtonNames.Add(instantiateButton);
@@ -231,11 +241,8 @@ public class NetworkManager : MonoBehaviour
                         KickMessage.text = krp.Request;
                         print("I got kicked out! or lobby is full");
                         BackToMenuScreen();
-                        //LobbySocket.Shutdown(SocketShutdown.Both);
-                        //SceneManager.LoadScene("_MainMenu");
-                        
-                        //for leaving...if client...relaunch main scene
-                        //if host send packet to cancel the lobby and remove it off the list of lobbies in the main server... 
+                        LobbySocket.Shutdown(SocketShutdown.Both);
+                        LobbySocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                         break;
                     case BasePacket.PacketType.StartGame:
                         StartGamePacket sgp = (StartGamePacket)new StartGamePacket().DeSerialize(recievedBuffer);
