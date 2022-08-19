@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -352,7 +352,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 689534690}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.6, y: 2, z: -12.91}
+  m_LocalPosition: {x: 4.2, y: 2, z: -2.7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -488,7 +488,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 873a1ab64ef909349b53f77c0f673e67, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gnManager: {fileID: 0}
   testNetManager: {fileID: 0}
   gameObjID: 
   trigger: {fileID: 0}
@@ -648,12 +647,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefabName: PlayerPrefab
+  mainCam: {fileID: 0}
   netObjs: []
   playersAdded: 0
-  p1Spawn: {fileID: 689534691}
-  p2Spawn: {fileID: 1193156998}
   clientIdDisplay: 
   clientDesignation: 
+  timerDuration: 5
+  beginInstantiation: 0
+  p1Spawn: {fileID: 689534691}
+  p2Spawn: {fileID: 1193156998}
   localPlayer: {fileID: 0}
   localName: 
   localIdDisplay: 
@@ -670,7 +672,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1526425543}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -20.593592, y: 3.8018246, z: -9.808356}
+  m_LocalPosition: {x: 0, y: 0, z: 10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}

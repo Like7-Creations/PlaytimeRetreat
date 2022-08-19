@@ -6,6 +6,10 @@ public class AbilityTargeting : MonoBehaviour
 {
     public GameObject targetObj;
 
+    public ObjEffect effectableObj;
+    public PickUpThrow throwableObj;
+    public TriggerSystem triggerObj;
+
     public LayerMask effectable;
     public Color highlightedColor;
 
@@ -20,7 +24,7 @@ public class AbilityTargeting : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(1))
         {
-            targeting=true;
+            targeting = true;
         }
 
         if (Input.GetMouseButtonUp(1))
@@ -32,50 +36,7 @@ public class AbilityTargeting : MonoBehaviour
             Targeting(true);
         else if (!targeting)
             Targeting(false);
-
-
-        /*
-        if (freezeAim)
-        {
-            
-
-            else
-            {
-                if (targetObj != null)
-                {
-                    if (targetObj.GetComponent<FreezeObj>() != null)
-                        if (!targetObj.GetComponent<FreezeObj>().freezeActive)
-                            targetObj.GetComponent<Renderer>().material.SetColor("_EmissionColor", frozenColor);
-
-                    targetObj = null;
-
-                }
-            }
-
-            if (Input.GetMouseButtonDown(0))
-            {
-                if (freezeAim)
-                {
-                    if (targetObj != null && targetObj.GetComponent<FreezeObj>() != null)
-                    {
-                        bool freeze = targetObj.GetComponent<FreezeObj>().freezeActive;
-
-                        targetObj.GetComponent<FreezeObj>().FreezeObject(!freeze);
-
-                        FreezeTarget(false);
-                    }
-                }
-            }
-        }
-        */
     }
-
-    /*Raycast hits object
-     * Bool for whether the object has been detected.
-     Bool for obj to check if its frozen
-    Once forzen, start timer.
-
-    */
 
     void Targeting(bool state)
     {
@@ -87,41 +48,81 @@ public class AbilityTargeting : MonoBehaviour
 
             if (Physics.Raycast(ray, out hit, Mathf.Infinity, effectable))
             {
-                if (hit.collider.gameObject.GetComponent<ObjEffect>())
-                {
-                    targetObj = hit.collider.gameObject;
+                targetObj = hit.collider.gameObject;
 
-                    //targetObj.GetComponent<Renderer>().material.color = highlightedColor;
+                if (targetObj.GetComponent<ObjEffect>())
+                {
+                    effectableObj = targetObj.GetComponent<ObjEffect>();
+
+                    if (targetObj.GetComponent<PickUpThrow>())
+                    {
+                        throwableObj = targetObj.GetComponent<PickUpThrow>();
+                        throwableObj.hasplayer = true;
+                    }
+
+                    else
+                    {
+                        if (throwableObj != null)
+                            throwableObj.hasplayer = false;
+
+                        throwableObj = null;
+                    }
+                }
+
+                else if (targetObj.GetComponent<TriggerSystem>())
+                {
+                    triggerObj = targetObj.GetComponent<TriggerSystem>();
+                    triggerObj.hasPlayer = true;
                 }
 
                 else
+                {
                     targetObj = null;
+                    effectableObj = null;
+
+                    if (throwableObj != null)
+                        throwableObj.hasplayer = false;
+
+                    throwableObj = null;
+
+                    if (triggerObj != null)
+                        triggerObj.hasPlayer = false;
+
+                    triggerObj = null;
+                }
             }
 
             else
+            {
                 targetObj = null;
+                effectableObj = null;
+
+                if (throwableObj != null)
+                    throwableObj.hasplayer = false;
+
+                throwableObj = null;
+
+                if (triggerObj != null)
+                    triggerObj.hasPlayer = false;
+
+                triggerObj = null;
+            }
         }
 
         else if (!state)
         {
             targetObj = null;
+            effectableObj = null;
+
+            if (throwableObj != null)
+                throwableObj.hasplayer = false;
+
+            throwableObj = null;
+
+            if (triggerObj != null)
+                triggerObj.hasPlayer = false;
+
+            triggerObj = null;
         }
     }
-
-    /*void FreezeTarget(bool state)
-    {
-        targeting = state;
-
-        float freezeEffect = state ? 0.4f : 0;
-
-        freezableObjects = FindObjectsOfType<ObjEffect>();
-        foreach (ObjEffect obj in freezableObjects)
-        {
-            if (!obj.freezeActive)
-            {
-                obj.GetComponent<Renderer>().material.SetColor("_EmissionColor", frozenColor);
-                obj.GetComponent<Renderer>().material.SetFloat("_FreezeAmount", freezeEffect);
-            }
-        }
-    }*/
 }

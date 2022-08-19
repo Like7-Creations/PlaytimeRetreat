@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class ObjFreezeAbility : MonoBehaviour
 {
+    //Potentially Deprecated
+
     public AbilityTargeting targeting;
 
     public GameObject selectedObj;
@@ -21,7 +23,7 @@ public class ObjFreezeAbility : MonoBehaviour
     {
         selectedObj = targeting.targetObj;
 
-        if (Input.GetKeyDown(KeyCode.K))
+        /*if (Input.GetKeyDown(KeyCode.K))
         {
             if (targeting.targeting)
             {
@@ -33,7 +35,7 @@ public class ObjFreezeAbility : MonoBehaviour
                     print("Object is Frozen");
                 }
             }
-        }
+        }*/
     }
 
     void FreezeObject(GameObject obj)
