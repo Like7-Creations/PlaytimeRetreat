@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class ObjMassAbility : MonoBehaviour
 {
+    //Potentially Deprecated
+
     public AbilityTargeting targeting;
     public GameObject selectedObj;
 
@@ -23,7 +25,7 @@ public class ObjMassAbility : MonoBehaviour
     void Update()
     {
         selectedObj = targeting.targetObj;
-
+        /*
         if (Input.GetKeyDown(KeyCode.B))
             if (targeting.targeting)
                 if (!selectedObj.GetComponent<ObjEffect>().heavyObj)
@@ -36,7 +38,7 @@ public class ObjMassAbility : MonoBehaviour
                 if (!selectedObj.GetComponent<ObjEffect>().lightObj)
                 {
                     DecreaseObjMass(selectedObj.GetComponent<Rigidbody>());
-                }
+                }*/
     }
 
     public void IncreaseObjMass(Rigidbody rb)

@@ -35,8 +35,8 @@ public class ObjEffect : MonoBehaviour
     public bool bounceActive;
     public bool frictionInactive;
 
-    public bool heavyObj;
-    public bool lightObj;
+    //public bool heavyObj;
+    //public bool lightObj;
 
     Color originalObjColor;
     Color highlightedColor;
@@ -87,7 +87,7 @@ public class ObjEffect : MonoBehaviour
 
     }
 
-    public void UnfreezeObject(bool state)
+    /*public void UnfreezeObject(bool state)
     {
         print("Froze Object");
 
@@ -122,9 +122,9 @@ public class ObjEffect : MonoBehaviour
 
             rbody.AddForceAtPosition(direction * accumulatedForce, hitPoint, ForceMode.Impulse);
 
-            accumulatedForce = 0;*/
+            accumulatedForce = 0;
         }
-    }
+    }*/
 
     /*public void AccumulateForce(float amount, Vector3 point)
     {
@@ -141,7 +141,13 @@ public class ObjEffect : MonoBehaviour
         transform.GetChild(0).rotation = Quaternion.LookRotation(direction);
     }*/
 
-    //Returns obj to its original size.
+    //----------Scale n Mass Functions----------
+    public void ModifyObjScalenMass(Vector3 scaleVal, float mass)
+    {
+        transform.localScale = scaleVal;
+        rbody.mass = mass;
+    }
+    
     public void ReturnToNormalSize(bool state)
     {
         if (state)
@@ -149,13 +155,13 @@ public class ObjEffect : MonoBehaviour
             if (shrinkActive)
             {
                 StartCoroutine(EffectCountdown());
-                print($"{gameObject.name} shrunk");
+                print($"{gameObject.name} shrunk & lost mass");
             }
 
             else if (growActive)
             {
                 StartCoroutine(EffectCountdown());
-                print($"{gameObject.name} grew");
+                print($"{gameObject.name} grew & gained mass");
             }
         }
 
@@ -163,7 +169,9 @@ public class ObjEffect : MonoBehaviour
         {
             StopAllCoroutines();
 
-            gameObject.transform.localScale = originalObjScale;
+            transform.localScale = originalObjScale;
+            rbody.mass = originalMass;
+
             colorRenderer.material.color = originalObjColor;
 
             if (shrinkActive)
@@ -172,8 +180,81 @@ public class ObjEffect : MonoBehaviour
                 growActive = false;
         }
     }
+    //----------Scale n Mass Functions----------
 
-    public void ResetObjMass(bool state)
+
+    //----------Friction Functions----------
+    public void EnableFriction(bool state)
+    {
+        if (state)
+        {
+            if (frictionInactive)
+            {
+                StartCoroutine(EffectCountdown());
+                print($"{gameObject.name}'s friction is inactive");
+            }
+        }
+
+        if (!state)
+        {
+            StopAllCoroutines();
+            frictionInactive = false;
+            objCollider.material.dynamicFriction = 0.6f;
+            rbody.mass = originalMass;
+            objCollider.material.frictionCombine = PhysicMaterialCombine.Average;
+
+            print($"{gameObject.name}'s friction is Active");
+        }
+    }
+
+    public void DisableFriction(Collider col)
+    {
+        col = GetComponent<Collider>();
+
+        col.material.dynamicFriction = 0.2f;
+        col.attachedRigidbody.mass += 20;
+
+        col.material.frictionCombine = PhysicMaterialCombine.Minimum;
+        print("Object is Slippery Now");
+    }
+    //----------Friction Functions----------
+
+
+    //----------Bounciness Functions----------
+    public void EnableBounce(Collider col)
+    {
+        col = GetComponent<Collider>();
+
+        col.material.bounciness = 1;
+        col.material.bounceCombine = PhysicMaterialCombine.Maximum;
+        print("Bouncyness Activate");
+    }
+
+    public void DisableBounce(bool state)
+    {
+        if (state)
+        {
+            if (bounceActive)
+            {
+                StartCoroutine(EffectCountdown());
+                print($"{gameObject.name} is Bouncy now");
+            }
+
+        }
+
+        if (!state)
+        {
+            StopAllCoroutines();
+
+            bounceActive = false;
+            objCollider.material.bounciness = 0;
+            objCollider.material.bounceCombine = PhysicMaterialCombine.Average;
+            print($"{gameObject.name} is no longer bouncy");
+        }
+    }
+    //----------Bounciness Functions----------
+
+    /*public void ResetObjMass(bool state)
     {
         if (state)
         {
@@ -202,53 +283,7 @@ public class ObjEffect : MonoBehaviour
             if (lightObj)
                 lightObj = false;
         }
-    }
-
-    public void DisableBounce(bool state)
-    {
-        if (state)
-        {
-            if (bounceActive)
-            {
-                StartCoroutine(EffectCountdown());
-                print($"{gameObject.name} is Bouncy now");
-            }
-
-        }
-
-        if (!state)
-        {
-            StopAllCoroutines();
-
-            bounceActive = false;
-            objCollider.material.bounciness = 0;
-            objCollider.material.bounceCombine = PhysicMaterialCombine.Average;
-            print($"{gameObject.name} is no longer bouncy");
-        }
-    }
-
-    public void EnableFriction(bool state)
-    {
-        if (state)
-        {
-            if (frictionInactive)
-            {
-                StartCoroutine(EffectCountdown());
-                print($"{gameObject.name}'s friction is inactive");
-            }
-        }
-
-        if (!state)
-        {
-            StopAllCoroutines();
-            frictionInactive = false;
-            objCollider.material.dynamicFriction = 0.6f;
-            rbody.mass = originalMass;
-            objCollider.material.frictionCombine = PhysicMaterialCombine.Average;
-
-            print($"{gameObject.name}'s friction is Active");
-        }
-    }
+    }*/
 
     public IEnumerator EffectCountdown()
     {
@@ -267,10 +302,10 @@ public class ObjEffect : MonoBehaviour
                 yield return new WaitForSeconds(delay);
             }
 
-            //For Resetting Frozen Object
+            /*//For Resetting Frozen Object
             if (freezeActive)
                 UnfreezeObject(false);
-            //For Resetting Frozen Object
+            //For Resetting Frozen Object*/
 
             //For Resetting Object Scale
             if (shrinkActive)
@@ -279,12 +314,12 @@ public class ObjEffect : MonoBehaviour
                 ReturnToNormalSize(false);
             //For Resetting Object Scale
 
-            //For Resetting Object Mass
+            /*//For Resetting Object Mass
             if (heavyObj)
                 ResetObjMass(false);
             if (lightObj)
                 ResetObjMass(false);
-            //For Resetting Object Mass
+            //For Resetting Object Mass*/
 
             //For Resetting Object Bounciness
             if (bounceActive)

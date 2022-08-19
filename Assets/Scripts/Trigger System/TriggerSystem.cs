@@ -279,13 +279,12 @@ public class TriggerSystem : MonoBehaviour
 
     void Update()
     {
-
-        RaycastHit hit;
+        /*RaycastHit hit;
         if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, 2))
         {
             hasPlayer = hit.collider.gameObject == this.gameObject;
         }
-        else hasPlayer = false;
+        else hasPlayer = false;*/
 
 
         if (triggerType == TriggerType.TimedButton)

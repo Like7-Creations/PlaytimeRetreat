@@ -86,12 +86,12 @@ public class PickUpThrow : MonoBehaviour
     void Update()
     {
         //dist = Vector3.Distance(transform.position, player.transform.position);
-        RaycastHit hit;
+        /*RaycastHit hit;
         if( Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, 2))
         {
             hasplayer = hit.collider.gameObject == this.gameObject;
         }
-        else hasplayer = false;
+        else hasplayer = false;*/
 
         if(holding) timer += Time.deltaTime;
 

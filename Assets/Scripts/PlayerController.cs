@@ -10,6 +10,9 @@ public class PlayerController : MonoBehaviour
     public CameraController cam;
 
     public TestNetManager tnManager;
+
+    public bool singlePlayer = false;       //Set to true if testing mechanics. Only for testing purposes.
+
     public PlayerNetComp pcNetComp;
 
     public int level;
@@ -32,10 +35,12 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         characterController = GetComponent<CharacterController>();
-        if (FindObjectOfType<TestNetManager>() != null)
+
+        if (!singlePlayer)
+        {
             tnManager = FindObjectOfType<TestNetManager>();
-        if (GetComponent<PlayerNetComp>() != null)
             pcNetComp = gameObject.GetComponent<PlayerNetComp>();
+        }
     }
 
     void Update()
@@ -47,45 +52,75 @@ public class PlayerController : MonoBehaviour
             velocity.y = -2;
         }
 
-        if (pcNetComp != null)
+        if (!singlePlayer)
         {
-            if (pcNetComp.localID == tnManager.clientID)
+            if (pcNetComp != null)
             {
-                float x = Input.GetAxis("Horizontal");
-                float z = Input.GetAxis("Vertical");
-
-                movement = transform.right * x + transform.forward * z;
-
-                characterController.Move(movement * speed * Time.deltaTime);
-            }
-
-            if (pcNetComp.localID == tnManager.clientID)
-            {
-                if (Input.GetButtonDown("Jump") && isGrounded)
+                if (pcNetComp.localID == tnManager.clientID)
                 {
-                    velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
+                    float x = Input.GetAxis("Horizontal");
+                    float z = Input.GetAxis("Vertical");
+
+                    movement = transform.right * x + transform.forward * z;
+
+                    characterController.Move(movement * speed * Time.deltaTime);
                 }
 
-                velocity.y += gravity * Time.deltaTime;
-                characterController.Move(velocity * Time.deltaTime);
-            }
-
-            if (pcNetComp.localID == tnManager.clientID)
-            {
-                for (int i = 0; i < key.Length; i++)
+                if (pcNetComp.localID == tnManager.clientID)
                 {
-                    if (Input.GetKeyDown(key[i]))
+                    if (Input.GetButtonDown("Jump") && isGrounded)
                     {
-                        AbilityIndex = i + 1;
-                        Debug.Log(AbilityIndex);
+                        velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
+                    }
+
+                    velocity.y += gravity * Time.deltaTime;
+                    characterController.Move(velocity * Time.deltaTime);
+                }
+
+                if (pcNetComp.localID == tnManager.clientID)
+                {
+                    for (int i = 0; i < key.Length; i++)
+                    {
+                        if (Input.GetKeyDown(key[i]))
+                        {
+                            AbilityIndex = i + 1;
+                            Debug.Log(AbilityIndex);
+                        }
                     }
                 }
+
+                /* if(what ever happens to player here)
+                 {
+                     TPToCheckpoint(lastCheckpoint);
+                 }*/
+            }
+        }
+
+        else
+        {
+            float x = Input.GetAxis("Horizontal");
+            float z = Input.GetAxis("Vertical");
+
+            movement = transform.right * x + transform.forward * z;
+
+            characterController.Move(movement * speed * Time.deltaTime);
+
+            if (Input.GetButtonDown("Jump") && isGrounded)
+            {
+                velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
             }
 
-            /* if(what ever happens to player here)
-             {
-                 TPToCheckpoint(lastCheckpoint);
-             }*/
+            velocity.y += gravity * Time.deltaTime;
+            characterController.Move(velocity * Time.deltaTime);
+
+            for (int i = 0; i < key.Length; i++)
+            {
+                if (Input.GetKeyDown(key[i]))
+                {
+                    AbilityIndex = i + 1;
+                    Debug.Log(AbilityIndex);
+                }
+            }
         }
 
     }

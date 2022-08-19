@@ -6,9 +6,12 @@ using UnityEngine;
 
 public class ObjScaleAbility : MonoBehaviour //Ability
 {
+    //Potentially Deprecated
+
     public AbilityTargeting targeting;
 
     public GameObject selectedObj;
+    public ObjEffect objectEffects;
 
     public Vector3 originalScale;
     public Vector3 shrinkVal;
@@ -54,14 +57,15 @@ public class ObjScaleAbility : MonoBehaviour //Ability
     void Update()
     {
         selectedObj = targeting.targetObj;
+        objectEffects = selectedObj.GetComponent<ObjEffect>();
 
         if (Input.GetKeyDown(KeyCode.P))
             if (targeting.targeting)
             {
-                if (!selectedObj.GetComponent<ObjEffect>().shrinkActive)
+                if (!objectEffects.shrinkActive)
                 {
-                    selectedObj.GetComponent<ObjEffect>().shrinkActive = true;
-                    selectedObj.GetComponent<ObjEffect>().ReturnToNormalSize(true);
+                    objectEffects.shrinkActive = true;
+                    objectEffects.ReturnToNormalSize(true);
                     ShrinkObject(selectedObj);
                     print("Shrinking Object");
                 }
@@ -72,8 +76,8 @@ public class ObjScaleAbility : MonoBehaviour //Ability
             {
                 if (!selectedObj.GetComponent<ObjEffect>().growActive)
                 {
-                    selectedObj.GetComponent<ObjEffect>().growActive = true;
-                    selectedObj.GetComponent<ObjEffect>().ReturnToNormalSize(true);
+                    objectEffects.growActive = true;
+                    objectEffects.ReturnToNormalSize(true);
                     GrowObject(selectedObj);
                     print("Growing Object");
                 }
