@@ -4,9 +4,11 @@ using UnityEngine;
 
 public class ObjSurfaceAbility : MonoBehaviour
 {
+    [Header("Vital Components & GameObjects")]
     public AbilityTargeting targeting;
-
     public GameObject selectedObj;
+    public ObjEffect objectEffects;
+
     //public Collider selectedCollider;
 
     void Start()
@@ -16,31 +18,35 @@ public class ObjSurfaceAbility : MonoBehaviour
 
     void Update()
     {
-        selectedObj = targeting.targetObj;
         //selectedCollider = targeting.targetObj.GetComponent<Collider>();
+        objectEffects = targeting.effectableObj;
 
         if (Input.GetKeyDown(KeyCode.B))
             if (targeting.targeting)
-                if (!selectedObj.GetComponent<ObjEffect>().bounceActive)
+                if (!objectEffects.bounceActive)
                 {
-                    selectedObj.GetComponent<ObjEffect>().bounceActive = true;
-                    selectedObj.GetComponent<ObjEffect>().DisableBounce(true);
-                    EnableBounce(selectedObj.GetComponent<Collider>());
+                    objectEffects.bounceActive = true;
+
+                    objectEffects.DisableBounce(true);
+                    objectEffects.EnableBounce(selectedObj.GetComponent<Collider>());
+
                     print("Activate Bounce");
                 }
 
         if(Input.GetKeyDown(KeyCode.N))
             if(targeting.targeting)
-                if (!selectedObj.GetComponent<ObjEffect>().frictionInactive)
+                if (!objectEffects.frictionInactive)
                 {
-                    selectedObj.GetComponent<ObjEffect>().frictionInactive = true;
-                    selectedObj.GetComponent<ObjEffect>().EnableFriction(true);
-                    DisableFriction(selectedObj.GetComponent<Collider>());
+                    objectEffects.frictionInactive = true;
+
+                    objectEffects.EnableFriction(true);
+                    objectEffects.DisableFriction(selectedObj.GetComponent<Collider>());
+
                     print("Deactivate Friction");
                 }
     }
 
-    public void EnableBounce(Collider col)
+    /*public void EnableBounce(Collider col)
     {
         col = selectedObj.GetComponent<Collider>();
 
@@ -59,5 +65,5 @@ public class ObjSurfaceAbility : MonoBehaviour
         col.material.frictionCombine = PhysicMaterialCombine.Minimum;
 
         print("Object is Slippery Now");
-    }
+    }*/
 }
