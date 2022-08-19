@@ -11,13 +11,15 @@ public class Elevator : MonoBehaviour
     [Header("Arrival Settings")]
     public Vector3 velocity;
     [SerializeField] float Max_Velocity;
-    [SerializeField]float maxForce;
+    [SerializeField] float maxForce;
     [SerializeField] float mass;
     [SerializeField] float max_Speed;
     [SerializeField] float slowingradius;
     [SerializeField] bool UpDown;
     [SerializeField] bool active;
-    
+
+    public bool loop;
+
     void Start()
     {
         velocity = Vector3.zero;
@@ -31,20 +33,25 @@ public class Elevator : MonoBehaviour
         //    hasplayer = hit.collider.gameObject == ActivateObject.gameObject;
         //} else hasplayer = false;
 
+        //if (active)
+        //{
+        //    if (Input.GetKeyDown(KeyCode.E))
+        //    {
+        //        if (UpDown) UpDown = false;
+        //        else UpDown = true;          
+        //    }          
+        //}
+
         if (active)
         {
-            if (Input.GetKeyDown(KeyCode.E))
+            if (UpDown)
             {
-                if (UpDown) UpDown = false;
-                else UpDown = true;          
-            }          
+                Arrival(waypoints[0]);
+            }
+            else Arrival(waypoints[1]);
         }
-
-        if (UpDown)
-        {
+        else
             Arrival(waypoints[0]);
-        }
-        else Arrival(waypoints[1]);
     }
 
     public void Arrival(Transform obj)
@@ -55,6 +62,8 @@ public class Elevator : MonoBehaviour
         if (dist < slowingradius)
         {
             desired_velocity = desired_velocity.normalized * Max_Velocity * (dist / slowingradius);
+            if (loop)
+                UpDown = !UpDown;
         }
         else
         {
@@ -68,6 +77,7 @@ public class Elevator : MonoBehaviour
 
     public void TriggerElevator()
     {
+        active = !active;
         UpDown = !UpDown;
     }
 }
