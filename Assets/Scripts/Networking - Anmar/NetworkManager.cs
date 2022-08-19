@@ -60,9 +60,12 @@ public class NetworkManager : MonoBehaviour
 
     Player player;
     Socket MainSocket;
+    List<Socket> Lobbysockets = new List<Socket>();
     Socket LobbySocket;
     List<PlayerController> playerss = new List<PlayerController>();
     PlayerController[] playerController;
+
+    public GameServerPort gameServerPort;
 
     string playerPrefabPath = "Prefabs/PlayerController";
     bool connected;
@@ -72,7 +75,9 @@ public class NetworkManager : MonoBehaviour
         MainSocket.Connect(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 3000));
         MainSocket.Blocking = false;
         player = new Player(Guid.NewGuid().ToString());
-        
+
+        LobbySocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+
 
 
         //lobbySocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -137,7 +142,7 @@ public class NetworkManager : MonoBehaviour
         StartButton.onClick.AddListener(() =>
         {
             if(host)
-                LobbySocket.Send(new StartGamePacket("start", player).Serialize());
+                LobbySocket.Send(new StartGamePacket(0, player).Serialize());
         });
         KickButton.onClick.AddListener(() =>
         {
@@ -148,6 +153,8 @@ public class NetworkManager : MonoBehaviour
         {
             if(host) LobbySocket.Send(new LeaveRequestPacket(RoomName.text, host, player).Serialize());
             if(client) LobbySocket.Send(new LeaveRequestPacket(ChosenLobbyName, client, player).Serialize());
+            LobbySocket.Shutdown(SocketShutdown.Both);
+            LobbySocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         });
     }
     void Update()
@@ -169,7 +176,6 @@ public class NetworkManager : MonoBehaviour
                         int portnumber = lp.LobbyPort;
                         RoomCodeText.text = "Room Code: " + lp.RoomCode.ToString();
                         print("Connecting to " + lp.Name + "with port " + portnumber);
-                        LobbySocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                         LobbySocket.Connect(new IPEndPoint(IPAddress.Parse("127.0.0.1"), portnumber));
                         LobbySocket.Blocking = false;
                         print("I have connected to " + name);
@@ -191,8 +197,15 @@ public class NetworkManager : MonoBehaviour
                         for (int i = 0; i < lnp.LobbyNames.Count; i++)
                         {
                             string.Join(", ", lnp.LobbyNames);
-                            print(lnp.LobbyNames[i]);
                             print("Recieved lobby name: " + lnp.LobbyNames[i]);
+                            if(ContentPanel.transform.childCount > 0 && lobbyButtonNames != null)
+                            {
+                                lobbyButtonNames.Clear();
+                                for (int j = 0; j < ContentPanel.transform.childCount; j++)
+                                {
+                                    Destroy(ContentPanel.transform.GetChild(j));
+                                }
+                            }
                             Button instantiateButton = Instantiate(buttonPrefabForLobbyNames);
                             instantiateButton.transform.Find("Text (TMP)").gameObject.GetComponent<TextMeshProUGUI>().text = lnp.LobbyNames[i];
                             lobbyButtonNames.Add(instantiateButton);
@@ -228,14 +241,13 @@ public class NetworkManager : MonoBehaviour
                         KickMessage.text = krp.Request;
                         print("I got kicked out! or lobby is full");
                         BackToMenuScreen();
-                        //LobbySocket.Shutdown(SocketShutdown.Both);
-                        //SceneManager.LoadScene("_MainMenu");
-                        
-                        //for leaving...if client...relaunch main scene
-                        //if host send packet to cancel the lobby and remove it off the list of lobbies in the main server... 
+                        LobbySocket.Shutdown(SocketShutdown.Both);
+                        LobbySocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                         break;
                     case BasePacket.PacketType.StartGame:
-                        SceneManager.LoadScene("Chris Scene");
+                        StartGamePacket sgp = (StartGamePacket)new StartGamePacket().DeSerialize(recievedBuffer);
+                        gameServerPort.GamePort = sgp.Gameport;
+                        SceneManager.LoadScene("_Level 1");
                         break;
 
                     default:

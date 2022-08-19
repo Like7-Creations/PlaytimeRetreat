@@ -7389,7 +7389,7 @@ GameObject:
   - component: {fileID: 1704856020}
   - component: {fileID: 1704856019}
   m_Layer: 0
-  m_Name: Clientobject
+  m_Name: NetworkManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7433,6 +7433,7 @@ MonoBehaviour:
   host: 0
   MainMenuPage: {fileID: 1630465765}
   LobbyPage: {fileID: 1460866309}
+  gameServerPort: {fileID: 11400000, guid: cb3b9b185e417d641908462bc3ac85e7, type: 2}
 --- !u!4 &1704856020
 Transform:
   m_ObjectHideFlags: 0

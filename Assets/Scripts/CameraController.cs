@@ -10,12 +10,15 @@ public class CameraController : MonoBehaviour
     Animator anim;
     float rotationX;
     Vector3 lastPosition;
+
+    Camera camera;
     void Start()
     {
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
         playerController = GetComponentInParent<PlayerController>();
         anim = GetComponent<Animator>();
+        camera = GetComponent<Camera>();
     }
 
     // Update is called once per frame
@@ -35,5 +38,15 @@ public class CameraController : MonoBehaviour
         }
        // else anim.SetBool("Bobbing", false);
         lastPosition = playerController.transform.position;
+    }
+
+    public void SetSensitivity(float sensitivity)
+    {
+        camSens = sensitivity;
+    }
+
+    public void SetFOV(int fov)
+    {
+        camera.fieldOfView = fov;
     }
 }

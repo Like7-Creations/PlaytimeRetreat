@@ -40,12 +40,19 @@ public class ObjEffect : MonoBehaviour
 
     Color originalObjColor;
     Color highlightedColor;
-    
+
     /*Color frozenColor;
     Color finalColor;*/
 
-    void Start()
+    TestNetManager testmanager;
+
+
+    void Awake()
     {
+        this.gameObject.AddComponent<Rigidbody>();
+        this.gameObject.AddComponent<PickUpThrow>();
+        this.gameObject.AddComponent<PickUpNetComp>();
+        this.gameObject.AddComponent<RBNetComp>();
         targeting = FindObjectOfType<AbilityTargeting>();
 
         rbody = GetComponent<Rigidbody>();
@@ -58,6 +65,7 @@ public class ObjEffect : MonoBehaviour
 
         originalObjColor = colorRenderer.material.color;
         highlightedColor = FindObjectOfType<ObjEffect>().highlightedColor;
+        testmanager = FindObjectOfType<TestNetManager>();
 
         /*frozenColor = FindObjectOfType<ObjEffect>().frozenColor;
         finalColor = FindObjectOfType<ObjEffect>().finalColor;*/
@@ -67,18 +75,24 @@ public class ObjEffect : MonoBehaviour
 
     void Update()
     {
-        if (targeting.targeting)
+        if(testmanager.localPlayer != null) 
         {
-            if (gameObject == targeting.targetObj)
+            targeting = testmanager.localPlayer.GetComponent<AbilityTargeting>();
+            if (targeting.targeting)
             {
-                colorRenderer.material.color = highlightedColor;
-            }
+                if (gameObject == targeting.targetObj)
+                {
+                    colorRenderer.material.color = highlightedColor;
+                }
 
-            else
-            {
-                colorRenderer.material.color = originalObjColor;
+                else
+                {
+                    colorRenderer.material.color = originalObjColor;
+                }
             }
         }
+
+
 
     }
 
