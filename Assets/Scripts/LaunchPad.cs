@@ -12,6 +12,10 @@ public class LaunchPad : MonoBehaviour
     float timer;
 
     public bool active;
+    public Color activeColor, inactiveColor;
+    public Renderer[] activeIndicators;
+
+    public Animator ani;
 
     void Start()
     {
@@ -24,6 +28,25 @@ public class LaunchPad : MonoBehaviour
     {
         if (jumped) timer += Time.deltaTime;
         if(timer > 1 && playerController.isGrounded) {playerController.velocity = Vector3.zero; timer = 0; jumped = false; }
+
+        if (active)
+        {
+            for (int i = 0; i < activeIndicators.Length; i++)
+            {
+                Material mat = activeIndicators[i].material;
+                mat.color = activeColor;
+                activeIndicators[i].material = mat;
+            }
+        }
+        else
+        {
+            for (int i = 0; i < activeIndicators.Length; i++)
+            {
+                Material mat = activeIndicators[i].material;
+                mat.color = inactiveColor;
+                activeIndicators[i].material = mat;
+            }
+        }
     }
     private void OnTriggerEnter(Collider other)
     {
@@ -35,7 +58,11 @@ public class LaunchPad : MonoBehaviour
 
             // Mobile
             mobileController.velocity.y = Mathf.Sqrt(ForceHeight * -2f * playerController.gravity);
+
+            ani.SetTrigger("Launch");
+            audioSource.Play();
         }
+        
     }
 
     public void Trigger()

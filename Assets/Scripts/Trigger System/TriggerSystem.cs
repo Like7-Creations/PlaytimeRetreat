@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 public class TriggerSystem : MonoBehaviour
 {
@@ -40,6 +41,13 @@ public class TriggerSystem : MonoBehaviour
     bool leverPulled = false;
     bool pressureActive = false;
 
+    public Color activeColor, inactiveColor;
+    public Renderer[] activeIndicators;
+
+    public Text[] weightIndicators;
+
+    AudioSource sound;
+
     //Used for triggers that need to be manually disabled, like Buttons and maybe specific Pressure Plates
     //Set to false for Timed Buttons and Levers that disable themselves without player interference. Or for pressure plates that require an object
     //on it to remain triggered
@@ -50,14 +58,19 @@ public class TriggerSystem : MonoBehaviour
     private void Awake()
     {
         TriggerSys = new MechanicsControl();
+		sound = GetComponent<AudioSource>();
         this.gameObject.AddComponent<TriggerNetComp>();
     }
 
     void Start()
     {
-        originalObjColor = GetComponent<Renderer>().material.color;
+        //originalObjColor = GetComponent<Renderer>().material.color;
+
         originalPos = transform.position;
         timer = timerDuration;
+
+        for (int i = 0; i < weightIndicators.Length; i++)
+            weightIndicators[i].text = "" + pressureWeightReq;
     }
 
     void OnEnable()
@@ -72,7 +85,7 @@ public class TriggerSystem : MonoBehaviour
 
         PressLever = TriggerSys.Trigger.InteractLever;
         PressLever.Enable();
-        PressLever.performed += LeverPulled;
+        PressLever.performed += LeverPulled;        
     }
 
     void OnDisable()
@@ -80,6 +93,8 @@ public class TriggerSystem : MonoBehaviour
         PressButton.Disable();
         PressTimedButton.Disable();
         PressLever.Disable();
+
+        
     }
 
     public bool IsTriggered()
@@ -92,7 +107,7 @@ public class TriggerSystem : MonoBehaviour
                 if (buttonPressed)
                 {
                     triggerActive = true;
-                   // Debug.Log($"{this.name} of type: {this.triggerType} has been activated");
+                    //Debug.Log($"{this.name} of type: {this.triggerType} has been activated");
                     return triggerActive;
                 }
                 else if (!buttonPressed)
@@ -114,7 +129,7 @@ public class TriggerSystem : MonoBehaviour
                         triggerActive = true;
                         timerButtonPressed = true;
                         //Debug.Log($"{this.name} of type: {this.triggerType} has been activated");
-                       // Debug.Log($"{this.name}'s timer has been activated");
+                        //Debug.Log($"{this.name}'s timer has been activated");
 
                         return triggerActive;
                     }
@@ -132,7 +147,7 @@ public class TriggerSystem : MonoBehaviour
                         triggerActive = false;
                         timerButtonPressed = false;
                         timer = timerDuration;
-                       // Debug.Log($"{this.name} of type: {this.triggerType} has been deactivated");
+                        //Debug.Log($"{this.name} of type: {this.triggerType} has been deactivated");
 
                         return triggerActive;
                     }
@@ -166,14 +181,14 @@ public class TriggerSystem : MonoBehaviour
                 {
                     triggerActive = true;
                     //Debug.Log($"{this.name} of type: {this.triggerType} has been activated");
-                    return triggerActive;
+                    return pressureActive;
                 }
 
                 else if (!pressureActive)
                 {
                     triggerActive = false;
                     //Debug.Log($"{this.name} of type: {this.triggerType} has been deactivated");
-                    return triggerActive;
+                    return pressureActive;
                 }
 
                 break;
@@ -194,7 +209,8 @@ public class TriggerSystem : MonoBehaviour
             if (!buttonPressed)
             {
                 buttonPressed = true;
-                //Debug.Log("Button Has Been Pressed");
+                sound.Play();
+                Debug.Log("Button Has Been Pressed");
             }
 
             else if (buttonPressed)
@@ -213,7 +229,8 @@ public class TriggerSystem : MonoBehaviour
             if (timer == timerDuration)
             {
                 timerButtonPressed = true;
-                //Debug.Log("TimedButton Has Been Pressed");
+                sound.Play();
+                Debug.Log("TimedButton Has Been Pressed");
             }
         }
     }
@@ -225,7 +242,8 @@ public class TriggerSystem : MonoBehaviour
             if (!leverPulled)
             {
                 leverPulled = true;
-               // Debug.Log("Lever Has Been Pulled");
+                sound.Play();
+                Debug.Log("Lever Has Been Pulled");
             }
 
             else if (leverPulled)
@@ -241,7 +259,7 @@ public class TriggerSystem : MonoBehaviour
         if (collision.collider.tag == "EffectableObject" || collision.collider.tag == "Player")
         {
             //collision.transform.parent = transform;
-            GetComponent<Renderer>().material.color = Color.red;
+            //GetComponent<Renderer>().material.color = Color.red;
         }
     }
 
@@ -253,7 +271,8 @@ public class TriggerSystem : MonoBehaviour
             {
                 //transform.Translate(0, -0.1f, 0);
                 pressureActive = true;
-                //Debug.Log($"A Pressure Plate has been activated");
+                sound.Play();
+                Debug.Log($"A Pressure Plate has been activated");
             }
 
             else
@@ -271,8 +290,8 @@ public class TriggerSystem : MonoBehaviour
             pressureActive = false;
            // Debug.Log($"A Pressure Plate has been deactivated");
 
-            collision.transform.parent = null;
-            GetComponent<Renderer>().material.color = originalObjColor;
+            //collision.transform.parent = null;
+            //GetComponent<Renderer>().material.color = originalObjColor;
         }
     }
 
@@ -310,20 +329,51 @@ public class TriggerSystem : MonoBehaviour
             }
         }
 
-        if (triggerType == TriggerType.PressurePlate)
-        {
-            if (!pressureActive)
-            {
-                if (transform.position.y < originalPos.y)
-                {
-                    transform.Translate(0, 0.1f, 0);
-                   // Debug.Log("Pressure Plate Reset");
-                }
+        //if (triggerType == TriggerType.PressurePlate)
+        //{
+        //    if (!pressureActive)
+        //    {
+        //        if (transform.position.y < originalPos.y)
+        //        {
+        //            transform.Translate(0, 0.1f, 0);
+        //            Debug.Log("Pressure Plate Reset");
+        //        }
 
-                else
-                {
-                    pressureActive = true;  //This should make sure that if the object's y pos is lower than original, then the pressure plate is active.
-                }
+        //        else
+        //        {
+        //            //pressureActive = true;  //This should make sure that if the object's y pos is lower than original, then the pressure plate is active.
+        //        }
+        //    }
+        //}
+
+        if (triggerActive || pressureActive)
+        {
+            for (int i = 0; i < activeIndicators.Length; i++)
+            {
+                Material mat = activeIndicators[i].material;
+                mat.color = activeColor;
+                activeIndicators[i].material = mat;
+            }
+            for (int i = 0; i < weightIndicators.Length; i++)
+            {
+                Material mat = weightIndicators[i].material;
+                mat.color = activeColor;
+                weightIndicators[i].material = mat;
+            }
+        }
+        else if (!triggerActive && !pressureActive)
+        {
+            for (int i = 0; i < activeIndicators.Length; i++)
+            {
+                Material mat = activeIndicators[i].material;
+                mat.color = inactiveColor;
+                activeIndicators[i].material = mat;
+            }
+            for (int i = 0; i < weightIndicators.Length; i++)
+            {
+                Material mat = weightIndicators[i].material;
+                mat.color = inactiveColor;
+                weightIndicators[i].material = mat;
             }
         }
     }
