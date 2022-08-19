@@ -508,12 +508,28 @@ MonoBehaviour:
   timerButtonPressed: 0
   triggerSpotted: 0
   triggerActive: 0
+  buttonPressed: 0
   activeColor: {r: 0, g: 1, b: 0.13333344, a: 1}
   inactiveColor: {r: 1, g: 0, b: 0, a: 1}
   activeIndicators:
   - {fileID: 7864317109263996385}
   weightIndicators: []
   interactible: 0
+--- !u!114 &7238977439813584461
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 72757797094078124}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 873a1ab64ef909349b53f77c0f673e67, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  testNetManager: {fileID: 0}
+  gameObjID: 
+  trigger: {fileID: 0}
 --- !u!114 &1883539891982878831
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -8,13 +8,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/_MainMenu.unity
     guid: 833a0d424fd82d5408fa323068941869
-  - enabled: 0
-    path: Assets/Scenes/Chris Scene.unity
-    guid: 75d26f4f2ea181849b336eaefc441d24
   - enabled: 1
     path: Assets/Scenes/_Level 1.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
-  - enabled: 0
-    path: Assets/Scenes/TestPacketScene.unity
-    guid: b4b6bbc5e4063b347bc60f8b76cb6f43
+  - enabled: 1
+    path: Assets/Scenes/_Level 2.unity
+    guid: 4b581a390876616468144a6b95b63617
   m_configObjects: {}
