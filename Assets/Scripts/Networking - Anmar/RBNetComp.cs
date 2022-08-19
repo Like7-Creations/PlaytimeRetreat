@@ -76,13 +76,13 @@ public class RBNetComp : NetworkComponent
                 receiving = true;
                 rb.isKinematic = rbp.isKinematic;
                 print("received kinematic = " + rbp.isKinematic);
-                rb.mass = rbp.mass;
-                rb.useGravity = rbp.gravityActive;
+                rb.mass = rbp.Mass;
+                rb.useGravity = rbp.GravityActive;
 
-                Velocity = rbp.velocity;
-                mass = rbp.mass;
-                gravityActive = rbp.gravityActive;
-                kinematic = rbp.isKinematic;
+               // Velocity = rbp.velocity;
+                mass = rb.mass;
+                gravityActive = rb.useGravity;
+                kinematic = rb.isKinematic;
                 //print(rbp.isKinematic);
                 receiving = false;
                 
@@ -97,7 +97,7 @@ public class RBNetComp : NetworkComponent
     {
         byte[] buffer;
 
-        GameBasePacket pickUpPacket = new RigidbodyPacket(rb, gameObjID);
+        GameBasePacket pickUpPacket = new RigidbodyPacket(rb.mass, rb.useGravity, rb.isKinematic, gameObjID);
         buffer = pickUpPacket.Serialize();
         testNetManager.SendPacket(buffer);
         print("Sending Rigidbody Packet");

@@ -49,9 +49,9 @@ public class ObjEffect : MonoBehaviour
 
     void Awake()
     {
+        this.gameObject.AddComponent<Rigidbody>();
         this.gameObject.AddComponent<PickUpThrow>();
         this.gameObject.AddComponent<PickUpNetComp>();
-        this.gameObject.AddComponent<Rigidbody>();
         this.gameObject.AddComponent<RBNetComp>();
         targeting = FindObjectOfType<AbilityTargeting>();
 
