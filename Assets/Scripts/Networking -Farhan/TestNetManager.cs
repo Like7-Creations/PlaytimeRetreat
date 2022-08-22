@@ -91,7 +91,7 @@ public class TestNetManager : MonoBehaviour
          */
 
         socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-        socket.Connect(new IPEndPoint(IPAddress.Parse("127.0.0.1"), gameServerPort.GamePort));
+        socket.Connect(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 4000/*gameServerPort.GamePort*/));
         socket.Blocking = false;
 
         isConnected = true;

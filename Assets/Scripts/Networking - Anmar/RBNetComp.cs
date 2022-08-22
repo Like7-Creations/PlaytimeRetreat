@@ -74,7 +74,7 @@ public class RBNetComp : NetworkComponent
                 RigidbodyPacket rbp = (RigidbodyPacket)new RigidbodyPacket().DeSerialize(receivedBuffer);
                 //print($"Packet contains position:{pup.Position}");
                 receiving = true;
-                rb.isKinematic = rbp.isKinematic;
+               // rb.isKinematic = rbp.isKinematic;
                 print("received kinematic = " + rbp.isKinematic);
                 rb.mass = rbp.Mass;
                 rb.useGravity = rbp.GravityActive;
