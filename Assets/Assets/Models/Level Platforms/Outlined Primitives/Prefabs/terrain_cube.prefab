@@ -43,6 +43,7 @@ GameObject:
   - component: {fileID: 5549857338579722508}
   - component: {fileID: 188616454386271171}
   - component: {fileID: 2302019568502084522}
+  - component: {fileID: 376263995697585822}
   m_Layer: 0
   m_Name: terrain_cube
   m_TagString: Untagged
@@ -127,6 +128,29 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -1173222830312211860}
+--- !u!114 &376263995697585822
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7337374037987621502}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fd2ef58e5da654488b72b361965e300, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Variations:
+  - {r: 0, g: 0.42352945, b: 0.8705883, a: 1}
+  - {r: 0, g: 0.8705883, b: 0.8235295, a: 1}
+  - {r: 0.52156866, g: 0.52156866, b: 0.52156866, a: 1}
+  - {r: 0, g: 0.8705883, b: 0, a: 1}
+  - {r: 0.8705883, g: 0.43529415, b: 0, a: 1}
+  - {r: 0.8705883, g: 0, b: 0.6509804, a: 1}
+  - {r: 0.6509804, g: 0, b: 0.8705883, a: 1}
+  - {r: 0.8705883, g: 0, b: 0, a: 1}
+  - {r: 0.82745105, g: 0.82745105, b: 0.82745105, a: 1}
+  - {r: 0.8705883, g: 0.8705883, b: 0, a: 1}
 --- !u!43 &-1173222830312211860
 Mesh:
   m_ObjectHideFlags: 0

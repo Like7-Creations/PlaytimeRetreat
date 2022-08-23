@@ -18,6 +18,7 @@ public class PauseMenu : MonoBehaviour
     {
         state = PauseState.Running;
         pauseUI.SetActive(false);
+        settingsUI.SetActive(false);
     }
 
     // Update is called once per frame
@@ -44,11 +45,11 @@ public class PauseMenu : MonoBehaviour
     public void Resume()
     {
         state = PauseState.Running;
-        pauseUI.SetActive(false);
-        settingsUI.SetActive(false);
         Time.timeScale = 1;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+        pauseUI.SetActive(false);
+        settingsUI.SetActive(false);
     }
 
     public void Leave()
