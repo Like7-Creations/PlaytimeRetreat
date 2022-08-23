@@ -22,18 +22,18 @@ public class TriggerNetComp : NetworkComponent
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (testNetManager.localPlayer != null && testNetManager.partnerPlayer != null) 
-        { 
-            if(currentActive != trigger.triggerActive & !receiving)
+        if (testNetManager.localPlayer != null && testNetManager.partnerPlayer != null)
+        {
+            if (currentActive != trigger.triggerActive & !receiving)
             {
                 SendUpdateRequest();
                 currentActive = trigger.triggerActive;
             }
-            if (currentActive2 != trigger.buttonPressed)
+            /*if (currentActive2 != trigger.buttonPressed)
             {
                 SendUpdateRequest();
                 currentActive2 = trigger.buttonPressed;
-            }
+            }*/
         }
 
     }
@@ -49,9 +49,32 @@ public class TriggerNetComp : NetworkComponent
                 Debug.Log("Received Trigger Request");
                 receiving = true;
                 trigger.triggerActive = tp.triggerActive;
-                trigger.buttonPressed = tp.PressedActive;
                 currentActive = trigger.triggerActive;
-                currentActive2 = trigger.buttonPressed;
+
+                if (trigger.triggerType == TriggerSystem.TriggerType.Button)
+                {
+                    trigger.buttonPressed = tp.PressedActive;
+                    currentActive2 = trigger.buttonPressed;
+                }
+
+                else if (trigger.triggerType == TriggerSystem.TriggerType.TimedButton)
+                {
+                    trigger.timerButtonPressed = tp.PressedActive;
+                    currentActive2 = trigger.timerButtonPressed;
+                }
+
+                else if (trigger.triggerType == TriggerSystem.TriggerType.Lever)
+                {
+                    trigger.leverPulled = tp.PressedActive;
+                    currentActive2 = trigger.leverPulled;
+                }
+
+                else if (trigger.triggerType == TriggerSystem.TriggerType.PressurePlate)
+                {
+                    trigger.pressureActive = tp.PressedActive;
+                    currentActive2 = trigger.pressureActive;
+                }
+
                 print(trigger.triggerActive);
                 receiving = false;
 
@@ -66,8 +89,47 @@ public class TriggerNetComp : NetworkComponent
     {
         byte[] buffer;
         Debug.Log("Sending Trigger Packet");
-        GameBasePacket pcPacket = new TriggerPacket(gameObjID, trigger.buttonPressed,trigger.triggerActive);
-        buffer = pcPacket.Serialize();
-        testNetManager.SendPacket(buffer);
+
+        bool setTrigger;
+        GameBasePacket pcPacket;
+
+        switch (trigger.triggerType)
+        {
+            case TriggerSystem.TriggerType.Button:
+
+                setTrigger = trigger.buttonPressed;
+                pcPacket = new TriggerPacket(gameObjID, setTrigger, trigger.triggerActive);
+                buffer = pcPacket.Serialize();
+                testNetManager.SendPacket(buffer);
+
+                break;
+            case TriggerSystem.TriggerType.TimedButton:
+
+                setTrigger = trigger.timerButtonPressed;
+                pcPacket = new TriggerPacket(gameObjID, setTrigger, trigger.triggerActive);
+                buffer = pcPacket.Serialize();
+                testNetManager.SendPacket(buffer);
+
+                break;
+            case TriggerSystem.TriggerType.Lever:
+
+                setTrigger = trigger.leverPulled;
+                pcPacket = new TriggerPacket(gameObjID, setTrigger, trigger.triggerActive);
+                buffer = pcPacket.Serialize();
+                testNetManager.SendPacket(buffer);
+
+                break;
+            case TriggerSystem.TriggerType.PressurePlate:
+
+                setTrigger = trigger.pressureActive;
+                pcPacket = new TriggerPacket(gameObjID, setTrigger, trigger.triggerActive);
+                buffer = pcPacket.Serialize();
+                testNetManager.SendPacket(buffer);
+
+                break;
+
+            default:
+                break;
+        }
     }
 }

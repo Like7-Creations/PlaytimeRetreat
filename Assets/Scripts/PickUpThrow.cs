@@ -5,6 +5,8 @@ using TMPro;
 
 public class PickUpThrow : MonoBehaviour
 {
+    public PickUpNetComp pickupComp;
+
     PlayerController player;
     [SerializeField] public bool holding;
     [SerializeField] public bool hasplayer;
@@ -49,7 +51,8 @@ public class PickUpThrow : MonoBehaviour
 
     void Start()
     {
-        player = FindObjectOfType<PlayerController>(); 
+        //player = FindObjectOfType<PlayerController>();
+        pickupComp = GetComponent<PickUpNetComp>();
         rb = GetComponent<Rigidbody>();
     }
     // Update is called once per frame

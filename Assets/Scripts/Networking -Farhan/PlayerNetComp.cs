@@ -39,7 +39,13 @@ public class PlayerNetComp : NetworkComponent
         gameObjID = gameObject.name;
 
         if(localID != testNetManager.clientID)
+        {
             pCam.gameObject.SetActive(false);
+            gameObject.GetComponent<AbilityTargeting>().enabled = false;
+            gameObject.GetComponent<AbilityHolder>().enabled = false;
+            gameObject.GetComponent<ObjResizeAbility>().enabled = false;
+            gameObject.GetComponent<ObjSurfaceAbility>().enabled = false;
+        }
 
         /*else
             pCam.gameObject.SetActive(false);*/
