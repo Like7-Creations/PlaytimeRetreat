@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class AbilityTargeting : MonoBehaviour
 {
+    PlayerNetComp pcComp;
     public GameObject targetObj;
 
     public ObjEffect effectableObj;
@@ -18,6 +19,8 @@ public class AbilityTargeting : MonoBehaviour
     void Start()
     {
         Cursor.visible = false;
+
+        pcComp = GetComponent<PlayerNetComp>();
     }
 
     void Update()
@@ -58,12 +61,16 @@ public class AbilityTargeting : MonoBehaviour
                     {
                         throwableObj = targetObj.GetComponent<PickUpThrow>();
                         throwableObj.hasplayer = true;
+                        throwableObj.pickupComp.ownerID = pcComp.localID;
                     }
 
                     else
                     {
                         if (throwableObj != null)
+                        {
                             throwableObj.hasplayer = false;
+                            throwableObj.pickupComp.ownerID = System.Guid.Empty;
+                        }
 
                         throwableObj = null;
                     }
@@ -81,7 +88,10 @@ public class AbilityTargeting : MonoBehaviour
                     effectableObj = null;
 
                     if (throwableObj != null)
+                    {
                         throwableObj.hasplayer = false;
+                        throwableObj.pickupComp.ownerID = System.Guid.Empty;
+                    }
 
                     throwableObj = null;
 
@@ -98,7 +108,10 @@ public class AbilityTargeting : MonoBehaviour
                 effectableObj = null;
 
                 if (throwableObj != null)
+                {
                     throwableObj.hasplayer = false;
+                    throwableObj.pickupComp.ownerID = System.Guid.Empty;
+                }
 
                 throwableObj = null;
 
@@ -115,7 +128,10 @@ public class AbilityTargeting : MonoBehaviour
             effectableObj = null;
 
             if (throwableObj != null)
+            {
                 throwableObj.hasplayer = false;
+                throwableObj.pickupComp.ownerID = System.Guid.Empty;
+            }
 
             throwableObj = null;
 

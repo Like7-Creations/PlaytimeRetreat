@@ -126,6 +126,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4f6e70bf576cae4099f67145244c57f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  boxCol: {fileID: 0}
   ForceHeight: 50
   jumped: 0
   active: 1

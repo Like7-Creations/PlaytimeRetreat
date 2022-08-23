@@ -11,14 +11,14 @@ public class CameraController : MonoBehaviour
     float rotationX;
     Vector3 lastPosition;
 
-    Camera camera;
+    Camera cam;
     void Start()
     {
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
         playerController = GetComponentInParent<PlayerController>();
         anim = GetComponent<Animator>();
-        camera = GetComponent<Camera>();
+        cam = GetComponent<Camera>();
     }
 
     // Update is called once per frame
@@ -47,6 +47,6 @@ public class CameraController : MonoBehaviour
 
     public void SetFOV(int fov)
     {
-        camera.fieldOfView = fov;
+        cam.fieldOfView = fov;
     }
 }

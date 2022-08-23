@@ -31,7 +31,7 @@ public class RBNetComp : NetworkComponent
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    /*void FixedUpdate()
     {
         /*timer += Time.deltaTime;
         if(timer > 0.05f)
@@ -43,7 +43,7 @@ public class RBNetComp : NetworkComponent
         {
             SendUpdateRequest();
             Velocity = rb.velocity;
-        }*/
+        }
         if (testNetManager.localPlayer != null && testNetManager.partnerPlayer != null)
         {
             if (mass != rb.mass && !receiving)
@@ -63,7 +63,8 @@ public class RBNetComp : NetworkComponent
             }
         }
         //Debug.Log("The Kinematic Bool is " + rb.isKinematic);
-    }
+    }*/
+
     public override void UpdateComponent(byte[] receivedBuffer)
     {
         GameBasePacket pb = new GameBasePacket().DeSerialize(receivedBuffer);

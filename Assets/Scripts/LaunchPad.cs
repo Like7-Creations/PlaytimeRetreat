@@ -4,8 +4,13 @@ using UnityEngine;
 
 public class LaunchPad : MonoBehaviour
 {
+    TestNetManager tnManager;
+
     PlayerController playerController;
     MobileController mobileController;
+
+    [SerializeField] BoxCollider boxCol;
+
     [SerializeField] float ForceHeight;
     AudioSource audioSource;
     [SerializeField] bool jumped;
@@ -19,15 +24,24 @@ public class LaunchPad : MonoBehaviour
 
     void Start()
     {
-        playerController = FindObjectOfType<PlayerController>();
-        mobileController = FindObjectOfType<MobileController>();
+        tnManager = FindObjectOfType<TestNetManager>();
+
+        //playerController = FindObjectOfType<PlayerController>();
+        //mobileController = FindObjectOfType<MobileController>();
         audioSource = GetComponent<AudioSource>();
     }
 
     void Update()
     {
-        if (jumped) timer += Time.deltaTime;
-        if(timer > 1 && playerController.isGrounded) {playerController.velocity = Vector3.zero; timer = 0; jumped = false; }
+        if (jumped) 
+            timer += Time.deltaTime;
+        if(timer > 1 && playerController.isGrounded) 
+        {
+            playerController.velocity = Vector3.zero;
+            playerController = null;
+            timer = 0; 
+            jumped = false; 
+        }
 
         if (active)
         {
@@ -52,6 +66,7 @@ public class LaunchPad : MonoBehaviour
     {
         if (other.gameObject.tag == "Player" && active)
         {
+            playerController = other.GetComponent<PlayerController>();
             playerController.velocity = transform.up * ForceHeight;
             jumped = true;
 

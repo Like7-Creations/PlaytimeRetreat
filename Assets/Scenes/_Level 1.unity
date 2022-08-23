@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028334, g: 0.2257134, b: 0.30692226, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -5869,6 +5869,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Button_1
       objectReference: {fileID: 0}
+    - target: {fileID: 72757797094078124, guid: 87cfc7d32b2813c489fc706ad0952e5e, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 138537017913711235, guid: 87cfc7d32b2813c489fc706ad0952e5e, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -10070,6 +10074,10 @@ PrefabInstance:
     - target: {fileID: 2969615444044395334, guid: 670dca2d13e0c3c47a452873a8329e90, type: 3}
       propertyPath: m_Name
       value: Lever_6
+      objectReference: {fileID: 0}
+    - target: {fileID: 2969615444044395334, guid: 670dca2d13e0c3c47a452873a8329e90, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 6102938742334459281, guid: 670dca2d13e0c3c47a452873a8329e90, type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -23427,6 +23435,10 @@ PrefabInstance:
     - target: {fileID: 2969615444044395334, guid: 670dca2d13e0c3c47a452873a8329e90, type: 3}
       propertyPath: m_Name
       value: Lever_7
+      objectReference: {fileID: 0}
+    - target: {fileID: 2969615444044395334, guid: 670dca2d13e0c3c47a452873a8329e90, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 6102938742334459281, guid: 670dca2d13e0c3c47a452873a8329e90, type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -36991,6 +37003,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Lever_5
       objectReference: {fileID: 0}
+    - target: {fileID: 2969615444044395334, guid: 670dca2d13e0c3c47a452873a8329e90, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 6102938742929820367, guid: 670dca2d13e0c3c47a452873a8329e90, type: 3}
       propertyPath: m_Name
       value: Trigger_Lever_5
@@ -38016,6 +38032,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1842031681}
     m_Modifications:
+    - target: {fileID: 220723954867877968, guid: 1a337ff095da00746a8231955efe076f, type: 3}
+      propertyPath: effectTimer
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4943491839344763526, guid: 1a337ff095da00746a8231955efe076f, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -38067,6 +38087,10 @@ PrefabInstance:
     - target: {fileID: 4943491839344763580, guid: 1a337ff095da00746a8231955efe076f, type: 3}
       propertyPath: m_Name
       value: PressurePlate_3_Cube
+      objectReference: {fileID: 0}
+    - target: {fileID: 4943491839344763580, guid: 1a337ff095da00746a8231955efe076f, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 4943491839344763580, guid: 1a337ff095da00746a8231955efe076f, type: 3}
       propertyPath: m_TagString
@@ -48144,6 +48168,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Lever_4
       objectReference: {fileID: 0}
+    - target: {fileID: 2969615444044395334, guid: 670dca2d13e0c3c47a452873a8329e90, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 6102938742929820367, guid: 670dca2d13e0c3c47a452873a8329e90, type: 3}
       propertyPath: m_Name
       value: Trigger_Lever_4
@@ -51213,6 +51241,10 @@ PrefabInstance:
     - target: {fileID: 2969615444044395334, guid: 670dca2d13e0c3c47a452873a8329e90, type: 3}
       propertyPath: m_Name
       value: Lever_3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2969615444044395334, guid: 670dca2d13e0c3c47a452873a8329e90, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 6102938742929820367, guid: 670dca2d13e0c3c47a452873a8329e90, type: 3}
       propertyPath: m_Name
@@ -62100,6 +62132,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 532702785}
     m_Modifications:
+    - target: {fileID: 250957944932582038, guid: 30b141bb940ea1f41929dcbb160519e6, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3509886663879751130, guid: 30b141bb940ea1f41929dcbb160519e6, type: 3}
       propertyPath: m_RootOrder
       value: 1

@@ -38,8 +38,8 @@ public class TriggerSystem : MonoBehaviour
     public bool triggerActive = false;
 
     public bool buttonPressed = false;
-    bool leverPulled = false;
-    bool pressureActive = false;
+    public bool leverPulled = false;
+    public bool pressureActive = false;
 
     public Color activeColor, inactiveColor;
     public Renderer[] activeIndicators;

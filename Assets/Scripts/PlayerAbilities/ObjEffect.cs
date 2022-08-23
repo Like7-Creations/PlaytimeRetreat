@@ -49,28 +49,25 @@ public class ObjEffect : MonoBehaviour
 
     void Awake()
     {
-        this.gameObject.AddComponent<Rigidbody>();
-        this.gameObject.AddComponent<PickUpThrow>();
-        this.gameObject.AddComponent<PickUpNetComp>();
-        this.gameObject.AddComponent<RBNetComp>();
+        testmanager = FindObjectOfType<TestNetManager>();
+        
         targeting = FindObjectOfType<AbilityTargeting>();
 
-        rbody = GetComponent<Rigidbody>();
         objCollider = GetComponent<Collider>();
         colorRenderer = GetComponent<Renderer>();
 
+        //gameObject.AddComponent<RBNetComp>();
+        rbody = GetComponent<Rigidbody>();
+        
+        gameObject.AddComponent<PickUpNetComp>();
+        gameObject.GetComponent<PickUpThrow>().enabled = true;
+        
         originalMass = rbody.mass;
 
         originalObjScale = gameObject.transform.localScale;
 
         originalObjColor = colorRenderer.material.color;
         highlightedColor = FindObjectOfType<ObjEffect>().highlightedColor;
-        testmanager = FindObjectOfType<TestNetManager>();
-
-        /*frozenColor = FindObjectOfType<ObjEffect>().frozenColor;
-        finalColor = FindObjectOfType<ObjEffect>().finalColor;*/
-
-        //dirArrow = transform.GetChild(0);
     }
 
     void Update()
