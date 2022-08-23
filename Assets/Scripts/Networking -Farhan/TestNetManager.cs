@@ -12,6 +12,8 @@ using System.Linq;
 
 public class TestNetManager : MonoBehaviour
 {
+    [SerializeField]TextMeshProUGUI LoadingText;
+
     [Header("Instate Prefabs")]
     [SerializeField] string prefabName;
 
@@ -91,7 +93,7 @@ public class TestNetManager : MonoBehaviour
          */
 
         socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-        socket.Connect(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 4000/*gameServerPort.GamePort*/));
+        socket.Connect(new IPEndPoint(IPAddress.Parse("127.0.0.1"), gameServerPort.GamePort));
         socket.Blocking = false;
 
         isConnected = true;
@@ -118,6 +120,7 @@ public class TestNetManager : MonoBehaviour
                             if (localPlayer == null)
                             {
                                 SpawnController(prefabName, clientDesignation, clientID.ToString());
+                                LoadingText.gameObject.SetActive(false);
                                 //print($"{localName} has been instantiated for {clientDesignation}");
                             }
 
