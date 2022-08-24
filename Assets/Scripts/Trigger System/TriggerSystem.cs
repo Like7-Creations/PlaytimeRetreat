@@ -8,6 +8,9 @@ using UnityEngine.UI;
 public class TriggerSystem : MonoBehaviour
 {
     public MechanicsControl TriggerSys;
+    InputAction UseButtons;
+    InputAction UseLever;
+
     InputAction PressButton;
     InputAction PressTimedButton;
     InputAction PressLever;
@@ -59,7 +62,7 @@ public class TriggerSystem : MonoBehaviour
     {
         TriggerSys = new MechanicsControl();
 		sound = GetComponent<AudioSource>();
-        this.gameObject.AddComponent<TriggerNetComp>();
+        gameObject.AddComponent<TriggerNetComp>();
     }
 
     void Start()
@@ -75,7 +78,15 @@ public class TriggerSystem : MonoBehaviour
 
     void OnEnable()
     {
-        PressButton = TriggerSys.Trigger.InteractButton;
+        UseButtons = TriggerSys.Trigger.UseButtons;
+        UseButtons.Enable();
+        UseButtons.performed += InteractWithButtons;
+
+        UseLever = TriggerSys.Trigger.UseLever;
+        UseLever.Enable();
+        UseLever.performed += InteractWithLever;
+
+        /*PressButton = TriggerSys.Trigger.InteractButton;
         PressButton.Enable();
         PressButton.performed += ButtonPressed;
 
@@ -85,16 +96,17 @@ public class TriggerSystem : MonoBehaviour
 
         PressLever = TriggerSys.Trigger.InteractLever;
         PressLever.Enable();
-        PressLever.performed += LeverPulled;        
+        PressLever.performed += LeverPulled;*/        
     }
 
     void OnDisable()
     {
-        PressButton.Disable();
-        PressTimedButton.Disable();
-        PressLever.Disable();
+        UseButtons.Disable();
+        UseLever.Disable();
 
-        
+        /*PressButton.Disable();
+        PressTimedButton.Disable();
+        PressLever.Disable();*/
     }
 
     public bool IsTriggered()
@@ -202,7 +214,37 @@ public class TriggerSystem : MonoBehaviour
         return triggerActive;
     }
 
-    public void ButtonPressed(InputAction.CallbackContext context)
+    public void InteractWithButtons(InputAction.CallbackContext context)
+    {
+        switch (triggerType)
+        {
+            case TriggerType.Button:
+                ButtonPressed();
+                break;
+
+            case TriggerType.TimedButton:
+                TimedButtonPressed();
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    public void InteractWithLever(InputAction.CallbackContext context)
+    {
+        switch (triggerType)
+        {
+            case TriggerType.Lever:
+                LeverPulled();
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    public void ButtonPressed(/*InputAction.CallbackContext context*/)
     {
         if (hasPlayer)
         {
@@ -222,7 +264,7 @@ public class TriggerSystem : MonoBehaviour
 
     }
 
-    public void TimedButtonPressed(InputAction.CallbackContext context)
+    public void TimedButtonPressed(/*InputAction.CallbackContext context*/)
     {
         if (hasPlayer)
         {
@@ -235,7 +277,7 @@ public class TriggerSystem : MonoBehaviour
         }
     }
 
-    public void LeverPulled(InputAction.CallbackContext context)
+    public void LeverPulled(/*InputAction.CallbackContext context*/)
     {
         if (hasPlayer)
         {
@@ -294,7 +336,6 @@ public class TriggerSystem : MonoBehaviour
             //GetComponent<Renderer>().material.color = originalObjColor;
         }
     }
-
 
     void Update()
     {
