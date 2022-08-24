@@ -41,58 +41,60 @@ public class TriggerNetComp : NetworkComponent
 
     public override void UpdateComponent(byte[] receivedBuffer)
     {
-        if (testNetManager.socket.Available > 0)
+        /*if (testNetManager.socket.Available > 0)
         {
             try
             {
-                GameBasePacket pb = new GameBasePacket().DeSerialize(receivedBuffer);
-
-                switch (pb.Type)
-                {
-                    case GameBasePacket.PacketType.Trigger:
-                        TriggerPacket tp = (TriggerPacket)new TriggerPacket().DeSerialize(receivedBuffer);
-                        Debug.Log("Received Trigger Request");
-                        receiving = true;
-                        trigger.triggerActive = tp.triggerActive;
-                        currentActive = trigger.triggerActive;
-
-                        if (trigger.triggerType == TriggerSystem.TriggerType.Button)
-                        {
-                            trigger.buttonPressed = tp.PressedActive;
-                            currentActive2 = trigger.buttonPressed;
-                        }
-
-                        else if (trigger.triggerType == TriggerSystem.TriggerType.TimedButton)
-                        {
-                            trigger.timerButtonPressed = tp.PressedActive;
-                            currentActive2 = trigger.timerButtonPressed;
-                        }
-
-                        else if (trigger.triggerType == TriggerSystem.TriggerType.Lever)
-                        {
-                            trigger.leverPulled = tp.PressedActive;
-                            currentActive2 = trigger.leverPulled;
-                        }
-
-                        else if (trigger.triggerType == TriggerSystem.TriggerType.PressurePlate)
-                        {
-                            trigger.pressureActive = tp.PressedActive;
-                            currentActive2 = trigger.pressureActive;
-                        }
-
-                        print(trigger.triggerActive);
-                        receiving = false;
-
-                        break;
-
-                    default:
-                        break;
-                }
+                
             }
             catch (Exception ex)
             {
                 Debug.LogException(ex);
             }
+        }*/
+
+        GameBasePacket pb = new GameBasePacket().DeSerialize(receivedBuffer);
+
+        switch (pb.Type)
+        {
+            case GameBasePacket.PacketType.Trigger:
+                TriggerPacket tp = (TriggerPacket)new TriggerPacket().DeSerialize(receivedBuffer);
+                Debug.Log("Received Trigger Request");
+                receiving = true;
+                trigger.triggerActive = tp.triggerActive;
+                currentActive = trigger.triggerActive;
+
+                if (trigger.triggerType == TriggerSystem.TriggerType.Button)
+                {
+                    trigger.buttonPressed = tp.PressedActive;
+                    currentActive2 = trigger.buttonPressed;
+                }
+
+                else if (trigger.triggerType == TriggerSystem.TriggerType.TimedButton)
+                {
+                    trigger.timerButtonPressed = tp.PressedActive;
+                    currentActive2 = trigger.timerButtonPressed;
+                }
+
+                else if (trigger.triggerType == TriggerSystem.TriggerType.Lever)
+                {
+                    trigger.leverPulled = tp.PressedActive;
+                    currentActive2 = trigger.leverPulled;
+                }
+
+                else if (trigger.triggerType == TriggerSystem.TriggerType.PressurePlate)
+                {
+                    trigger.pressureActive = tp.PressedActive;
+                    currentActive2 = trigger.pressureActive;
+                }
+
+                print(trigger.triggerActive);
+                receiving = false;
+
+                break;
+
+            default:
+                break;
         }
     }
 
