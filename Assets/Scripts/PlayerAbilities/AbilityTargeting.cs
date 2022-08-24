@@ -6,7 +6,8 @@ using UnityEngine.UI;
 public class AbilityTargeting : MonoBehaviour
 {
     [Header("References")]
-    PlayerNetComp pcComp;
+    MobileController mController;
+    //PlayerNetComp pcComp;
 
     [Header("Mobile UI Buttons")]
     [SerializeField] Button interactButton;
@@ -32,7 +33,8 @@ public class AbilityTargeting : MonoBehaviour
     {
         Cursor.visible = false;
 
-        pcComp = GetComponent<PlayerNetComp>();
+        mController = GetComponent<MobileController>();
+        //pcComp = GetComponent<PlayerNetComp>();
     }
 
     void Update()
@@ -69,10 +71,27 @@ public class AbilityTargeting : MonoBehaviour
             {
                 throwableObj = targetObj.GetComponent<PickUpThrow>();
                 throwableObj.hasplayer = true;
-                throwableObj.pickupComp.ownerID = pcComp.localID;
+                //throwableObj.pickupComp.ownerID = pcComp.localID;
 
-                if (pcComp.mobilePlayer)
+                if (mController != null)
+                {
                     interactButton.gameObject.SetActive(true);
+
+                    interactButton.onClick.RemoveAllListeners();
+                    interactButton.onClick.AddListener(throwableObj.Picker);
+
+                    if (throwableObj.holding)
+                    {
+                        interactButton.onClick.RemoveAllListeners();
+                        interactButton.onClick.AddListener(throwableObj.Charging);
+
+                        if(throwableObj.timer >= .5f)
+                        {
+                            interactButton.onClick.RemoveAllListeners();
+                            interactButton.onClick.AddListener(throwableObj.Throw);
+                        }
+                    }
+                }
             }
 
             else
@@ -83,8 +102,11 @@ public class AbilityTargeting : MonoBehaviour
                     throwableObj.pickupComp.ownerID = System.Guid.Empty;
                 }
 
-                if (pcComp.mobilePlayer)
+                if (mController != null)
+                {
+                    interactButton.onClick.RemoveAllListeners();
                     interactButton.gameObject.SetActive(false);
+                }
 
                 throwableObj = null;
             }
@@ -103,7 +125,7 @@ public class AbilityTargeting : MonoBehaviour
                 triggerObj = targetObj.GetComponent<TriggerSystem>();
                 triggerObj.hasPlayer = true;
 
-                if (pcComp.mobilePlayer)
+                if (mController != null)
                 {
                     interactButton.gameObject.SetActive(true);
 
@@ -123,7 +145,7 @@ public class AbilityTargeting : MonoBehaviour
                 if (triggerObj != null)
                     triggerObj.hasPlayer = false;
 
-                if (pcComp.mobilePlayer)
+                if (mController != null)
                 {
                     interactButton.gameObject.SetActive(false);
 
@@ -155,7 +177,7 @@ public class AbilityTargeting : MonoBehaviour
                 {
                     effectableObj = targetObj.GetComponent<ObjEffect>();
 
-                    if (pcComp.mobilePlayer)
+                    if (mController != null)
                     {
                         switchAbilityButton.gameObject.SetActive(true);
                         useAbilityButton.gameObject.SetActive(true);
@@ -167,7 +189,7 @@ public class AbilityTargeting : MonoBehaviour
                     targetObj = null;
                     effectableObj = null;
 
-                    if (pcComp.mobilePlayer)
+                    if (mController != null)
                     {
                         switchAbilityButton.gameObject.SetActive(false);
                         useAbilityButton.gameObject.SetActive(false);
@@ -180,7 +202,7 @@ public class AbilityTargeting : MonoBehaviour
                 targetObj = null;
                 effectableObj = null;
 
-                if (pcComp.mobilePlayer)
+                if (mController != null)
                 {
                     switchAbilityButton.gameObject.SetActive(false);
                     useAbilityButton.gameObject.SetActive(false);
@@ -193,7 +215,7 @@ public class AbilityTargeting : MonoBehaviour
             targetObj = null;
             effectableObj = null;
 
-            if (pcComp.mobilePlayer)
+            if (mController != null)
             {
                 switchAbilityButton.gameObject.SetActive(false);
                 useAbilityButton.gameObject.SetActive(false);
