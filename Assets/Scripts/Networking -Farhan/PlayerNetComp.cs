@@ -86,42 +86,54 @@ public class PlayerNetComp : NetworkComponent
 
     public override void UpdateComponent(byte[] receivedBuffer)
     {
-        GameBasePacket pb = new GameBasePacket().DeSerialize(receivedBuffer);
-
-        switch (pb.Type)
+        if (testNetManager.socket.Available > 0)
         {
-            case GameBasePacket.PacketType.PlayerController:
-                PlayerControllerPacket pcPack = (PlayerControllerPacket)new PlayerControllerPacket().DeSerialize(receivedBuffer);
-                if (gameObjID == pcPack.objID)
+            try
+            {
+                GameBasePacket pb = new GameBasePacket().DeSerialize(receivedBuffer);
+
+                switch (pb.Type)
                 {
-                    //print($"{gameObject} has received {pcPack.Type} packet from the server.");
-
-                    Guid tempID = Guid.Parse(pcPack.ownershipID);
-
-                    if (localID != testNetManager.clientID)
-                    {
-                        if (localID == tempID)
+                    case GameBasePacket.PacketType.PlayerController:
+                        PlayerControllerPacket pcPack = (PlayerControllerPacket)new PlayerControllerPacket().DeSerialize(receivedBuffer);
+                        if (gameObjID == pcPack.objID)
                         {
-                            transform.position = pcPack.position;
-                            currentPos = transform.position;
-                            //print("Player Movement: " + pController.movement);
-                            //pController.movement = pcPack.movement;
-                            //currentMoveVel = pController.movement;
+                            //print($"{gameObject} has received {pcPack.Type} packet from the server.");
 
-                            // print("Player Velocity: " + pController.velocity);
-                            //pController.velocity = pcPack.velocity;
-                            //currentJumpVel = pController.velocity;
+                            Guid tempID = Guid.Parse(pcPack.ownershipID);
 
-                            //print($"{pcPack.movement} and {pcPack.velocity} from packet of type {pcPack.Type}, are being passed onto player of type {gameObject}");
+                            if (localID != testNetManager.clientID)
+                            {
+                                if (localID == tempID)
+                                {
+                                    transform.position = pcPack.position;
+                                    currentPos = transform.position;
+                                    //print("Player Movement: " + pController.movement);
+                                    //pController.movement = pcPack.movement;
+                                    //currentMoveVel = pController.movement;
+
+                                    // print("Player Velocity: " + pController.velocity);
+                                    //pController.velocity = pcPack.velocity;
+                                    //currentJumpVel = pController.velocity;
+
+                                    //print($"{pcPack.movement} and {pcPack.velocity} from packet of type {pcPack.Type}, are being passed onto player of type {gameObject}");
+                                }
+                            }
                         }
-                    }
+
+                        break;
+
+                    default:
+                        break;
                 }
-
-                break;
-
-            default:
-                break;
+            }
+            catch (Exception ex)
+            {
+                Debug.LogException(ex);
+            }
         }
+
+        
     }
 
     public override void SendUpdateRequest()

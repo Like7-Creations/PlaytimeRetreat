@@ -11,7 +11,7 @@ public class GetAllUsersMethod : MonoBehaviour
     }
     private void OnDestroy()
     {
-        Http.HttpResponseEvent += GetAllUsersResponse;
+        Http.HttpResponseEvent -= GetAllUsersResponse;
     }
 
     void Start()
@@ -32,8 +32,16 @@ public class GetAllUsersMethod : MonoBehaviour
 
     void GetAllUsersResponse(string jsonResponse, bool successful)
     {
-        if (successful)
-            print(jsonResponse);
-        else print("Getting not working");
+        if (successful) print("got all users lmao");
+            
+        Usersdata userdata = JsonUtility.FromJson<Usersdata>(jsonResponse);
+
+        for (int i = 0; i < userdata.Users.Length; i++)
+        {
+            print(userdata.Users[i].Name);
+        }
+
+        //if(print(js))
+        print(jsonResponse);
     }
 }

@@ -112,82 +112,93 @@ public class PickUpNetComp : NetworkComponent
     }
     public override void UpdateComponent(byte[] receivedBuffer)
     {
-        GameBasePacket pb = new GameBasePacket().DeSerialize(receivedBuffer);
-
-        switch (pb.Type)
+        if (testNetManager.socket.Available > 0)
         {
+            try
+            {
+                GameBasePacket pb = new GameBasePacket().DeSerialize(receivedBuffer);
 
-            case GameBasePacket.PacketType.PositionRotation:
-                PositionRotation prp = (PositionRotation)new PositionRotation().DeSerialize(receivedBuffer);
-                receiving = true;
-
-                if (gameObjID == prp.objID)
+                switch (pb.Type)
                 {
-                    transform.position = prp.Position;
-                    //transform.rotation = Quaternion.Euler(prp.Rotation.x, prp.Rotation.y, prp.Rotation.z);
 
-                    currentPos = transform.position;
-                    //currentRot = transform.rotation.eulerAngles;
-                }
-                receiving = false;
-                break;
+                    case GameBasePacket.PacketType.PositionRotation:
+                        PositionRotation prp = (PositionRotation)new PositionRotation().DeSerialize(receivedBuffer);
+                        receiving = true;
 
-            case GameBasePacket.PacketType.PickUp:
-                PickUpPacket puPack = (PickUpPacket)new PickUpPacket().DeSerialize(receivedBuffer);
-                receiving = true;
-
-                if (gameObjID == puPack.objID)
-                {
-                    if (ownerID != testNetManager.clientID)
-                    {
-                        Guid testID = Guid.Parse(puPack.objectOwnerID);
-                        if (ownerID == testID)
+                        if (gameObjID == prp.objID)
                         {
-                            pickupthrow.holding = puPack.Holding;
+                            transform.position = prp.Position;
+                            //transform.rotation = Quaternion.Euler(prp.Rotation.x, prp.Rotation.y, prp.Rotation.z);
+
+                            currentPos = transform.position;
+                            //currentRot = transform.rotation.eulerAngles;
                         }
-                    }
+                        receiving = false;
+                        break;
+
+                    case GameBasePacket.PacketType.PickUp:
+                        PickUpPacket puPack = (PickUpPacket)new PickUpPacket().DeSerialize(receivedBuffer);
+                        receiving = true;
+
+                        if (gameObjID == puPack.objID)
+                        {
+                            if (ownerID != testNetManager.clientID)
+                            {
+                                //Guid testID = Guid.Parse(puPack.objectOwnerID);
+                                //if (ownerID == testID)
+                                //{
+                                    pickupthrow.holding = puPack.Holding;
+                                //}
+                            }
+                        }
+
+                        // print(puPack.Holding);
+                        //print("Receiving pickuppacket");
+                        //currentPos = transform.position;
+                        //currentBool = pickupthrow.holding;
+                        receiving = false;
+                        break;
+
+                    case GameBasePacket.PacketType.SizeMass:
+                        SizeMassPacket smPack = (SizeMassPacket)new SizeMassPacket().DeSerialize(receivedBuffer);
+                        //print("receiving scale and mass packet");
+                        receiving = true;
+
+                        if (gameObjID == smPack.objID)
+                        {
+                            GetComponent<Transform>().localScale = smPack.Scale;
+                            rb.mass = smPack.Mass;
+                            currentScale = smPack.Scale;
+                            currentMass = rb.mass;
+                            // print(rb.mass);
+                        }
+                        receiving = false;
+                        break;
+
+                    case GameBasePacket.PacketType.Bounciness:
+                        BouncinessPacket bp = (BouncinessPacket)new BouncinessPacket().DeSerialize(receivedBuffer);
+                        receiving = true;
+
+                        if (gameObjID == bp.objID)
+                        {
+                            col.material.bounciness = bp.Bounciness;
+                            currentBounciness = col.material.bounciness;
+                        }
+                        // print("bounciness is now: " + collider.material.bounciness);
+                        receiving = false;
+                        break;
+
+                    default:
+                        break;
                 }
-
-                // print(puPack.Holding);
-                //print("Receiving pickuppacket");
-                //currentPos = transform.position;
-                //currentBool = pickupthrow.holding;
-                receiving = false;
-                break;
-
-            case GameBasePacket.PacketType.SizeMass:
-                SizeMassPacket smPack = (SizeMassPacket)new SizeMassPacket().DeSerialize(receivedBuffer);
-                //print("receiving scale and mass packet");
-                receiving = true;
-
-                if (gameObjID == smPack.objID)
-                {
-                    GetComponent<Transform>().localScale = smPack.Scale;
-                    rb.mass = smPack.Mass;
-                    currentScale = smPack.Scale;
-                    currentMass = rb.mass;
-                    // print(rb.mass);
-                }
-                receiving = false;
-                break;
-
-            case GameBasePacket.PacketType.Bounciness:
-                BouncinessPacket bp = (BouncinessPacket)new BouncinessPacket().DeSerialize(receivedBuffer);
-                receiving = true;
-
-                if (gameObjID == bp.objID)
-                {
-                    col.material.bounciness = bp.Bounciness;
-                    currentBounciness = col.material.bounciness;
-                }
-                // print("bounciness is now: " + collider.material.bounciness);
-                receiving = false;
-                break;
-
-            default:
-                break;
+            }
+            catch (Exception ex)
+            {
+                Debug.LogException(ex);
+            }
         }
     }
+
     public override void SendUpdateRequest()
     {
         byte[] buffer;
@@ -201,7 +212,7 @@ public class PickUpNetComp : NetworkComponent
         StartCoroutine(WaitFor(0.05f));
         if (HoldingCheck)
         {
-            GameBasePacket pickUpPacket = new PickUpPacket(pickupthrow.holding, ownerID.ToString(), gameObjID);
+            GameBasePacket pickUpPacket = new PickUpPacket(pickupthrow.holding, gameObjID);
             buffer = pickUpPacket.Serialize();
             testNetManager.SendPacket(buffer);
             print("Sending PickUP"); HoldingCheck = false;

@@ -53,7 +53,7 @@ public class ServerEndPoint : MonoBehaviour
     }
     public string GetAllUserEndPoint
     {
-        get { return $"{Protocol}://{serverIPAdress}:{GetPort}/get-all-users"; }
+        get { return $"{Protocol}://{serverIPAdress}:{GetPort}/get-All-users"; }
     }
 
     private void Awake()
