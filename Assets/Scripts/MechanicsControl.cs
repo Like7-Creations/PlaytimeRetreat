@@ -121,6 +121,24 @@ public partial class @MechanicsControl : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""UseButtons"",
+                    ""type"": ""Button"",
+                    ""id"": ""2bb23981-9c5c-4b31-9ca2-0b66c0ab777d"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""UseLever"",
+                    ""type"": ""Button"",
+                    ""id"": ""e3cc2501-95ec-400b-bfbc-c2dc650c39b1"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -156,6 +174,28 @@ public partial class @MechanicsControl : IInputActionCollection2, IDisposable
                     ""action"": ""InteractLever"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c1caeddc-4e5b-4123-951e-3846cdaf365a"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": ""Press"",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""UseButtons"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8a5f2371-deec-45d7-b135-5a6620b9cb95"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": ""Press(behavior=2)"",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""UseLever"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -172,6 +212,8 @@ public partial class @MechanicsControl : IInputActionCollection2, IDisposable
         m_Trigger_InteractButton = m_Trigger.FindAction("InteractButton", throwIfNotFound: true);
         m_Trigger_InteractTimedButton = m_Trigger.FindAction("InteractTimedButton", throwIfNotFound: true);
         m_Trigger_InteractLever = m_Trigger.FindAction("InteractLever", throwIfNotFound: true);
+        m_Trigger_UseButtons = m_Trigger.FindAction("UseButtons", throwIfNotFound: true);
+        m_Trigger_UseLever = m_Trigger.FindAction("UseLever", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -283,6 +325,8 @@ public partial class @MechanicsControl : IInputActionCollection2, IDisposable
     private readonly InputAction m_Trigger_InteractButton;
     private readonly InputAction m_Trigger_InteractTimedButton;
     private readonly InputAction m_Trigger_InteractLever;
+    private readonly InputAction m_Trigger_UseButtons;
+    private readonly InputAction m_Trigger_UseLever;
     public struct TriggerActions
     {
         private @MechanicsControl m_Wrapper;
@@ -290,6 +334,8 @@ public partial class @MechanicsControl : IInputActionCollection2, IDisposable
         public InputAction @InteractButton => m_Wrapper.m_Trigger_InteractButton;
         public InputAction @InteractTimedButton => m_Wrapper.m_Trigger_InteractTimedButton;
         public InputAction @InteractLever => m_Wrapper.m_Trigger_InteractLever;
+        public InputAction @UseButtons => m_Wrapper.m_Trigger_UseButtons;
+        public InputAction @UseLever => m_Wrapper.m_Trigger_UseLever;
         public InputActionMap Get() { return m_Wrapper.m_Trigger; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -308,6 +354,12 @@ public partial class @MechanicsControl : IInputActionCollection2, IDisposable
                 @InteractLever.started -= m_Wrapper.m_TriggerActionsCallbackInterface.OnInteractLever;
                 @InteractLever.performed -= m_Wrapper.m_TriggerActionsCallbackInterface.OnInteractLever;
                 @InteractLever.canceled -= m_Wrapper.m_TriggerActionsCallbackInterface.OnInteractLever;
+                @UseButtons.started -= m_Wrapper.m_TriggerActionsCallbackInterface.OnUseButtons;
+                @UseButtons.performed -= m_Wrapper.m_TriggerActionsCallbackInterface.OnUseButtons;
+                @UseButtons.canceled -= m_Wrapper.m_TriggerActionsCallbackInterface.OnUseButtons;
+                @UseLever.started -= m_Wrapper.m_TriggerActionsCallbackInterface.OnUseLever;
+                @UseLever.performed -= m_Wrapper.m_TriggerActionsCallbackInterface.OnUseLever;
+                @UseLever.canceled -= m_Wrapper.m_TriggerActionsCallbackInterface.OnUseLever;
             }
             m_Wrapper.m_TriggerActionsCallbackInterface = instance;
             if (instance != null)
@@ -321,6 +373,12 @@ public partial class @MechanicsControl : IInputActionCollection2, IDisposable
                 @InteractLever.started += instance.OnInteractLever;
                 @InteractLever.performed += instance.OnInteractLever;
                 @InteractLever.canceled += instance.OnInteractLever;
+                @UseButtons.started += instance.OnUseButtons;
+                @UseButtons.performed += instance.OnUseButtons;
+                @UseButtons.canceled += instance.OnUseButtons;
+                @UseLever.started += instance.OnUseLever;
+                @UseLever.performed += instance.OnUseLever;
+                @UseLever.canceled += instance.OnUseLever;
             }
         }
     }
@@ -336,5 +394,7 @@ public partial class @MechanicsControl : IInputActionCollection2, IDisposable
         void OnInteractButton(InputAction.CallbackContext context);
         void OnInteractTimedButton(InputAction.CallbackContext context);
         void OnInteractLever(InputAction.CallbackContext context);
+        void OnUseButtons(InputAction.CallbackContext context);
+        void OnUseLever(InputAction.CallbackContext context);
     }
 }

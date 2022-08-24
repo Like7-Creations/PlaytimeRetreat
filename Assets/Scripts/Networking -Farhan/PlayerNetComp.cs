@@ -9,7 +9,9 @@ public class PlayerNetComp : NetworkComponent
     public Guid localID;
 
     public PlayerController pController;
+    public MobileController mController;
     public Camera pCam;
+    public bool mobilePlayer;       //If true, enable the mobile controller. Otherwise, enable the regular controller.
 
     public Transform playerTransform;
     public CapsuleCollider capCollider;
@@ -30,7 +32,11 @@ public class PlayerNetComp : NetworkComponent
     {
         testNetManager = FindObjectOfType<TestNetManager>();
 
-        pController = GetComponent<PlayerController>();
+        if (!mobilePlayer)
+            pController = GetComponent<PlayerController>();
+        else if (mobilePlayer)
+            mController = GetComponent<MobileController>();
+
         playerTransform = GetComponent<Transform>();
         targeting = GetComponent<AbilityTargeting>();
 

@@ -1,19 +1,31 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class AbilityTargeting : MonoBehaviour
 {
+    [Header("References")]
     PlayerNetComp pcComp;
+
+    [Header("Mobile UI Buttons")]
+    [SerializeField] Button interactButton;
+    [SerializeField] Button useAbilityButton;
+    [SerializeField] Button switchAbilityButton;
+
+
+    [Header("Targeted Objects")]
     public GameObject targetObj;
 
     public ObjEffect effectableObj;
     public PickUpThrow throwableObj;
     public TriggerSystem triggerObj;
 
+    [Header("Modifiers")]
     public LayerMask effectable;
     public Color highlightedColor;
 
+    [Header("Debugging")]
     public bool targeting;
 
     void Start()
@@ -25,6 +37,11 @@ public class AbilityTargeting : MonoBehaviour
 
     void Update()
     {
+        Ray ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
+
+        TargetingPickUp(ray);
+        TargetingTrigger(ray);
+
         if (Input.GetMouseButtonDown(1))
         {
             targeting = true;
@@ -36,19 +53,100 @@ public class AbilityTargeting : MonoBehaviour
         }
 
         if (targeting)
-            Targeting(true);
+            TargetingObj(ray, true);
         else if (!targeting)
-            Targeting(false);
+            TargetingObj(ray, false);
     }
 
-    void Targeting(bool state)
+    void TargetingPickUp(Ray ray)
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity, effectable))
+        {
+            targetObj = hit.collider.gameObject;
+
+            if (targetObj.GetComponent<PickUpThrow>())
+            {
+                throwableObj = targetObj.GetComponent<PickUpThrow>();
+                throwableObj.hasplayer = true;
+                throwableObj.pickupComp.ownerID = pcComp.localID;
+
+                if (pcComp.mobilePlayer)
+                    interactButton.gameObject.SetActive(true);
+            }
+
+            else
+            {
+                if (throwableObj != null)
+                {
+                    throwableObj.hasplayer = false;
+                    throwableObj.pickupComp.ownerID = System.Guid.Empty;
+                }
+
+                if (pcComp.mobilePlayer)
+                    interactButton.gameObject.SetActive(false);
+
+                throwableObj = null;
+            }
+        }
+    }
+
+    void TargetingTrigger(Ray ray)
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity, effectable))
+        {
+            targetObj = hit.collider.gameObject;
+
+            if (targetObj.GetComponent<TriggerSystem>())
+            {
+                triggerObj = targetObj.GetComponent<TriggerSystem>();
+                triggerObj.hasPlayer = true;
+
+                if (pcComp.mobilePlayer)
+                {
+                    interactButton.gameObject.SetActive(true);
+
+                    if (triggerObj.triggerType == TriggerSystem.TriggerType.Button)
+                        interactButton.onClick.AddListener(triggerObj.ButtonPressed);
+
+                    if (triggerObj.triggerType == TriggerSystem.TriggerType.TimedButton)
+                        interactButton.onClick.AddListener(triggerObj.TimedButtonPressed);
+
+                    if (triggerObj.triggerType == TriggerSystem.TriggerType.Lever)
+                        interactButton.onClick.AddListener(triggerObj.LeverPulled);
+                }
+            }
+
+            else
+            {
+                if (triggerObj != null)
+                    triggerObj.hasPlayer = false;
+
+                if (pcComp.mobilePlayer)
+                {
+                    interactButton.gameObject.SetActive(false);
+
+                    if (triggerObj.triggerType == TriggerSystem.TriggerType.Button)
+                        interactButton.onClick.RemoveListener(triggerObj.ButtonPressed);
+
+                    if (triggerObj.triggerType == TriggerSystem.TriggerType.TimedButton)
+                        interactButton.onClick.RemoveListener(triggerObj.TimedButtonPressed);
+
+                    if (triggerObj.triggerType == TriggerSystem.TriggerType.Lever)
+                        interactButton.onClick.RemoveListener(triggerObj.LeverPulled);
+                }
+
+                triggerObj = null;
+            }
+        }
+    }
+
+    void TargetingObj(Ray ray, bool state)
     {
         if (state)
         {
             RaycastHit hit;
-
-            Ray ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
-
             if (Physics.Raycast(ray, out hit, Mathf.Infinity, effectable))
             {
                 targetObj = hit.collider.gameObject;
@@ -57,29 +155,11 @@ public class AbilityTargeting : MonoBehaviour
                 {
                     effectableObj = targetObj.GetComponent<ObjEffect>();
 
-                    if (targetObj.GetComponent<PickUpThrow>())
+                    if (pcComp.mobilePlayer)
                     {
-                        throwableObj = targetObj.GetComponent<PickUpThrow>();
-                        throwableObj.hasplayer = true;
-                        throwableObj.pickupComp.ownerID = pcComp.localID;
+                        switchAbilityButton.gameObject.SetActive(true);
+                        useAbilityButton.gameObject.SetActive(true);
                     }
-
-                    else
-                    {
-                        if (throwableObj != null)
-                        {
-                            throwableObj.hasplayer = false;
-                            throwableObj.pickupComp.ownerID = System.Guid.Empty;
-                        }
-
-                        throwableObj = null;
-                    }
-                }
-
-                else if (targetObj.GetComponent<TriggerSystem>())
-                {
-                    triggerObj = targetObj.GetComponent<TriggerSystem>();
-                    triggerObj.hasPlayer = true;
                 }
 
                 else
@@ -87,18 +167,11 @@ public class AbilityTargeting : MonoBehaviour
                     targetObj = null;
                     effectableObj = null;
 
-                    if (throwableObj != null)
+                    if (pcComp.mobilePlayer)
                     {
-                        throwableObj.hasplayer = false;
-                        throwableObj.pickupComp.ownerID = System.Guid.Empty;
+                        switchAbilityButton.gameObject.SetActive(false);
+                        useAbilityButton.gameObject.SetActive(false);
                     }
-
-                    throwableObj = null;
-
-                    if (triggerObj != null)
-                        triggerObj.hasPlayer = false;
-
-                    triggerObj = null;
                 }
             }
 
@@ -107,18 +180,11 @@ public class AbilityTargeting : MonoBehaviour
                 targetObj = null;
                 effectableObj = null;
 
-                if (throwableObj != null)
+                if (pcComp.mobilePlayer)
                 {
-                    throwableObj.hasplayer = false;
-                    throwableObj.pickupComp.ownerID = System.Guid.Empty;
+                    switchAbilityButton.gameObject.SetActive(false);
+                    useAbilityButton.gameObject.SetActive(false);
                 }
-
-                throwableObj = null;
-
-                if (triggerObj != null)
-                    triggerObj.hasPlayer = false;
-
-                triggerObj = null;
             }
         }
 
@@ -127,18 +193,11 @@ public class AbilityTargeting : MonoBehaviour
             targetObj = null;
             effectableObj = null;
 
-            if (throwableObj != null)
+            if (pcComp.mobilePlayer)
             {
-                throwableObj.hasplayer = false;
-                throwableObj.pickupComp.ownerID = System.Guid.Empty;
+                switchAbilityButton.gameObject.SetActive(false);
+                useAbilityButton.gameObject.SetActive(false);
             }
-
-            throwableObj = null;
-
-            if (triggerObj != null)
-                triggerObj.hasPlayer = false;
-
-            triggerObj = null;
         }
     }
 }
