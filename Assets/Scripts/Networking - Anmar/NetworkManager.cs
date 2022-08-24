@@ -78,7 +78,7 @@ public class NetworkManager : MonoBehaviour
     void Start()
     { 
         MainSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-        MainSocket.Connect(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 3000));
+        MainSocket.Connect(new IPEndPoint(IPAddress.Parse("192.168.122.184"), 3000));
         MainSocket.Blocking = false;
         player = new Player(Guid.NewGuid().ToString());
 
@@ -185,7 +185,7 @@ public class NetworkManager : MonoBehaviour
                         int portnumber = lp.LobbyPort;
                         RoomCodeText.text = "Room Code: " + lp.RoomCode.ToString();
                         print("Connecting to " + lp.Name + "with port " + portnumber);
-                        LobbySocket.Connect(new IPEndPoint(IPAddress.Parse("127.0.0.1"), portnumber));
+                        LobbySocket.Connect(new IPEndPoint(IPAddress.Parse("192.168.122.184"), portnumber));
                         LobbySocket.Blocking = false;
                         if(host)LobbySocket.Send(new UsernamePacket(MyUserName.text, "Partner", player).Serialize());
                         if(client)LobbySocket.Send(new UsernamePacket("Host", MyUserName.text, player).Serialize());

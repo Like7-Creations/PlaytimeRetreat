@@ -32034,6 +32034,10 @@ PrefabInstance:
       propertyPath: jumpHeight
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 2096522150723370458, guid: 9f5e3adf14907bd4f9b728a738da82f2, type: 3}
+      propertyPath: singlePlayer
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2096522150723370460, guid: 9f5e3adf14907bd4f9b728a738da82f2, type: 3}
       propertyPath: m_Name
       value: PlayerController
