@@ -23,17 +23,23 @@ public class NetworkManager : MonoBehaviour
     [SerializeField] Button StartButton;
     [SerializeField] public string ChosenLobbyName;
 
+
     [SerializeField] Canvas canvas;
     [SerializeField] TMP_InputField RoomName;
     [SerializeField] TMP_InputField ChatInput;
     [SerializeField] TMP_InputField RoomCodeInput;
+    [SerializeField] TMP_InputField MyUserName;
 
     [SerializeField] TextMeshProUGUI KickMessage;
     [SerializeField] TextMeshProUGUI RoomCode;
     [SerializeField] TextMeshProUGUI PartnerUsername;
     [SerializeField] TextMeshProUGUI RoomCodeText;
-    
-    
+
+    [SerializeField] TextMeshProUGUI UsernameWarn;
+    [SerializeField] TextMeshProUGUI Hostname;
+    [SerializeField] TextMeshProUGUI PartnerName;
+
+
     [SerializeField] TextMeshProUGUI TextPrefabForChat;
     [SerializeField] GameObject ChatPanel;
 
@@ -54,6 +60,8 @@ public class NetworkManager : MonoBehaviour
     //in case kick happens these need to be enabled and disabled
     public GameObject MainMenuPage;
     public GameObject LobbyPage;
+    public GameObject UsernamePage;
+    public GameObject MenuPanel;
 
     //__________
 
@@ -92,16 +100,10 @@ public class NetworkManager : MonoBehaviour
             {
                 host = true;
                 client = false;
-                //RoomCode.text = RoomName.text;
 
                 print("connecting to created lobby server");
 
-                /*socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                socket.Connect(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 3000));
-                socket.Blocking = false;*/ //commented this cuz we are connecting right from start
-                //connected = true;
-
-                //socket.Send(new LobbyPacket(MyUsername.text, player).Serialize());
+                RoomName.text = RoomName.text.Replace(" ", "-");
                 MainSocket.Send(new CreateLobbyPacket(RoomName.text, player).Serialize());
                 //socket.Disconnect(true);
 
@@ -135,9 +137,18 @@ public class NetworkManager : MonoBehaviour
         });
         ConnectButton.onClick.AddListener(() =>
         {
-            int roomcode = int.Parse(RoomCodeInput.text);
-            print(roomcode);
-            MainSocket.Send(new JoinRequestPacket(ChosenLobbyName,roomcode,"null", player).Serialize());
+            int roomcode = 0;
+            if (RoomCodeInput.text != "")
+            {
+                roomcode = int.Parse(RoomCodeInput.text);
+                print(roomcode);
+            }
+            if (ChosenLobbyName != "")
+            {
+                MainSocket.Send(new JoinRequestPacket(ChosenLobbyName, roomcode, "null", player).Serialize());
+            }
+            else { BackToMenuScreen(); KickMessage.gameObject.SetActive(true); KickMessage.text = "Please Pick A Lobby First"; }
+            //MainSocket.Send(new JoinRequestPacket(ChosenLobbyName,roomcode,"null", player).Serialize());
         });
         StartButton.onClick.AddListener(() =>
         {
@@ -152,7 +163,7 @@ public class NetworkManager : MonoBehaviour
         LeaveButton.onClick.AddListener(() =>
         {
             if(host) LobbySocket.Send(new LeaveRequestPacket(RoomName.text, host, player).Serialize());
-            if(client) LobbySocket.Send(new LeaveRequestPacket(ChosenLobbyName, client, player).Serialize());
+            if (client) LobbySocket.Send(new LeaveRequestPacket(ChosenLobbyName, false, player).Serialize());
             LobbySocket.Shutdown(SocketShutdown.Both);
             LobbySocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         });
@@ -178,6 +189,8 @@ public class NetworkManager : MonoBehaviour
                         print("Connecting to " + lp.Name + "with port " + portnumber);
                         LobbySocket.Connect(new IPEndPoint(IPAddress.Parse("127.0.0.1"), portnumber));
                         LobbySocket.Blocking = false;
+                        if (host) LobbySocket.Send(new UsernamePacket(MyUserName.text, "Partner", player).Serialize());
+                        if (client) LobbySocket.Send(new UsernamePacket("Host", MyUserName.text, player).Serialize());
                         print("I have connected to " + name);
 
                         break;
@@ -198,12 +211,12 @@ public class NetworkManager : MonoBehaviour
                         {
                             string.Join(", ", lnp.LobbyNames);
                             print("Recieved lobby name: " + lnp.LobbyNames[i]);
-                            if(ContentPanel.transform.childCount > 0 && lobbyButtonNames != null)
+                            if (ContentPanel.transform.childCount > 0 && lobbyButtonNames != null)
                             {
                                 lobbyButtonNames.Clear();
                                 for (int j = 0; j < ContentPanel.transform.childCount; j++)
                                 {
-                                    Destroy(ContentPanel.transform.GetChild(j));
+                                    Destroy(ContentPanel.transform.GetChild(j).gameObject);
                                 }
                             }
                             Button instantiateButton = Instantiate(buttonPrefabForLobbyNames);
@@ -250,6 +263,12 @@ public class NetworkManager : MonoBehaviour
                         SceneManager.LoadScene("_Level 1");
                         break;
 
+                    case BasePacket.PacketType.Usernames:
+                        UsernamePacket unp = (UsernamePacket)new UsernamePacket().DeSerialize(recievedBuffer);
+                        Hostname.text = unp.HostName;
+                        PartnerName.text = unp.PartnerName;
+                        break;
+
                     default:
                         break;
                 }
@@ -274,6 +293,21 @@ public class NetworkManager : MonoBehaviour
         LobbyPage.gameObject.SetActive(false);
         MainMenuPage.gameObject.SetActive(true);
     }
+    public void GoButton()
+    {
+
+        if (MyUserName.text != "")
+        {
+            UsernamePage.gameObject.SetActive(false);
+            MenuPanel.gameObject.SetActive(true);
+        }
+        else
+        {
+            UsernamePage.gameObject.SetActive(true);
+            UsernameWarn.gameObject.SetActive(true);
+        }
+    }
+
     public void CreateLobby()
     {
 
@@ -289,8 +323,5 @@ public class NetworkManager : MonoBehaviour
         //request for the port
     }
 
-    public void LeaveLobby()
-    {
 
-    }
 }
