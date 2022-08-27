@@ -13,7 +13,7 @@ public class VolumeSlider : MonoBehaviour
     public TMP_Text ui;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         slider = GetComponent<Slider>();
         ResetSliderValue();

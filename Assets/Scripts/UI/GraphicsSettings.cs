@@ -19,7 +19,7 @@ public class GraphicsSettings : MonoBehaviour
     public TMP_Dropdown fpsUI;
     public Toggle fullscreenUI;
 
-    private void Start()
+    private void Awake()
     {
         resolutions = Screen.resolutions;
         resUI.ClearOptions();

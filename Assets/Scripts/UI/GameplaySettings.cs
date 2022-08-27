@@ -15,7 +15,7 @@ public class GameplaySettings : MonoBehaviour
     public CameraController controller;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         if (PlayerPrefs.HasKey(prefPrefix + "Sensitivity"))
         {
