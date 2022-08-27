@@ -13,7 +13,7 @@ public class PickUpThrow : MonoBehaviour
     [SerializeField] bool chargingg;
     public float baseforce;
     [SerializeField] float throwForce;
-    float timer;
+    public float timer;
     bool bol;
     
     Rigidbody rb;
@@ -32,15 +32,15 @@ public class PickUpThrow : MonoBehaviour
     {
         pick = PickUpDrop.PickupDropThrow.PickUp;
         pick.Enable();
-        pick.performed += Picker;
+        pick.performed += PickUpObj;
 
         charging = PickUpDrop.PickupDropThrow.Charge;
         charging.Enable();
-        charging.performed += Charging;
+        charging.performed += ChargeObj;
 
         Throwing = PickUpDrop.PickupDropThrow.Throw;
         Throwing.Enable();
-        Throwing.performed += Throw;
+        Throwing.performed += ThrowObj;
     }
 
     private void OnDisable()
@@ -58,7 +58,20 @@ public class PickUpThrow : MonoBehaviour
     }
     // Update is called once per frame
 
-    public void Picker(InputAction.CallbackContext context)
+    public void PickUpObj(InputAction.CallbackContext context)
+    {
+        Picker();
+    }
+    public void ChargeObj(InputAction.CallbackContext context)
+    {
+        Charging();
+    }
+    public void ThrowObj(InputAction.CallbackContext context)
+    {
+        Throw();
+    }
+
+    public void Picker()
     {
         if (hasplayer && !holding && rb.mass<20)
         {
@@ -68,11 +81,11 @@ public class PickUpThrow : MonoBehaviour
             holding = true;
         }
     }
-    public void Charging(InputAction.CallbackContext context)
+    public void Charging()
     {
         if (holding) { chargingg = true; throwForce += Time.deltaTime * 200; }
     }
-    public void Throw(InputAction.CallbackContext context)
+    public void Throw()
     {
         if (holding && timer >= .5f)
         {

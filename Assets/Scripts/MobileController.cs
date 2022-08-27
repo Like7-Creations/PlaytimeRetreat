@@ -8,9 +8,9 @@ public class MobileController : MonoBehaviour
 {
     CharacterController characterController;
     public CameraController cam;
-    PickUpThrow[] pickupthrow;
-    [SerializeField] Button pickUpBut;
-    [SerializeField] Button ThrowBut;
+    //PickUpThrow[] pickupthrow;
+    //[SerializeField] Button pickUpBut;
+    //[SerializeField] Button ThrowBut;
     [SerializeField] Button jumpButt;
 
     public float speed;
@@ -35,7 +35,7 @@ public class MobileController : MonoBehaviour
 
     void Start()
     {
-        pickupthrow = FindObjectsOfType<PickUpThrow>();
+        //pickupthrow = FindObjectsOfType<PickUpThrow>();
         characterController = GetComponent<CharacterController>();
         cam = GetComponentInChildren<CameraController>();
         leftFingerId = -1;
@@ -73,7 +73,7 @@ public class MobileController : MonoBehaviour
              TPToCheckpoint(lastCheckpoint);
          }*/
 
-        for (int i = 0; i < pickupthrow.Length; i++)
+        /*for (int i = 0; i < pickupthrow.Length; i++)
         {
             if (pickupthrow[i].hasplayer)
             {
@@ -90,7 +90,7 @@ public class MobileController : MonoBehaviour
             {
                 ThrowBut.gameObject.SetActive(false);
             }
-        }
+        }*/
 
         for (int i = 0; i < Input.touchCount; i++)
         {

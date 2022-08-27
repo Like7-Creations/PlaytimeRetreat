@@ -1,16 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class AbilityTargeting : MonoBehaviour
 {
-
     [Header("Targeted Objects")]
     public GameObject targetObj;
+    MobileController mController;
+
+    [Header("Mobile UI Buttons")]
+    [SerializeField] Button interactButton;
 
     public ObjEffect effectableObj;
+
     public PickUpThrow throwableObj;
+    public EventTrigger chargeObj;
+
     public TriggerSystem triggerObj;
 
     [Header("Modifiers")]
@@ -23,7 +30,12 @@ public class AbilityTargeting : MonoBehaviour
     void Start()
     {
         Cursor.visible = false;
-        //pcComp = GetComponent<PlayerNetComp>();
+        mController = GetComponent<MobileController>();
+
+        /*chargeObj = interactButton.GetComponent<EventTrigger>();
+        EventTrigger.Entry entry = new EventTrigger.Entry();
+        entry.eventID = EventTriggerType.PointerDown;
+        entry.callback.AddListener((data) => { })*/
     }
 
     void Update()
@@ -72,6 +84,22 @@ public class AbilityTargeting : MonoBehaviour
                 throwableObj = targetObj.GetComponent<PickUpThrow>();
                 throwableObj.hasplayer = true;
                 //throwableObj.pickupComp.ownerID = pcComp.localID;
+
+                if (mController != null)
+                {
+                    interactButton.gameObject.SetActive(true);
+
+                    interactButton.onClick.RemoveAllListeners();
+                    interactButton.onClick.AddListener(throwableObj.Picker);
+
+                    if (throwableObj.holding)
+                    {
+                        interactButton.onClick.RemoveAllListeners();
+                        interactButton.onClick.AddListener(throwableObj.Throw);
+
+                        //chargeObj.OnPointerDown(throwableObj.ChargeObj);
+                    }
+                }
             }
 
             else
@@ -82,9 +110,17 @@ public class AbilityTargeting : MonoBehaviour
                     throwableObj.pickupComp.ownerID = System.Guid.Empty;
                 }
 
+                if (mController != null)
+                {
+                    interactButton.onClick.RemoveAllListeners();
+                    interactButton.gameObject.SetActive(false);
+                }
+
                 throwableObj = null;
             }
         }
+
+
     }
 
     void TargetingTrigger(Ray ray)
@@ -98,12 +134,32 @@ public class AbilityTargeting : MonoBehaviour
             {
                 triggerObj = targetObj.GetComponent<TriggerSystem>();
                 triggerObj.hasPlayer = true;
+
+                if (mController != null)
+                {
+                    interactButton.gameObject.SetActive(true);
+
+                    if (triggerObj.triggerType == TriggerSystem.TriggerType.Button)
+                        interactButton.onClick.AddListener(triggerObj.ButtonPressed);
+
+                    if (triggerObj.triggerType == TriggerSystem.TriggerType.TimedButton)
+                        interactButton.onClick.AddListener(triggerObj.TimedButtonPressed);
+
+                    if (triggerObj.triggerType == TriggerSystem.TriggerType.Lever)
+                        interactButton.onClick.AddListener(triggerObj.LeverPulled);
+                }
             }
 
             else
             {
                 if (triggerObj != null)
                     triggerObj.hasPlayer = false;
+
+                if (mController != null)
+                {
+                    interactButton.onClick.RemoveAllListeners();
+                    interactButton.gameObject.SetActive(false);
+                }
 
                 triggerObj = null;
             }
@@ -138,6 +194,11 @@ public class AbilityTargeting : MonoBehaviour
                 targetObj = null;
                 effectableObj = null;
 
+                if (mController != null)
+                {
+                    interactButton.onClick.RemoveAllListeners();
+                    interactButton.gameObject.SetActive(false);
+                }
             }
         }
 
