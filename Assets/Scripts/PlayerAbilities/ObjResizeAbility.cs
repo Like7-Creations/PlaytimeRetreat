@@ -33,11 +33,19 @@ public class ObjResizeAbility : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.P))
             if (targeting.targeting)
             {
-                if (!objectEffects.shrinkActive)
+                if (!objectEffects.shrinkActive && !objectEffects.growActive)
                 {
                     objectEffects.shrinkActive = true;
                     objectEffects.ReturnToNormalSize(true);
-                    objectEffects.ModifyObjScalenMass(shrinkVal, lightMass);
+                    objectEffects.ModifyObjScalenMass(shrinkVal, ObjEffect.MassType.minMass);
+
+                    print("Shrinking Object & Decreasing Mass");
+                }
+                else if (objectEffects.growActive && !objectEffects.shrinkActive)
+                {
+                    objectEffects.growActive = false;
+                    objectEffects.ReturnToNormalSize(true);
+                    objectEffects.ModifyObjScalenMass(originalScale, ObjEffect.MassType.defaultMass);
 
                     print("Shrinking Object & Decreasing Mass");
                 }
@@ -46,11 +54,22 @@ public class ObjResizeAbility : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.O))
             if (targeting.targeting)
             {
-                objectEffects.growActive = true;
-                objectEffects.ReturnToNormalSize(true);
-                objectEffects.ModifyObjScalenMass(growVal, heavyMass);
+                if (!objectEffects.growActive && !objectEffects.shrinkActive)
+                {
+                    objectEffects.growActive = true;
+                    objectEffects.ReturnToNormalSize(true);
+                    objectEffects.ModifyObjScalenMass(growVal, ObjEffect.MassType.maxMass);
 
-                print("Gorwing Object & Increasing Mass");
+                    print("Gorwing Object & Increasing Mass");
+                }
+                else if (!objectEffects.growActive && objectEffects.shrinkActive)
+                {
+                    objectEffects.shrinkActive = false;
+                    objectEffects.ReturnToNormalSize(true);
+                    objectEffects.ModifyObjScalenMass(originalScale, ObjEffect.MassType.defaultMass);
+
+                    print("Shrinking Object & Decreasing Mass");
+                }
             }
     }
 }

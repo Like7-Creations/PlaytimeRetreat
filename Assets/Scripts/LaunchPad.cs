@@ -72,7 +72,7 @@ public class LaunchPad : MonoBehaviour
 
 
             // Mobile
-            mobileController.velocity.y = Mathf.Sqrt(ForceHeight * -2f * playerController.gravity);
+            //mobileController.velocity.y = Mathf.Sqrt(ForceHeight * -2f * playerController.gravity);
 
             ani.SetTrigger("Launch");
             audioSource.Play();

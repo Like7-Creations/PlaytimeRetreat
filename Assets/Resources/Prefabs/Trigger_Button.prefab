@@ -309,6 +309,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 67081736665144514, guid: fe8e22d8471de8a40b3ba2937f7a8852, type: 3}
+      propertyPath: m_TagString
+      value: Trigger
+      objectReference: {fileID: 0}
     - target: {fileID: 3737241599050356222, guid: fe8e22d8471de8a40b3ba2937f7a8852, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -513,6 +517,8 @@ MonoBehaviour:
   triggerSpotted: 0
   triggerActive: 0
   buttonPressed: 0
+  leverPulled: 0
+  pressureActive: 0
   activeColor: {r: 0, g: 1, b: 0.13333344, a: 1}
   inactiveColor: {r: 1, g: 0, b: 0, a: 1}
   activeIndicators:

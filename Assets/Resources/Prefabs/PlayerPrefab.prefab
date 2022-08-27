@@ -180,9 +180,9 @@ MonoBehaviour:
   singlePlayer: 0
   pcNetComp: {fileID: 0}
   level: 0
-  speed: 10
-  jumpHeight: 23.23
-  gravity: -90.34
+  speed: 15
+  jumpHeight: 6
+  gravity: -50
   isGrounded: 0
   velocity: {x: 0, y: 0, z: 0}
   movement: {x: 0, y: 0, z: 0}
@@ -436,7 +436,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2591032937139399762
 Transform:
   m_ObjectHideFlags: 0

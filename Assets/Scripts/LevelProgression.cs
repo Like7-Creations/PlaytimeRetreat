@@ -7,11 +7,18 @@ public class LevelProgression : MonoBehaviour
 {
 
     public string nextLevel;
+    public LevelTimer timer;
+
     private void OnTriggerEnter(Collider other)
     {
         if(other.gameObject.tag == "Player")
         {
-            SceneManager.LoadScene(nextLevel);
+            timer.DisplayTime();
         }
+    }
+
+    public void NextLevel()
+    {
+        SceneManager.LoadScene(nextLevel);
     }
 }

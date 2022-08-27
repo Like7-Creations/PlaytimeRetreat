@@ -35,6 +35,8 @@ public class ObjEffect : MonoBehaviour
     public bool bounceActive;
     public bool frictionInactive;
 
+    public float minMass, baseMass, maxMass;
+
     //public bool heavyObj;
     //public bool lightObj;
 
@@ -46,11 +48,18 @@ public class ObjEffect : MonoBehaviour
 
     TestNetManager testmanager;
 
+    public enum MassType
+    {
+        defaultMass,
+        maxMass,
+        minMass
+    }
+
 
     void Awake()
     {
         testmanager = FindObjectOfType<TestNetManager>();
-        
+
         targeting = FindObjectOfType<AbilityTargeting>();
 
         objCollider = GetComponent<Collider>();
@@ -58,11 +67,11 @@ public class ObjEffect : MonoBehaviour
 
         //gameObject.AddComponent<RBNetComp>();
         rbody = GetComponent<Rigidbody>();
-        
-        gameObject.AddComponent<PickUpNetComp>();
+
+        //gameObject.AddComponent<PickUpNetComp>();
         gameObject.GetComponent<PickUpThrow>().enabled = true;
-        
-        originalMass = rbody.mass;
+
+        rbody.mass = baseMass;
 
         originalObjScale = gameObject.transform.localScale;
 
@@ -72,19 +81,22 @@ public class ObjEffect : MonoBehaviour
 
     void Update()
     {
-        if(testmanager.localPlayer != null) 
+        if (testmanager != null)
         {
-            targeting = testmanager.localPlayer.GetComponent<AbilityTargeting>();
-            if (targeting.targeting)
+            if (testmanager.localPlayer != null)
             {
-                if (gameObject == targeting.targetObj)
+                targeting = testmanager.localPlayer.GetComponent<AbilityTargeting>();
+                if (targeting.targeting)
                 {
-                    colorRenderer.material.color = highlightedColor;
-                }
+                    if (gameObject == targeting.targetObj)
+                    {
+                        colorRenderer.material.color = highlightedColor;
+                    }
 
-                else
-                {
-                    colorRenderer.material.color = originalObjColor;
+                    else
+                    {
+                        colorRenderer.material.color = originalObjColor;
+                    }
                 }
             }
         }
@@ -148,12 +160,23 @@ public class ObjEffect : MonoBehaviour
     }*/
 
     //----------Scale n Mass Functions----------
-    public void ModifyObjScalenMass(Vector3 scaleVal, float mass)
+    public void ModifyObjScalenMass(Vector3 scaleVal, MassType type)
     {
         transform.localScale = scaleVal;
-        rbody.mass = mass;
+        switch (type)
+        {
+            case MassType.defaultMass:
+                rbody.mass = baseMass;
+                break;
+            case MassType.minMass:
+                rbody.mass = minMass;
+                break;
+            case MassType.maxMass:
+                rbody.mass = maxMass;
+                break;
+        }
     }
-    
+
     public void ReturnToNormalSize(bool state)
     {
         if (state)

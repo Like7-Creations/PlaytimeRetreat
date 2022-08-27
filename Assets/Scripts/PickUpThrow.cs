@@ -11,6 +11,7 @@ public class PickUpThrow : MonoBehaviour
     [SerializeField] public bool holding;
     [SerializeField] public bool hasplayer;
     [SerializeField] bool chargingg;
+    public float baseforce;
     [SerializeField] float throwForce;
     float timer;
     bool bol;
@@ -59,7 +60,7 @@ public class PickUpThrow : MonoBehaviour
 
     public void Picker(InputAction.CallbackContext context)
     {
-        if (hasplayer && !holding)
+        if (hasplayer && !holding && rb.mass<20)
         {
             this.rb.isKinematic = true;
             rb.detectCollisions = false;
@@ -80,7 +81,7 @@ public class PickUpThrow : MonoBehaviour
             transform.parent = null;
             chargingg = false;
             rb.AddForce(Camera.main.transform.forward * throwForce);
-            throwForce = 1000;
+            throwForce = baseforce;
             timer = 0;
             holding = false;
             Debug.Log("throwing if holding");

@@ -310,6 +310,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 9045427008721972338, guid: df275da264be24048a88b65c998525e8, type: 3}
+      propertyPath: m_TagString
+      value: Trigger
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: df275da264be24048a88b65c998525e8, type: 3}
 --- !u!1 &2969615444044395334 stripped
@@ -476,13 +480,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   originalPos: {x: 0, y: 0, z: 0}
   pressureWeightReq: 0
-  triggerType: 2
+  triggerType: 1
   hasPlayer: 0
-  timerDuration: 0
+  timerDuration: 10
   timerButtonPressed: 0
   triggerSpotted: 0
   triggerActive: 0
   buttonPressed: 0
+  leverPulled: 0
+  pressureActive: 0
   activeColor: {r: 0, g: 1, b: 0, a: 1}
   inactiveColor: {r: 1, g: 0, b: 0, a: 1}
   activeIndicators:

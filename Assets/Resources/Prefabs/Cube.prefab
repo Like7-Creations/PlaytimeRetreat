@@ -1358,7 +1358,7 @@ GameObject:
   - component: {fileID: 4943491839344763578}
   m_Layer: 6
   m_Name: Cube
-  m_TagString: Untagged
+  m_TagString: EffectableObject
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1471,12 +1471,15 @@ MonoBehaviour:
   direction: {x: 0, y: 0, z: 0}
   hitPoint: {x: 0, y: 0, z: 0}
   originalObjScale: {x: 0, y: 0, z: 0}
-  effectTimer: 1
+  effectTimer: 0
   freezeActive: 0
   shrinkActive: 0
   growActive: 0
   bounceActive: 0
   frictionInactive: 0
+  minMass: 0
+  baseMass: 0
+  maxMass: 0
 --- !u!114 &4943491839344763578
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1493,6 +1496,7 @@ MonoBehaviour:
   holding: 0
   hasplayer: 0
   chargingg: 0
+  baseforce: 0
   throwForce: 1000
 --- !u!1 &5642635089292664856
 GameObject:

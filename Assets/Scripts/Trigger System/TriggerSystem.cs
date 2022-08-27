@@ -59,7 +59,7 @@ public class TriggerSystem : MonoBehaviour
     {
         TriggerSys = new MechanicsControl();
 		sound = GetComponent<AudioSource>();
-        this.gameObject.AddComponent<TriggerNetComp>();
+        //this.gameObject.AddComponent<TriggerNetComp>();
     }
 
     void Start()
@@ -92,9 +92,7 @@ public class TriggerSystem : MonoBehaviour
     {
         PressButton.Disable();
         PressTimedButton.Disable();
-        PressLever.Disable();
-
-        
+        PressLever.Disable();        
     }
 
     public bool IsTriggered()
