@@ -12,6 +12,7 @@ public class AbilityTargeting : MonoBehaviour
 
     [Header("Mobile UI Buttons")]
     [SerializeField] Button interactButton;
+    [SerializeField] Button pickUpButton;
 
     public ObjEffect effectableObj;
 
@@ -87,15 +88,15 @@ public class AbilityTargeting : MonoBehaviour
 
                 if (mController != null)
                 {
-                    interactButton.gameObject.SetActive(true);
+                    pickUpButton.gameObject.SetActive(true);
 
-                    interactButton.onClick.RemoveAllListeners();
-                    interactButton.onClick.AddListener(throwableObj.Picker);
+                    pickUpButton.onClick.RemoveAllListeners();
+                    pickUpButton.onClick.AddListener(throwableObj.Picker);
 
                     if (throwableObj.holding)
                     {
-                        interactButton.onClick.RemoveAllListeners();
-                        interactButton.onClick.AddListener(throwableObj.Throw);
+                        pickUpButton.onClick.RemoveAllListeners();
+                        pickUpButton.onClick.AddListener(throwableObj.Throw);
 
                         //chargeObj.OnPointerDown(throwableObj.ChargeObj);
                     }
@@ -112,8 +113,8 @@ public class AbilityTargeting : MonoBehaviour
 
                 if (mController != null)
                 {
-                    interactButton.onClick.RemoveAllListeners();
-                    interactButton.gameObject.SetActive(false);
+                    pickUpButton.onClick.RemoveAllListeners();
+                    pickUpButton.gameObject.SetActive(false);
                 }
 
                 throwableObj = null;
