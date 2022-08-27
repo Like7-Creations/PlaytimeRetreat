@@ -70352,7 +70352,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1695142793
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -71866,7 +71866,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1731025252
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -71915,7 +71915,7 @@ Transform:
   - {fileID: 925125037}
   - {fileID: 286868329}
   m_Father: {fileID: 0}
-  m_RootOrder: 15
+  m_RootOrder: 16
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1731627061
 PrefabInstance:
@@ -89900,7 +89900,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2045486712538356357, guid: b4e9a84c18e78ce49b82c69184bfed25, type: 3}
       propertyPath: m_RootOrder
-      value: 16
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 2045486712538356357, guid: b4e9a84c18e78ce49b82c69184bfed25, type: 3}
       propertyPath: m_AnchorMax.x
@@ -90072,12 +90072,12 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1503224322912377438}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6a17ff5ad0217a748bd744693e45a1fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  camSens: 300
+  camSens: 50
   player: {fileID: 978080356829796086}
 --- !u!65 &5752504563436860561
 BoxCollider:

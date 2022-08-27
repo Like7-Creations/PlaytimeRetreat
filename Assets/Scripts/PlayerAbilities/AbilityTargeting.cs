@@ -45,11 +45,11 @@ public class AbilityTargeting : MonoBehaviour
             triggerObj.hasPlayer = false;
             triggerObj = null;
         }
-        if (throwableObj != null && throwableObj.hasplayer)
+       /* if (throwableObj != null && throwableObj.hasplayer)
         {
             throwableObj.hasplayer = false;
             throwableObj = null;
-        }
+        }*/
 
         Ray ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
 

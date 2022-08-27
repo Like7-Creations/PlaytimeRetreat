@@ -6,7 +6,7 @@ public class CameraController : MonoBehaviour
 {
     public float camSens;
     public Transform player;
-    PlayerController playerController;
+    MobileController playerController;
     Animator anim;
     float rotationX;
     Vector3 lastPosition;
@@ -16,7 +16,7 @@ public class CameraController : MonoBehaviour
     {
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
-        playerController = GetComponentInParent<PlayerController>();
+        playerController = GetComponentInParent<MobileController>();
         anim = GetComponent<Animator>();
         cam = GetComponent<Camera>();
     }
